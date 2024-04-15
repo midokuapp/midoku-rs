@@ -1,0 +1,17 @@
+[package]
+name = "example-source"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+cargo-component-bindings = "0.6.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.component]
+package = "midoku:example-source"
+
+[package.metadata.component.target.dependencies]
+"midoku:midoku-types" = { path = "../../midoku-types/wit" }
