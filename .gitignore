@@ -1,0 +1,6 @@
+# Ignore all .vscode but the workspace's root .vscode
+**/.vscode
+!/.vscode
+
+Cargo.lock
+target

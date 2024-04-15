@@ -1,0 +1,16 @@
+[package]
+name = "midoku-types"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+
+[dependencies]
+bitflags = "2.5.0"
+wit-bindgen-rt = "0.24.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.component]
+package = "component:midoku-types"

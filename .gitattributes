@@ -1,0 +1,2 @@
+# Mark all bindings.rs files as generated
+bindings.rs linguist-generated

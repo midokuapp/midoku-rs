@@ -1,0 +1,14 @@
+interface chapter {
+    record chapter {
+        id: string,
+        title: string,
+        volume: f32,
+        chapter: f32,
+
+        /// The date the chapter was last updated. This is a Unix timestamp in seconds.
+        data-updated: u32,
+        scanlator: string,
+        url: string,
+        language: string,
+    }
+}
