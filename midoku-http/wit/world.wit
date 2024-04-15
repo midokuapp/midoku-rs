@@ -1,0 +1,42 @@
+package midoku:midoku-http;
+
+interface http {
+    enum method {
+        get,
+        post,
+        put,
+        head,
+        delete,
+    }
+
+    resource client {
+        constructor();
+        /// Sets the duration to replenish one burst or one cell if not initialized yet.
+        set-rate-limit-period: func(seconds: u32) -> result;
+        /// Sets the burst size for the set period or 1 second if not initialized yet.
+        set-rate-limit-burst: func(burst-size: u32) -> result;
+        /// Makes the HTTP request synchronously.
+        send: func(
+            method: method,
+            url: string,
+            headers: option<list<tuple<string, string>>>,
+            body-bytes: option<list<u8>>
+        ) -> result<response>;
+    }
+
+    enum response-error {
+        moved,
+    }
+
+    resource response {
+        status-code: func() -> result<u16, response-error>;
+        /// Consumes the response when called.
+        headers: func() -> result<list<tuple<string, string>>, response-error>;
+        /// Consumes the response when called.
+        bytes: func() -> result<list<u8>, response-error>;
+    }
+}
+
+world prelude {
+    export http;
+}
