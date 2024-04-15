@@ -590,6 +590,574 @@ pub(crate) use __export_world_prelude_cabi;
 struct _RetArea([::core::mem::MaybeUninit<u8>; 72]);
 static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 72]);
 pub mod midoku {
+    pub mod midoku_http {
+        #[allow(clippy::all)]
+        pub mod http {
+            #[used]
+            #[doc(hidden)]
+            #[cfg(target_arch = "wasm32")]
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
+            use super::super::super::_rt;
+            #[repr(u8)]
+            #[derive(Clone, Copy, Eq, PartialEq)]
+            pub enum Method {
+                Get,
+                Post,
+                Put,
+                Head,
+                Delete,
+            }
+            impl ::core::fmt::Debug for Method {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    match self {
+                        Method::Get => f.debug_tuple("Method::Get").finish(),
+                        Method::Post => f.debug_tuple("Method::Post").finish(),
+                        Method::Put => f.debug_tuple("Method::Put").finish(),
+                        Method::Head => f.debug_tuple("Method::Head").finish(),
+                        Method::Delete => f.debug_tuple("Method::Delete").finish(),
+                    }
+                }
+            }
+
+            impl Method {
+                pub(crate) unsafe fn _lift(val: u8) -> Method {
+                    if !cfg!(debug_assertions) {
+                        return ::core::mem::transmute(val);
+                    }
+
+                    match val {
+                        0 => Method::Get,
+                        1 => Method::Post,
+                        2 => Method::Put,
+                        3 => Method::Head,
+                        4 => Method::Delete,
+
+                        _ => panic!("invalid enum discriminant"),
+                    }
+                }
+            }
+
+            #[derive(Debug)]
+            #[repr(transparent)]
+            pub struct Client {
+                handle: _rt::Resource<Client>,
+            }
+
+            impl Client {
+                #[doc(hidden)]
+                pub unsafe fn from_handle(handle: u32) -> Self {
+                    Self {
+                        handle: _rt::Resource::from_handle(handle),
+                    }
+                }
+
+                #[doc(hidden)]
+                pub fn take_handle(&self) -> u32 {
+                    _rt::Resource::take_handle(&self.handle)
+                }
+
+                #[doc(hidden)]
+                pub fn handle(&self) -> u32 {
+                    _rt::Resource::handle(&self.handle)
+                }
+            }
+
+            unsafe impl _rt::WasmResource for Client {
+                #[inline]
+                unsafe fn drop(_handle: u32) {
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unreachable!();
+
+                    #[cfg(target_arch = "wasm32")]
+                    {
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[resource-drop]client"]
+                            fn drop(_: u32);
+                        }
+
+                        drop(_handle);
+                    }
+                }
+            }
+
+            #[repr(u8)]
+            #[derive(Clone, Copy, Eq, PartialEq)]
+            pub enum ResponseError {
+                Moved,
+            }
+            impl ResponseError {
+                pub fn name(&self) -> &'static str {
+                    match self {
+                        ResponseError::Moved => "moved",
+                    }
+                }
+                pub fn message(&self) -> &'static str {
+                    match self {
+                        ResponseError::Moved => "",
+                    }
+                }
+            }
+            impl ::core::fmt::Debug for ResponseError {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    f.debug_struct("ResponseError")
+                        .field("code", &(*self as i32))
+                        .field("name", &self.name())
+                        .field("message", &self.message())
+                        .finish()
+                }
+            }
+            impl ::core::fmt::Display for ResponseError {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                    write!(f, "{} (error {})", self.name(), *self as i32)
+                }
+            }
+
+            impl std::error::Error for ResponseError {}
+
+            impl ResponseError {
+                pub(crate) unsafe fn _lift(val: u8) -> ResponseError {
+                    if !cfg!(debug_assertions) {
+                        return ::core::mem::transmute(val);
+                    }
+
+                    match val {
+                        0 => ResponseError::Moved,
+
+                        _ => panic!("invalid enum discriminant"),
+                    }
+                }
+            }
+
+            #[derive(Debug)]
+            #[repr(transparent)]
+            pub struct Response {
+                handle: _rt::Resource<Response>,
+            }
+
+            impl Response {
+                #[doc(hidden)]
+                pub unsafe fn from_handle(handle: u32) -> Self {
+                    Self {
+                        handle: _rt::Resource::from_handle(handle),
+                    }
+                }
+
+                #[doc(hidden)]
+                pub fn take_handle(&self) -> u32 {
+                    _rt::Resource::take_handle(&self.handle)
+                }
+
+                #[doc(hidden)]
+                pub fn handle(&self) -> u32 {
+                    _rt::Resource::handle(&self.handle)
+                }
+            }
+
+            unsafe impl _rt::WasmResource for Response {
+                #[inline]
+                unsafe fn drop(_handle: u32) {
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unreachable!();
+
+                    #[cfg(target_arch = "wasm32")]
+                    {
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[resource-drop]response"]
+                            fn drop(_: u32);
+                        }
+
+                        drop(_handle);
+                    }
+                }
+            }
+
+            impl Client {
+                #[allow(unused_unsafe, clippy::all)]
+                pub fn new() -> Self {
+                    unsafe {
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[constructor]client"]
+                            fn wit_import() -> i32;
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import() -> i32 {
+                            unreachable!()
+                        }
+                        let ret = wit_import();
+                        Client::from_handle(ret as u32)
+                    }
+                }
+            }
+            impl Client {
+                #[allow(unused_unsafe, clippy::all)]
+                /// Sets the duration to replenish one burst or one cell if not initialized yet.
+                pub fn set_rate_limit_period(&self, seconds: u32) -> Result<(), ()> {
+                    unsafe {
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[method]client.set-rate-limit-period"]
+                            fn wit_import(_: i32, _: i32) -> i32;
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import(_: i32, _: i32) -> i32 {
+                            unreachable!()
+                        }
+                        let ret = wit_import((self).handle() as i32, _rt::as_i32(&seconds));
+                        match ret {
+                            0 => {
+                                let e = ();
+                                Ok(e)
+                            }
+                            1 => {
+                                let e = ();
+                                Err(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        }
+                    }
+                }
+            }
+            impl Client {
+                #[allow(unused_unsafe, clippy::all)]
+                /// Sets the burst size for the set period or 1 second if not initialized yet.
+                pub fn set_rate_limit_burst(&self, burst_size: u32) -> Result<(), ()> {
+                    unsafe {
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[method]client.set-rate-limit-burst"]
+                            fn wit_import(_: i32, _: i32) -> i32;
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import(_: i32, _: i32) -> i32 {
+                            unreachable!()
+                        }
+                        let ret = wit_import((self).handle() as i32, _rt::as_i32(&burst_size));
+                        match ret {
+                            0 => {
+                                let e = ();
+                                Ok(e)
+                            }
+                            1 => {
+                                let e = ();
+                                Err(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        }
+                    }
+                }
+            }
+            impl Client {
+                #[allow(unused_unsafe, clippy::all)]
+                /// Makes the HTTP request synchronously.
+                pub fn send(
+                    &self,
+                    method: Method,
+                    url: &str,
+                    headers: Option<&[(_rt::String, _rt::String)]>,
+                    body_bytes: Option<&[u8]>,
+                ) -> Result<Response, ()> {
+                    unsafe {
+                        let mut cleanup_list = _rt::Vec::new();
+                        #[repr(align(4))]
+                        struct RetArea([::core::mem::MaybeUninit<u8>; 8]);
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 8]);
+                        let vec0 = url;
+                        let ptr0 = vec0.as_ptr().cast::<u8>();
+                        let len0 = vec0.len();
+                        let (result5_0, result5_1, result5_2) = match headers {
+                            Some(e) => {
+                                let vec4 = e;
+                                let len4 = vec4.len();
+                                let layout4 = _rt::alloc::Layout::from_size_align_unchecked(
+                                    vec4.len() * 16,
+                                    4,
+                                );
+                                let result4 = if layout4.size() != 0 {
+                                    let ptr = _rt::alloc::alloc(layout4).cast::<u8>();
+                                    if ptr.is_null() {
+                                        _rt::alloc::handle_alloc_error(layout4);
+                                    }
+                                    ptr
+                                } else {
+                                    {
+                                        ::core::ptr::null_mut()
+                                    }
+                                };
+                                for (i, e) in vec4.into_iter().enumerate() {
+                                    let base = result4.add(i * 16);
+                                    {
+                                        let (t1_0, t1_1) = e;
+                                        let vec2 = t1_0;
+                                        let ptr2 = vec2.as_ptr().cast::<u8>();
+                                        let len2 = vec2.len();
+                                        *base.add(4).cast::<usize>() = len2;
+                                        *base.add(0).cast::<*mut u8>() = ptr2.cast_mut();
+                                        let vec3 = t1_1;
+                                        let ptr3 = vec3.as_ptr().cast::<u8>();
+                                        let len3 = vec3.len();
+                                        *base.add(12).cast::<usize>() = len3;
+                                        *base.add(8).cast::<*mut u8>() = ptr3.cast_mut();
+                                    }
+                                }
+                                cleanup_list.extend_from_slice(&[(result4, layout4)]);
+
+                                (1i32, result4, len4)
+                            }
+                            None => (0i32, ::core::ptr::null_mut(), 0usize),
+                        };
+                        let (result7_0, result7_1, result7_2) = match body_bytes {
+                            Some(e) => {
+                                let vec6 = e;
+                                let ptr6 = vec6.as_ptr().cast::<u8>();
+                                let len6 = vec6.len();
+
+                                (1i32, ptr6.cast_mut(), len6)
+                            }
+                            None => (0i32, ::core::ptr::null_mut(), 0usize),
+                        };
+                        let ptr8 = ret_area.0.as_mut_ptr().cast::<u8>();
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[method]client.send"]
+                            fn wit_import(
+                                _: i32,
+                                _: i32,
+                                _: *mut u8,
+                                _: usize,
+                                _: i32,
+                                _: *mut u8,
+                                _: usize,
+                                _: i32,
+                                _: *mut u8,
+                                _: usize,
+                                _: *mut u8,
+                            );
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import(
+                            _: i32,
+                            _: i32,
+                            _: *mut u8,
+                            _: usize,
+                            _: i32,
+                            _: *mut u8,
+                            _: usize,
+                            _: i32,
+                            _: *mut u8,
+                            _: usize,
+                            _: *mut u8,
+                        ) {
+                            unreachable!()
+                        }
+                        wit_import(
+                            (self).handle() as i32,
+                            method.clone() as i32,
+                            ptr0.cast_mut(),
+                            len0,
+                            result5_0,
+                            result5_1,
+                            result5_2,
+                            result7_0,
+                            result7_1,
+                            result7_2,
+                            ptr8,
+                        );
+                        let l9 = i32::from(*ptr8.add(0).cast::<u8>());
+                        for (ptr, layout) in cleanup_list {
+                            if layout.size() != 0 {
+                                _rt::alloc::dealloc(ptr.cast(), layout);
+                            }
+                        }
+                        match l9 {
+                            0 => {
+                                let e = {
+                                    let l10 = *ptr8.add(4).cast::<i32>();
+
+                                    Response::from_handle(l10 as u32)
+                                };
+                                Ok(e)
+                            }
+                            1 => {
+                                let e = ();
+                                Err(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        }
+                    }
+                }
+            }
+            impl Response {
+                #[allow(unused_unsafe, clippy::all)]
+                pub fn status_code(&self) -> Result<u16, ResponseError> {
+                    unsafe {
+                        #[repr(align(2))]
+                        struct RetArea([::core::mem::MaybeUninit<u8>; 4]);
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 4]);
+                        let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[method]response.status-code"]
+                            fn wit_import(_: i32, _: *mut u8);
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import(_: i32, _: *mut u8) {
+                            unreachable!()
+                        }
+                        wit_import((self).handle() as i32, ptr0);
+                        let l1 = i32::from(*ptr0.add(0).cast::<u8>());
+                        match l1 {
+                            0 => {
+                                let e = {
+                                    let l2 = i32::from(*ptr0.add(2).cast::<u16>());
+
+                                    l2 as u16
+                                };
+                                Ok(e)
+                            }
+                            1 => {
+                                let e = {
+                                    let l3 = i32::from(*ptr0.add(2).cast::<u8>());
+
+                                    ResponseError::_lift(l3 as u8)
+                                };
+                                Err(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        }
+                    }
+                }
+            }
+            impl Response {
+                #[allow(unused_unsafe, clippy::all)]
+                /// Consumes the response when called.
+                pub fn headers(
+                    &self,
+                ) -> Result<_rt::Vec<(_rt::String, _rt::String)>, ResponseError> {
+                    unsafe {
+                        #[repr(align(4))]
+                        struct RetArea([::core::mem::MaybeUninit<u8>; 12]);
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 12]);
+                        let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[method]response.headers"]
+                            fn wit_import(_: i32, _: *mut u8);
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import(_: i32, _: *mut u8) {
+                            unreachable!()
+                        }
+                        wit_import((self).handle() as i32, ptr0);
+                        let l1 = i32::from(*ptr0.add(0).cast::<u8>());
+                        match l1 {
+                            0 => {
+                                let e = {
+                                    let l2 = *ptr0.add(4).cast::<*mut u8>();
+                                    let l3 = *ptr0.add(8).cast::<usize>();
+                                    let base10 = l2;
+                                    let len10 = l3;
+                                    let mut result10 = _rt::Vec::with_capacity(len10);
+                                    for i in 0..len10 {
+                                        let base = base10.add(i * 16);
+                                        let e10 = {
+                                            let l4 = *base.add(0).cast::<*mut u8>();
+                                            let l5 = *base.add(4).cast::<usize>();
+                                            let len6 = l5;
+                                            let bytes6 =
+                                                _rt::Vec::from_raw_parts(l4.cast(), len6, len6);
+                                            let l7 = *base.add(8).cast::<*mut u8>();
+                                            let l8 = *base.add(12).cast::<usize>();
+                                            let len9 = l8;
+                                            let bytes9 =
+                                                _rt::Vec::from_raw_parts(l7.cast(), len9, len9);
+
+                                            (_rt::string_lift(bytes6), _rt::string_lift(bytes9))
+                                        };
+                                        result10.push(e10);
+                                    }
+                                    _rt::cabi_dealloc(base10, len10 * 16, 4);
+
+                                    result10
+                                };
+                                Ok(e)
+                            }
+                            1 => {
+                                let e = {
+                                    let l11 = i32::from(*ptr0.add(4).cast::<u8>());
+
+                                    ResponseError::_lift(l11 as u8)
+                                };
+                                Err(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        }
+                    }
+                }
+            }
+            impl Response {
+                #[allow(unused_unsafe, clippy::all)]
+                /// Consumes the response when called.
+                pub fn bytes(&self) -> Result<_rt::Vec<u8>, ResponseError> {
+                    unsafe {
+                        #[repr(align(4))]
+                        struct RetArea([::core::mem::MaybeUninit<u8>; 12]);
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 12]);
+                        let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
+                        #[cfg(target_arch = "wasm32")]
+                        #[link(wasm_import_module = "midoku:midoku-http/http")]
+                        extern "C" {
+                            #[link_name = "[method]response.bytes"]
+                            fn wit_import(_: i32, _: *mut u8);
+                        }
+
+                        #[cfg(not(target_arch = "wasm32"))]
+                        fn wit_import(_: i32, _: *mut u8) {
+                            unreachable!()
+                        }
+                        wit_import((self).handle() as i32, ptr0);
+                        let l1 = i32::from(*ptr0.add(0).cast::<u8>());
+                        match l1 {
+                            0 => {
+                                let e = {
+                                    let l2 = *ptr0.add(4).cast::<*mut u8>();
+                                    let l3 = *ptr0.add(8).cast::<usize>();
+                                    let len4 = l3;
+
+                                    _rt::Vec::from_raw_parts(l2.cast(), len4, len4)
+                                };
+                                Ok(e)
+                            }
+                            1 => {
+                                let e = {
+                                    let l5 = i32::from(*ptr0.add(4).cast::<u8>());
+
+                                    ResponseError::_lift(l5 as u8)
+                                };
+                                Err(e)
+                            }
+                            _ => _rt::invalid_enum_discriminant(),
+                        }
+                    }
+                }
+            }
+        }
+    }
     pub mod midoku_types {
         #[allow(clippy::all)]
         pub mod chapter {
@@ -823,42 +1391,98 @@ pub mod midoku {
     }
 }
 mod _rt {
-    pub use alloc_crate::alloc;
-    pub use alloc_crate::string::String;
-    pub use alloc_crate::vec::Vec;
-    pub unsafe fn cabi_dealloc(ptr: *mut u8, size: usize, align: usize) {
-        if size == 0 {
-            return;
+
+    use core::fmt;
+    use core::marker;
+    use core::sync::atomic::{AtomicU32, Ordering::Relaxed};
+
+    /// A type which represents a component model resource, either imported or
+    /// exported into this component.
+    ///
+    /// This is a low-level wrapper which handles the lifetime of the resource
+    /// (namely this has a destructor). The `T` provided defines the component model
+    /// intrinsics that this wrapper uses.
+    ///
+    /// One of the chief purposes of this type is to provide `Deref` implementations
+    /// to access the underlying data when it is owned.
+    ///
+    /// This type is primarily used in generated code for exported and imported
+    /// resources.
+    #[repr(transparent)]
+    pub struct Resource<T: WasmResource> {
+        // NB: This would ideally be `u32` but it is not. The fact that this has
+        // interior mutability is not exposed in the API of this type except for the
+        // `take_handle` method which is supposed to in theory be private.
+        //
+        // This represents, almost all the time, a valid handle value. When it's
+        // invalid it's stored as `u32::MAX`.
+        handle: AtomicU32,
+        _marker: marker::PhantomData<T>,
+    }
+
+    /// A trait which all wasm resources implement, namely providing the ability to
+    /// drop a resource.
+    ///
+    /// This generally is implemented by generated code, not user-facing code.
+    pub unsafe trait WasmResource {
+        /// Invokes the `[resource-drop]...` intrinsic.
+        unsafe fn drop(handle: u32);
+    }
+
+    impl<T: WasmResource> Resource<T> {
+        #[doc(hidden)]
+        pub unsafe fn from_handle(handle: u32) -> Self {
+            debug_assert!(handle != u32::MAX);
+            Self {
+                handle: AtomicU32::new(handle),
+                _marker: marker::PhantomData,
+            }
         }
-        let layout = alloc::Layout::from_size_align_unchecked(size, align);
-        alloc::dealloc(ptr as *mut u8, layout);
-    }
-    pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
-        if cfg!(debug_assertions) {
-            String::from_utf8(bytes).unwrap()
-        } else {
-            String::from_utf8_unchecked(bytes)
+
+        /// Takes ownership of the handle owned by `resource`.
+        ///
+        /// Note that this ideally would be `into_handle` taking `Resource<T>` by
+        /// ownership. The code generator does not enable that in all situations,
+        /// unfortunately, so this is provided instead.
+        ///
+        /// Also note that `take_handle` is in theory only ever called on values
+        /// owned by a generated function. For example a generated function might
+        /// take `Resource<T>` as an argument but then call `take_handle` on a
+        /// reference to that argument. In that sense the dynamic nature of
+        /// `take_handle` should only be exposed internally to generated code, not
+        /// to user code.
+        #[doc(hidden)]
+        pub fn take_handle(resource: &Resource<T>) -> u32 {
+            resource.handle.swap(u32::MAX, Relaxed)
+        }
+
+        #[doc(hidden)]
+        pub fn handle(resource: &Resource<T>) -> u32 {
+            resource.handle.load(Relaxed)
         }
     }
 
-    pub fn as_f32<T: AsF32>(t: T) -> f32 {
-        t.as_f32()
-    }
-
-    pub trait AsF32 {
-        fn as_f32(self) -> f32;
-    }
-
-    impl<'a, T: Copy + AsF32> AsF32 for &'a T {
-        fn as_f32(self) -> f32 {
-            (*self).as_f32()
+    impl<T: WasmResource> fmt::Debug for Resource<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("Resource")
+                .field("handle", &self.handle)
+                .finish()
         }
     }
 
-    impl AsF32 for f32 {
-        #[inline]
-        fn as_f32(self) -> f32 {
-            self as f32
+    impl<T: WasmResource> Drop for Resource<T> {
+        fn drop(&mut self) {
+            unsafe {
+                match self.handle.load(Relaxed) {
+                    // If this handle was "taken" then don't do anything in the
+                    // destructor.
+                    u32::MAX => {}
+
+                    // ... but otherwise do actually destroy it with the imported
+                    // component model intrinsic as defined through `T`.
+                    other => T::drop(other),
+                }
+            }
         }
     }
 
@@ -931,6 +1555,51 @@ mod _rt {
             self as i32
         }
     }
+    pub unsafe fn invalid_enum_discriminant<T>() -> T {
+        if cfg!(debug_assertions) {
+            panic!("invalid enum discriminant")
+        } else {
+            core::hint::unreachable_unchecked()
+        }
+    }
+    pub use alloc_crate::alloc;
+    pub use alloc_crate::string::String;
+    pub use alloc_crate::vec::Vec;
+    pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
+        if cfg!(debug_assertions) {
+            String::from_utf8(bytes).unwrap()
+        } else {
+            String::from_utf8_unchecked(bytes)
+        }
+    }
+    pub unsafe fn cabi_dealloc(ptr: *mut u8, size: usize, align: usize) {
+        if size == 0 {
+            return;
+        }
+        let layout = alloc::Layout::from_size_align_unchecked(size, align);
+        alloc::dealloc(ptr as *mut u8, layout);
+    }
+
+    pub fn as_f32<T: AsF32>(t: T) -> f32 {
+        t.as_f32()
+    }
+
+    pub trait AsF32 {
+        fn as_f32(self) -> f32;
+    }
+
+    impl<'a, T: Copy + AsF32> AsF32 for &'a T {
+        fn as_f32(self) -> f32 {
+            (*self).as_f32()
+        }
+    }
+
+    impl AsF32 for f32 {
+        #[inline]
+        fn as_f32(self) -> f32 {
+            self as f32
+        }
+    }
     extern crate alloc as alloc_crate;
 }
 
@@ -965,28 +1634,40 @@ pub(crate) use __export_prelude_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.21.0:prelude:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 993] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xe3\x06\x01A\x02\x01\
-A\x1c\x01B\x02\x01r\x08\x02ids\x05titles\x06volumev\x07chapterv\x0cdata-updatedy\
-\x09scanlators\x03urls\x08languages\x04\0\x07chapter\x03\0\0\x03\x01\x1bmidoku:m\
-idoku-types/chapter\x05\0\x01B\x0c\x01m\x05\x07unknown\x07ongoing\x09completed\x06\
-hiatus\x09cancelled\x04\0\x06status\x03\0\0\x01m\x03\x04safe\x0asuggestive\x04ns\
-fw\x04\0\x0econtent-rating\x03\0\x02\x01m\x04\x0dright-to-left\x0dleft-to-right\x08\
-vertical\x06scroll\x04\0\x0creading-mode\x03\0\x04\x01ps\x01r\x0b\x02ids\x05titl\
-es\x03urls\x0bdescriptions\x09cover-urls\x0bauthor-names\x0bartist-names\x0acate\
-gories\x06\x06status\x01\x0econtent-rating\x03\x0creading-mode\x05\x04\0\x05mang\
-a\x03\0\x07\x01p\x08\x01r\x02\x04page\x09\x08has-more\x7f\x04\0\x0bpage-result\x03\
-\0\x0a\x03\x01\x19midoku:midoku-types/manga\x05\x01\x01B\x02\x01r\x03\x05indexy\x03\
-urls\x05bas64s\x04\0\x04page\x03\0\0\x03\x01\x18midoku:midoku-types/page\x05\x02\
-\x02\x03\0\0\x07chapter\x03\0\x07chapter\x03\0\x03\x02\x03\0\x01\x05manga\x03\0\x05\
-manga\x03\0\x05\x02\x03\0\x01\x0bpage-result\x03\0\x0bpage-result\x03\0\x07\x02\x03\
-\0\x02\x04page\x03\0\x04page\x03\0\x09\x01j\x01\x08\0\x01@\x01\x04pagey\0\x0b\x04\
-\0\x0eget-manga-list\x01\x0c\x01j\x01\x06\0\x01@\x01\x08manga-ids\0\x0d\x04\0\x11\
-get-manga-details\x01\x0e\x01p\x04\x01j\x01\x0f\0\x01@\x01\x08manga-ids\0\x10\x04\
-\0\x10get-chapter-list\x01\x11\x01p\x0a\x01j\x01\x12\0\x01@\x02\x08manga-ids\x0a\
-chapter-ids\0\x13\x04\0\x0dget-page-list\x01\x14\x04\x01\x1dmidoku:example-sourc\
-e/prelude\x04\0\x0b\x0d\x01\0\x07prelude\x03\0\0\0G\x09producers\x01\x0cprocesse\
-d-by\x02\x0dwit-component\x070.201.0\x10wit-bindgen-rust\x060.21.0";
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1517] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xef\x0a\x01A\x02\x01\
+A\x1e\x01B\"\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
+\0\0\x04\0\x06client\x03\x01\x01m\x01\x05moved\x04\0\x0eresponse-error\x03\0\x03\
+\x04\0\x08response\x03\x01\x01i\x02\x01@\0\0\x06\x04\0\x13[constructor]client\x01\
+\x07\x01h\x02\x01j\0\0\x01@\x02\x04self\x08\x07secondsy\0\x09\x04\0$[method]clie\
+nt.set-rate-limit-period\x01\x0a\x01@\x02\x04self\x08\x0aburst-sizey\0\x09\x04\0\
+#[method]client.set-rate-limit-burst\x01\x0b\x01o\x02ss\x01p\x0c\x01k\x0d\x01p}\x01\
+k\x0f\x01i\x05\x01j\x01\x11\0\x01@\x05\x04self\x08\x06method\x01\x03urls\x07head\
+ers\x0e\x0abody-bytes\x10\0\x12\x04\0\x13[method]client.send\x01\x13\x01h\x05\x01\
+j\x01{\x01\x04\x01@\x01\x04self\x14\0\x15\x04\0\x1c[method]response.status-code\x01\
+\x16\x01j\x01\x0d\x01\x04\x01@\x01\x04self\x14\0\x17\x04\0\x18[method]response.h\
+eaders\x01\x18\x01j\x01\x0f\x01\x04\x01@\x01\x04self\x14\0\x19\x04\0\x16[method]\
+response.bytes\x01\x1a\x03\x01\x17midoku:midoku-http/http\x05\0\x01B\x02\x01r\x08\
+\x02ids\x05titles\x06volumev\x07chapterv\x0cdata-updatedy\x09scanlators\x03urls\x08\
+languages\x04\0\x07chapter\x03\0\0\x03\x01\x1bmidoku:midoku-types/chapter\x05\x01\
+\x01B\x0c\x01m\x05\x07unknown\x07ongoing\x09completed\x06hiatus\x09cancelled\x04\
+\0\x06status\x03\0\0\x01m\x03\x04safe\x0asuggestive\x04nsfw\x04\0\x0econtent-rat\
+ing\x03\0\x02\x01m\x04\x0dright-to-left\x0dleft-to-right\x08vertical\x06scroll\x04\
+\0\x0creading-mode\x03\0\x04\x01ps\x01r\x0b\x02ids\x05titles\x03urls\x0bdescript\
+ions\x09cover-urls\x0bauthor-names\x0bartist-names\x0acategories\x06\x06status\x01\
+\x0econtent-rating\x03\x0creading-mode\x05\x04\0\x05manga\x03\0\x07\x01p\x08\x01\
+r\x02\x04page\x09\x08has-more\x7f\x04\0\x0bpage-result\x03\0\x0a\x03\x01\x19mido\
+ku:midoku-types/manga\x05\x02\x01B\x02\x01r\x03\x05indexy\x03urls\x05bas64s\x04\0\
+\x04page\x03\0\0\x03\x01\x18midoku:midoku-types/page\x05\x03\x02\x03\0\x01\x07ch\
+apter\x03\0\x07chapter\x03\0\x04\x02\x03\0\x02\x05manga\x03\0\x05manga\x03\0\x06\
+\x02\x03\0\x02\x0bpage-result\x03\0\x0bpage-result\x03\0\x08\x02\x03\0\x03\x04pa\
+ge\x03\0\x04page\x03\0\x0a\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0c\x04\0\x0eget-m\
+anga-list\x01\x0d\x01j\x01\x07\0\x01@\x01\x08manga-ids\0\x0e\x04\0\x11get-manga-\
+details\x01\x0f\x01p\x05\x01j\x01\x10\0\x01@\x01\x08manga-ids\0\x11\x04\0\x10get\
+-chapter-list\x01\x12\x01p\x0b\x01j\x01\x13\0\x01@\x02\x08manga-ids\x0achapter-i\
+ds\0\x14\x04\0\x0dget-page-list\x01\x15\x04\x01\x1dmidoku:example-source/prelude\
+\x04\0\x0b\x0d\x01\0\x07prelude\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0d\
+wit-component\x070.201.0\x10wit-bindgen-rust\x060.21.0";
 
 #[inline(never)]
 #[doc(hidden)]

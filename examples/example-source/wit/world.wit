@@ -5,6 +5,8 @@ use midoku:midoku-types/manga;
 use midoku:midoku-types/page;
 
 world prelude {
+    import midoku:midoku-http/http;
+
     use chapter.{chapter};
     use manga.{manga, page-result};
     use page.{page};
