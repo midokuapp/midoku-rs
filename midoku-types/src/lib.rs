@@ -1,2 +1,3 @@
-#[allow(warnings)]
-mod bindings;
+pub mod chapter;
+pub mod manga;
+pub mod page;

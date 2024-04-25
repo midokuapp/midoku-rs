@@ -1,7 +1,0 @@
-package midoku:midoku-types;
-
-world types {
-    export chapter;
-    export manga;
-    export page;
-}

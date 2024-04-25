@@ -6,11 +6,9 @@ publish.workspace = true
 license.workspace = true
 
 [dependencies]
-bitflags = "2.5.0"
-wit-bindgen-rt = "0.24.0"
+wasmtime = "20.0.0"
+witgen_macro = "0.15.0"
 
-[lib]
-crate-type = ["cdylib"]
-
-[package.metadata.component]
-package = "component:midoku-types"
+[build-dependencies]
+anyhow = "1.0.82"
+cargo-witgen = "0.15.0"
