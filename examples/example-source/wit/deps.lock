@@ -1,0 +1,4 @@
+[midoku]
+path = "../../../wit"
+sha256 = "d360dda913a2a1303281c94af70ef32ca6869d14bf7b84c7b97b188df6f87cfa"
+sha512 = "78e7ef320206858e69999073346a7de24f8aab3aa352ae330f6fef1ae2dd12b6b288b7b87c030da04aaa9bcf467f53667fa0eaf9eaf5fff4edd460f7ca15c63f"

@@ -5,8 +5,11 @@ edition = "2021"
 publish = false
 
 [dependencies]
-bitflags = "2.5.0"
-wit-bindgen-rt = "0.24.0"
+wit-bindgen-rt = { version = "0.24.0", features = ["bitflags"] }
+
+[build-dependencies]
+anyhow = "1.0.82"
+wit-deps = "0.3.1"
 
 [lib]
 crate-type = ["cdylib"]
@@ -15,5 +18,4 @@ crate-type = ["cdylib"]
 package = "midoku:example-source"
 
 [package.metadata.component.target.dependencies]
-"midoku:midoku-http" = { path = "../../midoku-http/wit" }
-"midoku:midoku-types" = { path = "../../midoku-types/wit" }
+"midoku:types" = { path = "wit/deps/midoku" }

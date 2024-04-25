@@ -1,18 +1,16 @@
 package midoku:example-source;
 
-use midoku:midoku-types/chapter;
-use midoku:midoku-types/manga;
-use midoku:midoku-types/page;
+interface api {
+    use midoku:types/types.{chapter, manga, page};
 
-world prelude {
-    import midoku:midoku-http/http;
+    get-manga-list: func(page: u32) -> result<tuple<list<manga>, bool>>;
+    get-manga-details: func(manga-id: string) -> result<manga>;
+    get-chapter-list: func(manga-id: string) -> result<list<chapter>>;
+    get-page-list: func(manga-id: string, chapter-id: string) -> result<list<page>>;
+}
 
-    use chapter.{chapter};
-    use manga.{manga, page-result};
-    use page.{page};
+world endpoints {
+    export midoku:types/types;
 
-    export get-manga-list: func(page: u32) -> result<page-result>;
-    export get-manga-details: func(manga-id: string) -> result<manga>;
-    export get-chapter-list: func(manga-id: string) -> result<list<chapter>>;
-    export get-page-list: func(manga-id: string, chapter-id: string) -> result<list<page>>;
+    export api;
 }
