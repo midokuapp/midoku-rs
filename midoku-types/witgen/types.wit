@@ -1,5 +1,5 @@
 // auto-generated file by the build script from midoku-types
-package midoku:types;
+package midoku:types@0.1.0;
 
 interface types {
 record chapter {
