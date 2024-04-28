@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["midoku-*", "examples/*"]
+members = ["midoku-types", "examples/*"]
 
 [workspace.package]
 version = "0.1.0"
