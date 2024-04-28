@@ -30,3 +30,22 @@ Unlike `aidoku-rs`, this project leverages the latest version of WASI
 - [ ] Add tests
 - [ ] Add CI/CD pipeline for documentation and tests
 - [ ] Add more helper crates (e.g. `midoku-http` for handling HTTP requests)
+
+## Building
+
+To build a module, run the following command:
+
+```sh
+cargo component build --release --package example-source --target wasm32-unknown-unknow
+```
+
+Replace `example-source` with the name of the module you want to build.
+
+You can also build all modules at once by running:
+
+```sh
+cargo component build --release --workspace --target wasm32-unknown-unknown
+```
+
+Make sure to target `wasm32-unknown-unknown` since we do not want unwanted
+WASI dependencies in our modules (`wasm32-wasi` is targeted by default).

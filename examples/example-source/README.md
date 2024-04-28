@@ -19,3 +19,12 @@ strip = true
 lto = true
 codegen-units = 1
 ```
+
+Then, run the following command:
+
+```sh
+cargo component build --release --package example-source --target wasm32-unknown-unknown
+```
+
+Make sure to target `wasm32-unknown-unknown` since we do not want unwanted
+WASI dependencies in our modules (`wasm32-wasi` is targeted by default).
