@@ -36,7 +36,7 @@ Unlike `aidoku-rs`, this project leverages the latest version of WASI
 To build a module, run the following command:
 
 ```sh
-cargo component build --release --package example-source --target wasm32-unknown-unknow
+cargo component build --release --package example-source --target wasm32-unknown-unknown
 ```
 
 Replace `example-source` with the name of the module you want to build.
