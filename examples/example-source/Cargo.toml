@@ -18,4 +18,6 @@ crate-type = ["cdylib"]
 package = "midoku:example-source"
 
 [package.metadata.component.target.dependencies]
-"midoku:types" = { path = "wit/deps/midoku" }
+"midoku:http" = { path = "wit/deps/midoku-http" }
+"midoku:limiter" = { path = "wit/deps/midoku-limiter" }
+"midoku:types" = { path = "wit/deps/midoku-types" }
