@@ -1,6 +1,7 @@
-package midoku:midoku-http;
+package midoku:http@0.1.0;
 
-interface http {
+interface types {
+    /// Represents an HTTP method.
     enum method {
         get,
         post,
@@ -9,34 +10,48 @@ interface http {
         delete,
     }
 
-    resource client {
-        constructor();
-        /// Sets the duration to replenish one burst or one cell if not initialized yet.
-        set-rate-limit-period: func(seconds: u32) -> result;
-        /// Sets the burst size for the set period or 1 second if not initialized yet.
-        set-rate-limit-burst: func(burst-size: u32) -> result;
-        /// Makes the HTTP request synchronously.
-        send: func(
-            method: method,
-            url: string,
-            headers: option<list<tuple<string, string>>>,
-            body-bytes: option<list<u8>>
-        ) -> result<response>;
-    }
+    /// Represents a response from an HTTP request.
+    resource incoming-response {
+        /// Returns the status code of the response.
+        /// 
+        /// Returns `Err` if `bytes` has already been called.
+        status-code: func() -> result<u16>;
 
-    enum response-error {
-        moved,
-    }
+        /// Returns the headers of the response.
+        /// 
+        /// Returns `Err` if `bytes` has already been called.
+        headers: func() -> result<list<tuple<string, string>>>;
 
-    resource response {
-        status-code: func() -> result<u16, response-error>;
+        /// Returns the bytes of the response.
+        /// 
         /// Consumes the response when called.
-        headers: func() -> result<list<tuple<string, string>>, response-error>;
-        /// Consumes the response when called.
-        bytes: func() -> result<list<u8>, response-error>;
+        /// Returns `Err` if `bytes` has already been called.
+        bytes: func() -> result<list<u8>>;
     }
 }
 
-world prelude {
-    export http;
+interface outgoing-handler {
+    use types.{method, incoming-response};
+
+    /// Sends an HTTP request.
+    /// 
+    /// The `url` must be a valid URL.
+    /// 
+    /// The `headers` must be a list of tuples where the first element is the
+    /// header name and the second element is the header value.
+    /// 
+    /// The `body` must be a list of bytes.
+    /// 
+    /// Returns the response from the server.
+    handle: func(
+        method: method,
+        url: string,
+        headers: option<list<tuple<string, string>>>,
+        body: option<list<u8>>
+    ) -> result<incoming-response>;
+}
+
+world proxy {
+    // export types;
+    export outgoing-handler;
 }
