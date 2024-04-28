@@ -7,3 +7,13 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 license = "GPL-3.0-or-later"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+strip = true
+lto = true
+codegen-units = 1
