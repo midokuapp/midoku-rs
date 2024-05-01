@@ -1,3 +1,3 @@
 midoku-http = "../../../midoku-http/wit"
 midoku-limiter = "../../../midoku-limiter/wit"
-midoku-types = "../../../midoku-types/witgen"
+midoku-types = "../../../midoku-types/wit"

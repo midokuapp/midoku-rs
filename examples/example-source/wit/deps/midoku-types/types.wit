@@ -1,60 +1,61 @@
-// auto-generated file by the build script from midoku-types
 package midoku:types@0.1.0;
 
 interface types {
-record chapter {
-  id: string,
-  title: string,
-  volume: float32,
-  chapter: float32,
-  /// The date the chapter was last updated. This is a Unix timestamp in seconds.
-  data-updated: u32,
-  scanlator: string,
-  url: string,
-  language: string
-}
+    record chapter {
+        id: string,
+        title: string,
+        volume: f32,
+        chapter: f32,
 
-enum status {
-  unknown,
-  ongoing,
-  completed,
-  hiatus,
-  cancelled,
-}
+        /// The date the chapter was last updated. This is a Unix timestamp in seconds.
+        data-updated: u32,
+        scanlator: string,
+        url: string,
+        language: string,
+    }
 
-enum content-rating {
-  safe,
-  suggestive,
-  nsfw,
-}
+    enum status {
+        unknown,
+        ongoing,
+        completed,
+        hiatus,
+        cancelled,
+    }
 
-enum reading-mode {
-  right-to-left,
-  left-to-right,
-  vertical,
-  scroll,
-}
+    enum content-rating {
+        safe,
+        suggestive,
+        nsfw,
+    }
 
-record manga {
-  id: string,
-  title: string,
-  url: string,
-  description: string,
-  cover-url: string,
-  author-name: string,
-  artist-name: string,
-  categories: list<string>,
-  status: status,
-  content-rating: content-rating,
-  reading-mode: reading-mode
-}
+    enum reading-mode {
+        right-to-left,
+        left-to-right,
+        vertical,
+        scroll,
+    }
 
-record page {
-  index: u32,
-  url: string,
-  /// The base64-encoded data of the page.
-  base64: list<u8>
-}
+    record manga {
+        id: string,
+        title: string,
+        url: string,
+        description: string,
+        cover-url: string,
+        author-name: string,
+        artist-name: string,
+        categories: list<string>,
+        status: status,
+        content-rating: content-rating,
+        reading-mode: reading-mode,
+    }
+
+    record page {
+        index: u32,
+        url: string,
+
+        /// The base64-encoded data of the page.
+        bas64: string,
+    }
 }
 
 world prelude {

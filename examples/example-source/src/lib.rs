@@ -27,7 +27,7 @@ impl Guest for Component {
         let response: IncomingResponse = handle(Method::Get, &url, None, None)?;
 
         // Get the response bytes
-        let _bytes: Vec<u8> = response.bytes()?;
+        let _bytes: Vec<u8> = response.bytes();
 
         // Parse the response bytes into a list of manga with serde or similar
         // library. This is just a placeholder to show how to use the response.

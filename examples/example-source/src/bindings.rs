@@ -101,55 +101,32 @@ pub mod midoku {
             impl IncomingResponse {
                 #[allow(unused_unsafe, clippy::all)]
                 /// Returns the status code of the response.
-                ///
-                /// Returns `Err` if `bytes` has already been called.
-                pub fn status_code(&self) -> Result<u16, ()> {
+                pub fn status_code(&self) -> u16 {
                     unsafe {
-                        #[repr(align(2))]
-                        struct RetArea([::core::mem::MaybeUninit<u8>; 4]);
-                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 4]);
-                        let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                         #[cfg(target_arch = "wasm32")]
                         #[link(wasm_import_module = "midoku:http/types@0.1.0")]
                         extern "C" {
                             #[link_name = "[method]incoming-response.status-code"]
-                            fn wit_import(_: i32, _: *mut u8);
+                            fn wit_import(_: i32) -> i32;
                         }
 
                         #[cfg(not(target_arch = "wasm32"))]
-                        fn wit_import(_: i32, _: *mut u8) {
+                        fn wit_import(_: i32) -> i32 {
                             unreachable!()
                         }
-                        wit_import((self).handle() as i32, ptr0);
-                        let l1 = i32::from(*ptr0.add(0).cast::<u8>());
-                        match l1 {
-                            0 => {
-                                let e = {
-                                    let l2 = i32::from(*ptr0.add(2).cast::<u16>());
-
-                                    l2 as u16
-                                };
-                                Ok(e)
-                            }
-                            1 => {
-                                let e = ();
-                                Err(e)
-                            }
-                            _ => _rt::invalid_enum_discriminant(),
-                        }
+                        let ret = wit_import((self).handle() as i32);
+                        ret as u16
                     }
                 }
             }
             impl IncomingResponse {
                 #[allow(unused_unsafe, clippy::all)]
                 /// Returns the headers of the response.
-                ///
-                /// Returns `Err` if `bytes` has already been called.
-                pub fn headers(&self) -> Result<_rt::Vec<(_rt::String, _rt::String)>, ()> {
+                pub fn headers(&self) -> _rt::Vec<(_rt::String, _rt::String)> {
                     unsafe {
                         #[repr(align(4))]
-                        struct RetArea([::core::mem::MaybeUninit<u8>; 12]);
-                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 12]);
+                        struct RetArea([::core::mem::MaybeUninit<u8>; 8]);
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 8]);
                         let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                         #[cfg(target_arch = "wasm32")]
                         #[link(wasm_import_module = "midoku:http/types@0.1.0")]
@@ -163,59 +140,40 @@ pub mod midoku {
                             unreachable!()
                         }
                         wit_import((self).handle() as i32, ptr0);
-                        let l1 = i32::from(*ptr0.add(0).cast::<u8>());
-                        match l1 {
-                            0 => {
-                                let e = {
-                                    let l2 = *ptr0.add(4).cast::<*mut u8>();
-                                    let l3 = *ptr0.add(8).cast::<usize>();
-                                    let base10 = l2;
-                                    let len10 = l3;
-                                    let mut result10 = _rt::Vec::with_capacity(len10);
-                                    for i in 0..len10 {
-                                        let base = base10.add(i * 16);
-                                        let e10 = {
-                                            let l4 = *base.add(0).cast::<*mut u8>();
-                                            let l5 = *base.add(4).cast::<usize>();
-                                            let len6 = l5;
-                                            let bytes6 =
-                                                _rt::Vec::from_raw_parts(l4.cast(), len6, len6);
-                                            let l7 = *base.add(8).cast::<*mut u8>();
-                                            let l8 = *base.add(12).cast::<usize>();
-                                            let len9 = l8;
-                                            let bytes9 =
-                                                _rt::Vec::from_raw_parts(l7.cast(), len9, len9);
+                        let l1 = *ptr0.add(0).cast::<*mut u8>();
+                        let l2 = *ptr0.add(4).cast::<usize>();
+                        let base9 = l1;
+                        let len9 = l2;
+                        let mut result9 = _rt::Vec::with_capacity(len9);
+                        for i in 0..len9 {
+                            let base = base9.add(i * 16);
+                            let e9 = {
+                                let l3 = *base.add(0).cast::<*mut u8>();
+                                let l4 = *base.add(4).cast::<usize>();
+                                let len5 = l4;
+                                let bytes5 = _rt::Vec::from_raw_parts(l3.cast(), len5, len5);
+                                let l6 = *base.add(8).cast::<*mut u8>();
+                                let l7 = *base.add(12).cast::<usize>();
+                                let len8 = l7;
+                                let bytes8 = _rt::Vec::from_raw_parts(l6.cast(), len8, len8);
 
-                                            (_rt::string_lift(bytes6), _rt::string_lift(bytes9))
-                                        };
-                                        result10.push(e10);
-                                    }
-                                    _rt::cabi_dealloc(base10, len10 * 16, 4);
-
-                                    result10
-                                };
-                                Ok(e)
-                            }
-                            1 => {
-                                let e = ();
-                                Err(e)
-                            }
-                            _ => _rt::invalid_enum_discriminant(),
+                                (_rt::string_lift(bytes5), _rt::string_lift(bytes8))
+                            };
+                            result9.push(e9);
                         }
+                        _rt::cabi_dealloc(base9, len9 * 16, 4);
+                        result9
                     }
                 }
             }
             impl IncomingResponse {
                 #[allow(unused_unsafe, clippy::all)]
                 /// Returns the bytes of the response.
-                ///
-                /// Consumes the response when called.
-                /// Returns `Err` if `bytes` has already been called.
-                pub fn bytes(&self) -> Result<_rt::Vec<u8>, ()> {
+                pub fn bytes(&self) -> _rt::Vec<u8> {
                     unsafe {
                         #[repr(align(4))]
-                        struct RetArea([::core::mem::MaybeUninit<u8>; 12]);
-                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 12]);
+                        struct RetArea([::core::mem::MaybeUninit<u8>; 8]);
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 8]);
                         let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                         #[cfg(target_arch = "wasm32")]
                         #[link(wasm_import_module = "midoku:http/types@0.1.0")]
@@ -229,24 +187,10 @@ pub mod midoku {
                             unreachable!()
                         }
                         wit_import((self).handle() as i32, ptr0);
-                        let l1 = i32::from(*ptr0.add(0).cast::<u8>());
-                        match l1 {
-                            0 => {
-                                let e = {
-                                    let l2 = *ptr0.add(4).cast::<*mut u8>();
-                                    let l3 = *ptr0.add(8).cast::<usize>();
-                                    let len4 = l3;
-
-                                    _rt::Vec::from_raw_parts(l2.cast(), len4, len4)
-                                };
-                                Ok(e)
-                            }
-                            1 => {
-                                let e = ();
-                                Err(e)
-                            }
-                            _ => _rt::invalid_enum_discriminant(),
-                        }
+                        let l1 = *ptr0.add(0).cast::<*mut u8>();
+                        let l2 = *ptr0.add(4).cast::<usize>();
+                        let len3 = l2;
+                        _rt::Vec::from_raw_parts(l1.cast(), len3, len3)
                     }
                 }
             }
@@ -1110,7 +1054,7 @@ pub mod exports {
                             for (i, e) in vec7.into_iter().enumerate() {
                                 let base = result7.add(i * 20);
                                 {
-                                    let super::super::super::super::exports::midoku::types::types::Page{ index:index4, url:url4, base64:base644, } = e;
+                                    let super::super::super::super::exports::midoku::types::types::Page{ index:index4, url:url4, bas64:bas644, } = e;
                                     *base.add(0).cast::<i32>() = _rt::as_i32(index4);
                                     let vec5 = (url4.into_bytes()).into_boxed_slice();
                                     let ptr5 = vec5.as_ptr().cast::<u8>();
@@ -1118,7 +1062,7 @@ pub mod exports {
                                     ::core::mem::forget(vec5);
                                     *base.add(8).cast::<usize>() = len5;
                                     *base.add(4).cast::<*mut u8>() = ptr5.cast_mut();
-                                    let vec6 = (base644).into_boxed_slice();
+                                    let vec6 = (bas644.into_bytes()).into_boxed_slice();
                                     let ptr6 = vec6.as_ptr().cast::<u8>();
                                     let len6 = vec6.len();
                                     ::core::mem::forget(vec6);
@@ -1141,24 +1085,22 @@ pub mod exports {
                     let l0 = i32::from(*arg0.add(0).cast::<u8>());
                     match l0 {
                         0 => {
-                            let l6 = *arg0.add(4).cast::<*mut u8>();
-                            let l7 = *arg0.add(8).cast::<usize>();
-                            let base8 = l6;
-                            let len8 = l7;
-                            for i in 0..len8 {
-                                let base = base8.add(i * 20);
+                            let l5 = *arg0.add(4).cast::<*mut u8>();
+                            let l6 = *arg0.add(8).cast::<usize>();
+                            let base7 = l5;
+                            let len7 = l6;
+                            for i in 0..len7 {
+                                let base = base7.add(i * 20);
                                 {
                                     let l1 = *base.add(4).cast::<*mut u8>();
                                     let l2 = *base.add(8).cast::<usize>();
                                     _rt::cabi_dealloc(l1, l2, 1);
                                     let l3 = *base.add(12).cast::<*mut u8>();
                                     let l4 = *base.add(16).cast::<usize>();
-                                    let base5 = l3;
-                                    let len5 = l4;
-                                    _rt::cabi_dealloc(base5, len5 * 1, 1);
+                                    _rt::cabi_dealloc(l3, l4, 1);
                                 }
                             }
-                            _rt::cabi_dealloc(base8, len8 * 20, 4);
+                            _rt::cabi_dealloc(base7, len7 * 20, 4);
                         }
                         _ => (),
                     }
@@ -1411,14 +1353,14 @@ pub mod exports {
                     pub index: u32,
                     pub url: _rt::String,
                     /// The base64-encoded data of the page.
-                    pub base64: _rt::Vec<u8>,
+                    pub bas64: _rt::String,
                 }
                 impl ::core::fmt::Debug for Page {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("Page")
                             .field("index", &self.index)
                             .field("url", &self.url)
-                            .field("base64", &self.base64)
+                            .field("bas64", &self.bas64)
                             .finish()
                     }
                 }
@@ -1530,13 +1472,6 @@ mod _rt {
             }
         }
     }
-    pub unsafe fn invalid_enum_discriminant<T>() -> T {
-        if cfg!(debug_assertions) {
-            panic!("invalid enum discriminant")
-        } else {
-            core::hint::unreachable_unchecked()
-        }
-    }
     pub use alloc_crate::string::String;
     pub use alloc_crate::vec::Vec;
     pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
@@ -1554,6 +1489,13 @@ mod _rt {
         alloc::dealloc(ptr as *mut u8, layout);
     }
     pub use alloc_crate::alloc;
+    pub unsafe fn invalid_enum_discriminant<T>() -> T {
+        if cfg!(debug_assertions) {
+            panic!("invalid enum discriminant")
+        } else {
+            core::hint::unreachable_unchecked()
+        }
+    }
 
     pub fn as_i32<T: AsI32>(t: T) -> i32 {
         t.as_i32()
@@ -1696,42 +1638,42 @@ pub(crate) use __export_endpoints_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:endpoints:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1580] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xac\x0b\x01A\x02\x01\
-A\x0f\x01B\x10\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
-\0\0\x04\0\x11incoming-response\x03\x01\x01h\x02\x01j\x01{\0\x01@\x01\x04self\x03\
-\0\x04\x04\0%[method]incoming-response.status-code\x01\x05\x01o\x02ss\x01p\x06\x01\
-j\x01\x07\0\x01@\x01\x04self\x03\0\x08\x04\0![method]incoming-response.headers\x01\
-\x09\x01p}\x01j\x01\x0a\0\x01@\x01\x04self\x03\0\x0b\x04\0\x1f[method]incoming-r\
-esponse.bytes\x01\x0c\x03\x01\x17midoku:http/types@0.1.0\x05\0\x02\x03\0\0\x06me\
-thod\x02\x03\0\0\x11incoming-response\x01B\x0d\x02\x03\x02\x01\x01\x04\0\x06meth\
-od\x03\0\0\x02\x03\x02\x01\x02\x04\0\x11incoming-response\x03\0\x02\x01o\x02ss\x01\
-p\x04\x01k\x05\x01p}\x01k\x07\x01i\x03\x01j\x01\x09\0\x01@\x04\x06method\x01\x03\
-urls\x07headers\x06\x04body\x08\0\x0a\x04\0\x06handle\x01\x0b\x03\x01\"midoku:ht\
-tp/outgoing-handler@0.1.0\x05\x03\x01B\x0d\x01ky\x01@\0\0\0\x04\0\x05burst\x01\x01\
-\x04\0\x09period-ms\x01\x01\x01j\0\0\x01@\x01\x05bursty\0\x02\x04\0\x09set-burst\
-\x01\x03\x01@\x01\x09period-msy\0\x02\x04\0\x0dset-period-ms\x01\x04\x01@\0\0\x7f\
-\x04\0\x05ready\x01\x05\x01@\0\x01\0\x04\0\x05block\x01\x06\x03\x01!midoku:limit\
-er/rate-limiter@0.1.0\x05\x04\x01B\x0e\x01r\x08\x02ids\x05titles\x06volumev\x07c\
-hapterv\x0cdata-updatedy\x09scanlators\x03urls\x08languages\x04\0\x07chapter\x03\
-\0\0\x01m\x05\x07unknown\x07ongoing\x09completed\x06hiatus\x09cancelled\x04\0\x06\
-status\x03\0\x02\x01m\x03\x04safe\x0asuggestive\x04nsfw\x04\0\x0econtent-rating\x03\
-\0\x04\x01m\x04\x0dright-to-left\x0dleft-to-right\x08vertical\x06scroll\x04\0\x0c\
-reading-mode\x03\0\x06\x01ps\x01r\x0b\x02ids\x05titles\x03urls\x0bdescriptions\x09\
-cover-urls\x0bauthor-names\x0bartist-names\x0acategories\x08\x06status\x03\x0eco\
-ntent-rating\x05\x0creading-mode\x07\x04\0\x05manga\x03\0\x09\x01p}\x01r\x03\x05\
-indexy\x03urls\x06base64\x0b\x04\0\x04page\x03\0\x0c\x04\x01\x18midoku:types/typ\
-es@0.1.0\x05\x05\x02\x03\0\x03\x07chapter\x02\x03\0\x03\x05manga\x02\x03\0\x03\x04\
-page\x01B\x19\x02\x03\x02\x01\x06\x04\0\x07chapter\x03\0\0\x02\x03\x02\x01\x07\x04\
-\0\x05manga\x03\0\x02\x02\x03\x02\x01\x08\x04\0\x04page\x03\0\x04\x01j\0\0\x01@\0\
-\0\x06\x04\0\x0ainitialize\x01\x07\x01p\x03\x01o\x02\x08\x7f\x01j\x01\x09\0\x01@\
-\x01\x04pagey\0\x0a\x04\0\x0eget-manga-list\x01\x0b\x01j\x01\x03\0\x01@\x01\x08m\
-anga-ids\0\x0c\x04\0\x11get-manga-details\x01\x0d\x01p\x01\x01j\x01\x0e\0\x01@\x01\
-\x08manga-ids\0\x0f\x04\0\x10get-chapter-list\x01\x10\x01p\x05\x01j\x01\x11\0\x01\
-@\x02\x08manga-ids\x0achapter-ids\0\x12\x04\0\x0dget-page-list\x01\x13\x04\x01\x1f\
-midoku:example-source/api@0.1.0\x05\x09\x04\x01%midoku:example-source/endpoints@\
-0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09producers\x01\x0cprocessed-\
-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rust\x060.24.0";
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1561] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x99\x0b\x01A\x02\x01\
+A\x0f\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
+\0\0\x04\0\x11incoming-response\x03\x01\x01h\x02\x01@\x01\x04self\x03\0{\x04\0%[\
+method]incoming-response.status-code\x01\x04\x01o\x02ss\x01p\x05\x01@\x01\x04sel\
+f\x03\0\x06\x04\0![method]incoming-response.headers\x01\x07\x01p}\x01@\x01\x04se\
+lf\x03\0\x08\x04\0\x1f[method]incoming-response.bytes\x01\x09\x03\x01\x17midoku:\
+http/types@0.1.0\x05\0\x02\x03\0\0\x06method\x02\x03\0\0\x11incoming-response\x01\
+B\x0d\x02\x03\x02\x01\x01\x04\0\x06method\x03\0\0\x02\x03\x02\x01\x02\x04\0\x11i\
+ncoming-response\x03\0\x02\x01o\x02ss\x01p\x04\x01k\x05\x01p}\x01k\x07\x01i\x03\x01\
+j\x01\x09\0\x01@\x04\x06method\x01\x03urls\x07headers\x06\x04body\x08\0\x0a\x04\0\
+\x06handle\x01\x0b\x03\x01\"midoku:http/outgoing-handler@0.1.0\x05\x03\x01B\x0d\x01\
+ky\x01@\0\0\0\x04\0\x05burst\x01\x01\x04\0\x09period-ms\x01\x01\x01j\0\0\x01@\x01\
+\x05bursty\0\x02\x04\0\x09set-burst\x01\x03\x01@\x01\x09period-msy\0\x02\x04\0\x0d\
+set-period-ms\x01\x04\x01@\0\0\x7f\x04\0\x05ready\x01\x05\x01@\0\x01\0\x04\0\x05\
+block\x01\x06\x03\x01!midoku:limiter/rate-limiter@0.1.0\x05\x04\x01B\x0d\x01r\x08\
+\x02ids\x05titles\x06volumev\x07chapterv\x0cdata-updatedy\x09scanlators\x03urls\x08\
+languages\x04\0\x07chapter\x03\0\0\x01m\x05\x07unknown\x07ongoing\x09completed\x06\
+hiatus\x09cancelled\x04\0\x06status\x03\0\x02\x01m\x03\x04safe\x0asuggestive\x04\
+nsfw\x04\0\x0econtent-rating\x03\0\x04\x01m\x04\x0dright-to-left\x0dleft-to-righ\
+t\x08vertical\x06scroll\x04\0\x0creading-mode\x03\0\x06\x01ps\x01r\x0b\x02ids\x05\
+titles\x03urls\x0bdescriptions\x09cover-urls\x0bauthor-names\x0bartist-names\x0a\
+categories\x08\x06status\x03\x0econtent-rating\x05\x0creading-mode\x07\x04\0\x05\
+manga\x03\0\x09\x01r\x03\x05indexy\x03urls\x05bas64s\x04\0\x04page\x03\0\x0b\x04\
+\x01\x18midoku:types/types@0.1.0\x05\x05\x02\x03\0\x03\x07chapter\x02\x03\0\x03\x05\
+manga\x02\x03\0\x03\x04page\x01B\x19\x02\x03\x02\x01\x06\x04\0\x07chapter\x03\0\0\
+\x02\x03\x02\x01\x07\x04\0\x05manga\x03\0\x02\x02\x03\x02\x01\x08\x04\0\x04page\x03\
+\0\x04\x01j\0\0\x01@\0\0\x06\x04\0\x0ainitialize\x01\x07\x01p\x03\x01o\x02\x08\x7f\
+\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\x0eget-manga-list\x01\x0b\x01j\x01\
+\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11get-manga-details\x01\x0d\x01p\x01\x01\
+j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\0\x10get-chapter-list\x01\x10\x01p\x05\
+\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0achapter-ids\0\x12\x04\0\x0dget-page-lis\
+t\x01\x13\x04\x01\x1fmidoku:example-source/api@0.1.0\x05\x09\x04\x01%midoku:exam\
+ple-source/endpoints@0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09produc\
+ers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rust\x060\
+.24.0";
 
 #[inline(never)]
 #[doc(hidden)]
