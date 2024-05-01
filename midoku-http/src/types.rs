@@ -22,6 +22,14 @@ pub struct IncomingResponse {
 }
 
 impl IncomingResponse {
+    pub(crate) fn new(status_code: u16, headers: Vec<(String, String)>, bytes: Vec<u8>) -> Self {
+        IncomingResponse {
+            status_code,
+            headers,
+            bytes,
+        }
+    }
+
     pub fn status_code(&self) -> u16 {
         self.status_code
     }
