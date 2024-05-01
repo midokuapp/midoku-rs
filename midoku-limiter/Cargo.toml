@@ -1,0 +1,10 @@
+[package]
+name = "midoku-limiter"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+
+[dependencies]
+futures = "0.3.30"
+governor = { version = "0.6.3", default_features = false, features = ["std"] }
