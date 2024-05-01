@@ -1640,8 +1640,8 @@ pub(crate) use __export_endpoints_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:endpoints:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1559] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x97\x0b\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1562] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x9a\x0b\x01A\x02\x01\
 A\x0f\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
 \0\0\x04\0\x11incoming-response\x03\x01\x01h\x02\x01@\x01\x04self\x03\0{\x04\0%[\
 method]incoming-response.status-code\x01\x04\x01o\x02ss\x01p\x05\x01@\x01\x04sel\
@@ -1672,8 +1672,8 @@ o\x02\x08\x7f\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\x0eget-manga-list\x01
 \x0b\x01j\x01\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11get-manga-details\x01\x0d\
 \x01p\x01\x01j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\0\x10get-chapter-list\x01\
 \x10\x01p\x05\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0achapter-ids\0\x12\x04\0\x0d\
-get-page-list\x01\x13\x04\x01\x19midoku:bindings/api@0.1.0\x05\x09\x04\x01%midok\
-u:example-source/endpoints@0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09\
+get-page-list\x01\x13\x04\x01\x19midoku:bindings/api@0.1.0\x05\x09\x04\x01(midok\
+u:example-extension/endpoints@0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09\
 producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rus\
 t\x060.24.0";
 

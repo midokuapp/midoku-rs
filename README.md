@@ -33,15 +33,15 @@ Unlike `aidoku-rs`, this project leverages the latest version of WASI
 
 ## Building
 
-To build a module, run the following command:
+To build an extension, run the following command:
 
 ```sh
-cargo component build --release --package example-source --target wasm32-unknown-unknown
+cargo component build --release --package example-extension --target wasm32-unknown-unknown
 ```
 
-Replace `example-source` with the name of the module you want to build.
+Replace `example-extension` with the name of the extension you want to build.
 
-You can also build all modules at once by running:
+You can also build all extensions at once by running:
 
 ```sh
 cargo component build --release --workspace --target wasm32-unknown-unknown

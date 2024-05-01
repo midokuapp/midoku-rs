@@ -1,11 +1,11 @@
-# `example-source`
+# `example-extension`
 
-This is an example source for Midoku. It demonstrates how use the helper
+This is an example extension for Midoku. It demonstrates how use the helper
 functions provided by the `midoku-*` packages to create a source.
 
 ## Building
 
-To build this module, you need the following `profile` configuration in your
+To build this extension, you need the following `profile` configuration in your
 workspace's `Cargo.toml`:
 
 ```toml
@@ -23,7 +23,7 @@ codegen-units = 1
 Then, run the following command:
 
 ```sh
-cargo component build --release --package example-source --target wasm32-unknown-unknown
+cargo component build --release --package example-extension --target wasm32-unknown-unknown
 ```
 
 Make sure to target `wasm32-unknown-unknown` since we do not want unwanted

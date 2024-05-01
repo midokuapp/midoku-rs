@@ -1,5 +1,5 @@
 [package]
-name = "example-source"
+name = "example-extension"
 version = "0.1.0"
 edition = "2021"
 publish = false
@@ -14,7 +14,7 @@ wit-deps = "0.3.1"
 crate-type = ["cdylib"]
 
 [package.metadata.component]
-package = "midoku:example-source"
+package = "midoku:example-extension"
 
 [package.metadata.component.target.dependencies]
 "midoku:bindings" = { path = "wit/deps/midoku-bindings" }
