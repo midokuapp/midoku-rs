@@ -7,8 +7,3 @@ license.workspace = true
 
 [dependencies]
 wasmtime = "20.0.0"
-witgen_macro = "0.15.0"
-
-[build-dependencies]
-anyhow = "1.0.82"
-cargo-witgen = "0.15.0"

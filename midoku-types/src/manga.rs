@@ -1,9 +1,7 @@
 use wasmtime::component::{ComponentType, Lift, Lower};
-use witgen_macro::witgen;
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(enum)]
-#[witgen]
 pub enum Status {
     #[component(name = "unknown")]
     Unknown,
@@ -19,7 +17,6 @@ pub enum Status {
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(enum)]
-#[witgen]
 pub enum ContentRating {
     #[component(name = "safe")]
     Safe,
@@ -31,7 +28,6 @@ pub enum ContentRating {
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(enum)]
-#[witgen]
 pub enum ReadingMode {
     #[component(name = "right-to-left")]
     RightToLeft,
@@ -45,7 +41,6 @@ pub enum ReadingMode {
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(record)]
-#[witgen]
 pub struct Manga {
     pub id: String,
     pub title: String,

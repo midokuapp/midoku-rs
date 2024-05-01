@@ -1,9 +1,7 @@
 use wasmtime::component::{ComponentType, Lift, Lower};
-use witgen_macro::witgen;
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(record)]
-#[witgen]
 pub struct Chapter {
     pub id: String,
     pub title: String,
