@@ -12,3 +12,6 @@ midoku-http = { path = "../midoku-http" }
 midoku-limiter = { path = "../midoku-limiter" }
 midoku-types = { path = "../midoku-types" }
 wasmtime = "20.0.0"
+
+[build-dependencies]
+wit-deps = "0.3.1"

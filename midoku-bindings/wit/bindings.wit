@@ -1,0 +1,20 @@
+package midoku:bindings@0.1.0;
+
+interface api {
+    use midoku:types/types@0.1.0.{chapter, manga, page};
+
+    initialize: func() -> result;
+    get-manga-list: func(page: u32) -> result<tuple<list<manga>, bool>>;
+    get-manga-details: func(manga-id: string) -> result<manga>;
+    get-chapter-list: func(manga-id: string) -> result<list<chapter>>;
+    get-page-list: func(manga-id: string, chapter-id: string) -> result<list<page>>;
+}
+
+world bindings {
+    import midoku:http/outgoing-handler@0.1.0;
+    import midoku:http/types@0.1.0;
+    import midoku:limiter/rate-limiter@0.1.0;
+
+    export midoku:types/types@0.1.0;
+    export api;
+}

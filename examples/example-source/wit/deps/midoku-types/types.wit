@@ -54,7 +54,7 @@ interface types {
         url: string,
 
         /// The base64-encoded data of the page.
-        bas64: string,
+        base64: list<u8>,
     }
 }
 

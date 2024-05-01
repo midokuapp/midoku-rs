@@ -31,8 +31,7 @@ fn map_midoku_http_types(instance: &mut LinkerInstance<'_, State>) -> Result<(),
         |store, (self_,): (Resource<IncomingResponse>,)| {
             let incoming_response: &IncomingResponse = store.data().resource_table().get(&self_)?;
             let status_code: u16 = incoming_response.status_code();
-            let result: Result<u16, ()> = Ok(status_code);
-            Ok((result,))
+            Ok((status_code,))
         },
     )?;
     instance.func_wrap(
@@ -40,8 +39,7 @@ fn map_midoku_http_types(instance: &mut LinkerInstance<'_, State>) -> Result<(),
         |store, (self_,): (Resource<IncomingResponse>,)| {
             let incoming_response: &IncomingResponse = store.data().resource_table().get(&self_)?;
             let headers: Vec<(String, String)> = incoming_response.headers().clone();
-            let result: Result<Vec<(String, String)>, ()> = Ok(headers);
-            Ok((result,))
+            Ok((headers,))
         },
     )?;
     instance.func_wrap(
@@ -49,8 +47,7 @@ fn map_midoku_http_types(instance: &mut LinkerInstance<'_, State>) -> Result<(),
         |store, (self_,): (Resource<IncomingResponse>,)| {
             let incoming_response: &IncomingResponse = store.data().resource_table().get(&self_)?;
             let bytes: Vec<u8> = incoming_response.bytes().clone();
-            let result: Result<Vec<u8>, ()> = Ok(bytes);
-            Ok((result,))
+            Ok((bytes,))
         },
     )?;
     Ok(())

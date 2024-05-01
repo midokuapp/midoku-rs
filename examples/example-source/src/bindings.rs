@@ -550,7 +550,7 @@ pub mod exports {
     #[allow(dead_code)]
     pub mod midoku {
         #[allow(dead_code)]
-        pub mod example_source {
+        pub mod bindings {
             #[allow(dead_code, clippy::all)]
             pub mod api {
                 #[used]
@@ -1054,7 +1054,7 @@ pub mod exports {
                             for (i, e) in vec7.into_iter().enumerate() {
                                 let base = result7.add(i * 20);
                                 {
-                                    let super::super::super::super::exports::midoku::types::types::Page{ index:index4, url:url4, bas64:bas644, } = e;
+                                    let super::super::super::super::exports::midoku::types::types::Page{ index:index4, url:url4, base64:base644, } = e;
                                     *base.add(0).cast::<i32>() = _rt::as_i32(index4);
                                     let vec5 = (url4.into_bytes()).into_boxed_slice();
                                     let ptr5 = vec5.as_ptr().cast::<u8>();
@@ -1062,7 +1062,7 @@ pub mod exports {
                                     ::core::mem::forget(vec5);
                                     *base.add(8).cast::<usize>() = len5;
                                     *base.add(4).cast::<*mut u8>() = ptr5.cast_mut();
-                                    let vec6 = (bas644.into_bytes()).into_boxed_slice();
+                                    let vec6 = (base644).into_boxed_slice();
                                     let ptr6 = vec6.as_ptr().cast::<u8>();
                                     let len6 = vec6.len();
                                     ::core::mem::forget(vec6);
@@ -1085,22 +1085,24 @@ pub mod exports {
                     let l0 = i32::from(*arg0.add(0).cast::<u8>());
                     match l0 {
                         0 => {
-                            let l5 = *arg0.add(4).cast::<*mut u8>();
-                            let l6 = *arg0.add(8).cast::<usize>();
-                            let base7 = l5;
-                            let len7 = l6;
-                            for i in 0..len7 {
-                                let base = base7.add(i * 20);
+                            let l6 = *arg0.add(4).cast::<*mut u8>();
+                            let l7 = *arg0.add(8).cast::<usize>();
+                            let base8 = l6;
+                            let len8 = l7;
+                            for i in 0..len8 {
+                                let base = base8.add(i * 20);
                                 {
                                     let l1 = *base.add(4).cast::<*mut u8>();
                                     let l2 = *base.add(8).cast::<usize>();
                                     _rt::cabi_dealloc(l1, l2, 1);
                                     let l3 = *base.add(12).cast::<*mut u8>();
                                     let l4 = *base.add(16).cast::<usize>();
-                                    _rt::cabi_dealloc(l3, l4, 1);
+                                    let base5 = l3;
+                                    let len5 = l4;
+                                    _rt::cabi_dealloc(base5, len5 * 1, 1);
                                 }
                             }
-                            _rt::cabi_dealloc(base7, len7 * 20, 4);
+                            _rt::cabi_dealloc(base8, len8 * 20, 4);
                         }
                         _ => (),
                     }
@@ -1117,49 +1119,49 @@ pub mod exports {
                 }
                 #[doc(hidden)]
 
-                macro_rules! __export_midoku_example_source_api_0_1_0_cabi{
+                macro_rules! __export_midoku_bindings_api_0_1_0_cabi{
   ($ty:ident with_types_in $($path_to_types:tt)*) => (const _: () = {
 
-    #[export_name = "midoku:example-source/api@0.1.0#initialize"]
+    #[export_name = "midoku:bindings/api@0.1.0#initialize"]
     unsafe extern "C" fn export_initialize() -> i32 {
       $($path_to_types)*::_export_initialize_cabi::<$ty>()
     }
-    #[export_name = "midoku:example-source/api@0.1.0#get-manga-list"]
+    #[export_name = "midoku:bindings/api@0.1.0#get-manga-list"]
     unsafe extern "C" fn export_get_manga_list(arg0: i32,) -> *mut u8 {
       $($path_to_types)*::_export_get_manga_list_cabi::<$ty>(arg0)
     }
-    #[export_name = "cabi_post_midoku:example-source/api@0.1.0#get-manga-list"]
+    #[export_name = "cabi_post_midoku:bindings/api@0.1.0#get-manga-list"]
     unsafe extern "C" fn _post_return_get_manga_list(arg0: *mut u8,) {
       $($path_to_types)*::__post_return_get_manga_list::<$ty>(arg0)
     }
-    #[export_name = "midoku:example-source/api@0.1.0#get-manga-details"]
+    #[export_name = "midoku:bindings/api@0.1.0#get-manga-details"]
     unsafe extern "C" fn export_get_manga_details(arg0: *mut u8,arg1: usize,) -> *mut u8 {
       $($path_to_types)*::_export_get_manga_details_cabi::<$ty>(arg0, arg1)
     }
-    #[export_name = "cabi_post_midoku:example-source/api@0.1.0#get-manga-details"]
+    #[export_name = "cabi_post_midoku:bindings/api@0.1.0#get-manga-details"]
     unsafe extern "C" fn _post_return_get_manga_details(arg0: *mut u8,) {
       $($path_to_types)*::__post_return_get_manga_details::<$ty>(arg0)
     }
-    #[export_name = "midoku:example-source/api@0.1.0#get-chapter-list"]
+    #[export_name = "midoku:bindings/api@0.1.0#get-chapter-list"]
     unsafe extern "C" fn export_get_chapter_list(arg0: *mut u8,arg1: usize,) -> *mut u8 {
       $($path_to_types)*::_export_get_chapter_list_cabi::<$ty>(arg0, arg1)
     }
-    #[export_name = "cabi_post_midoku:example-source/api@0.1.0#get-chapter-list"]
+    #[export_name = "cabi_post_midoku:bindings/api@0.1.0#get-chapter-list"]
     unsafe extern "C" fn _post_return_get_chapter_list(arg0: *mut u8,) {
       $($path_to_types)*::__post_return_get_chapter_list::<$ty>(arg0)
     }
-    #[export_name = "midoku:example-source/api@0.1.0#get-page-list"]
+    #[export_name = "midoku:bindings/api@0.1.0#get-page-list"]
     unsafe extern "C" fn export_get_page_list(arg0: *mut u8,arg1: usize,arg2: *mut u8,arg3: usize,) -> *mut u8 {
       $($path_to_types)*::_export_get_page_list_cabi::<$ty>(arg0, arg1, arg2, arg3)
     }
-    #[export_name = "cabi_post_midoku:example-source/api@0.1.0#get-page-list"]
+    #[export_name = "cabi_post_midoku:bindings/api@0.1.0#get-page-list"]
     unsafe extern "C" fn _post_return_get_page_list(arg0: *mut u8,) {
       $($path_to_types)*::__post_return_get_page_list::<$ty>(arg0)
     }
   };);
 }
                 #[doc(hidden)]
-                pub(crate) use __export_midoku_example_source_api_0_1_0_cabi;
+                pub(crate) use __export_midoku_bindings_api_0_1_0_cabi;
                 #[repr(align(4))]
                 struct _RetArea([::core::mem::MaybeUninit<u8>; 72]);
                 static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 72]);
@@ -1353,14 +1355,14 @@ pub mod exports {
                     pub index: u32,
                     pub url: _rt::String,
                     /// The base64-encoded data of the page.
-                    pub bas64: _rt::String,
+                    pub base64: _rt::Vec<u8>,
                 }
                 impl ::core::fmt::Debug for Page {
                     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("Page")
                             .field("index", &self.index)
                             .field("url", &self.url)
-                            .field("bas64", &self.bas64)
+                            .field("base64", &self.base64)
                             .finish()
                     }
                 }
@@ -1629,7 +1631,7 @@ macro_rules! __export_endpoints_impl {
   ($ty:ident) => (self::export!($ty with_types_in self););
   ($ty:ident with_types_in $($path_to_types_root:tt)*) => (
   $($path_to_types_root)*::exports::midoku::types::types::__export_midoku_types_types_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::types);
-  $($path_to_types_root)*::exports::midoku::example_source::api::__export_midoku_example_source_api_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::example_source::api);
+  $($path_to_types_root)*::exports::midoku::bindings::api::__export_midoku_bindings_api_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::bindings::api);
   )
 }
 #[doc(inline)]
@@ -1638,8 +1640,8 @@ pub(crate) use __export_endpoints_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:endpoints:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1561] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x99\x0b\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1559] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x97\x0b\x01A\x02\x01\
 A\x0f\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
 \0\0\x04\0\x11incoming-response\x03\x01\x01h\x02\x01@\x01\x04self\x03\0{\x04\0%[\
 method]incoming-response.status-code\x01\x04\x01o\x02ss\x01p\x05\x01@\x01\x04sel\
@@ -1653,7 +1655,7 @@ j\x01\x09\0\x01@\x04\x06method\x01\x03urls\x07headers\x06\x04body\x08\0\x0a\x04\
 ky\x01@\0\0\0\x04\0\x05burst\x01\x01\x04\0\x09period-ms\x01\x01\x01j\0\0\x01@\x01\
 \x05bursty\0\x02\x04\0\x09set-burst\x01\x03\x01@\x01\x09period-msy\0\x02\x04\0\x0d\
 set-period-ms\x01\x04\x01@\0\0\x7f\x04\0\x05ready\x01\x05\x01@\0\x01\0\x04\0\x05\
-block\x01\x06\x03\x01!midoku:limiter/rate-limiter@0.1.0\x05\x04\x01B\x0d\x01r\x08\
+block\x01\x06\x03\x01!midoku:limiter/rate-limiter@0.1.0\x05\x04\x01B\x0e\x01r\x08\
 \x02ids\x05titles\x06volumev\x07chapterv\x0cdata-updatedy\x09scanlators\x03urls\x08\
 languages\x04\0\x07chapter\x03\0\0\x01m\x05\x07unknown\x07ongoing\x09completed\x06\
 hiatus\x09cancelled\x04\0\x06status\x03\0\x02\x01m\x03\x04safe\x0asuggestive\x04\
@@ -1661,19 +1663,19 @@ nsfw\x04\0\x0econtent-rating\x03\0\x04\x01m\x04\x0dright-to-left\x0dleft-to-righ
 t\x08vertical\x06scroll\x04\0\x0creading-mode\x03\0\x06\x01ps\x01r\x0b\x02ids\x05\
 titles\x03urls\x0bdescriptions\x09cover-urls\x0bauthor-names\x0bartist-names\x0a\
 categories\x08\x06status\x03\x0econtent-rating\x05\x0creading-mode\x07\x04\0\x05\
-manga\x03\0\x09\x01r\x03\x05indexy\x03urls\x05bas64s\x04\0\x04page\x03\0\x0b\x04\
-\x01\x18midoku:types/types@0.1.0\x05\x05\x02\x03\0\x03\x07chapter\x02\x03\0\x03\x05\
-manga\x02\x03\0\x03\x04page\x01B\x19\x02\x03\x02\x01\x06\x04\0\x07chapter\x03\0\0\
-\x02\x03\x02\x01\x07\x04\0\x05manga\x03\0\x02\x02\x03\x02\x01\x08\x04\0\x04page\x03\
-\0\x04\x01j\0\0\x01@\0\0\x06\x04\0\x0ainitialize\x01\x07\x01p\x03\x01o\x02\x08\x7f\
-\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\x0eget-manga-list\x01\x0b\x01j\x01\
-\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11get-manga-details\x01\x0d\x01p\x01\x01\
-j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\0\x10get-chapter-list\x01\x10\x01p\x05\
-\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0achapter-ids\0\x12\x04\0\x0dget-page-lis\
-t\x01\x13\x04\x01\x1fmidoku:example-source/api@0.1.0\x05\x09\x04\x01%midoku:exam\
-ple-source/endpoints@0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09produc\
-ers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rust\x060\
-.24.0";
+manga\x03\0\x09\x01p}\x01r\x03\x05indexy\x03urls\x06base64\x0b\x04\0\x04page\x03\
+\0\x0c\x04\x01\x18midoku:types/types@0.1.0\x05\x05\x02\x03\0\x03\x07chapter\x02\x03\
+\0\x03\x05manga\x02\x03\0\x03\x04page\x01B\x19\x02\x03\x02\x01\x06\x04\0\x07chap\
+ter\x03\0\0\x02\x03\x02\x01\x07\x04\0\x05manga\x03\0\x02\x02\x03\x02\x01\x08\x04\
+\0\x04page\x03\0\x04\x01j\0\0\x01@\0\0\x06\x04\0\x0ainitialize\x01\x07\x01p\x03\x01\
+o\x02\x08\x7f\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\x0eget-manga-list\x01\
+\x0b\x01j\x01\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11get-manga-details\x01\x0d\
+\x01p\x01\x01j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\0\x10get-chapter-list\x01\
+\x10\x01p\x05\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0achapter-ids\0\x12\x04\0\x0d\
+get-page-list\x01\x13\x04\x01\x19midoku:bindings/api@0.1.0\x05\x09\x04\x01%midok\
+u:example-source/endpoints@0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09\
+producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rus\
+t\x060.24.0";
 
 #[inline(never)]
 #[doc(hidden)]

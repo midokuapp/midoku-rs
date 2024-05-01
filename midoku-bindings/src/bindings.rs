@@ -80,7 +80,7 @@ impl Bindings {
 
         let mut export = instance.exports(&mut store);
         let mut api = export
-            .instance("midoku:example-source/api@0.1.0")
+            .instance("midoku:bindings/api@0.1.0")
             .ok_or("export not found")?;
 
         let initialize = api.typed_func::<(), (Result<(), ()>,)>("initialize")?;

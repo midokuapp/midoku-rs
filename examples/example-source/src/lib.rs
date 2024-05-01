@@ -1,7 +1,7 @@
 #[allow(warnings)]
 mod bindings;
 
-use bindings::exports::midoku::example_source::api::{Chapter, Guest, Manga, Page};
+use bindings::exports::midoku::bindings::api::{Chapter, Guest, Manga, Page};
 use bindings::midoku::http::outgoing_handler::{handle, IncomingResponse, Method};
 use bindings::midoku::limiter::rate_limiter::{block, set_burst, set_period_ms};
 
