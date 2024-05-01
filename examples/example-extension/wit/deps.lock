@@ -1,7 +1,7 @@
 [midoku-bindings]
 path = "../../../midoku-bindings/wit"
-sha256 = "6a6b433de84796f0685ff2b00627389f309cf100662c4f9a1601b336dc3f4564"
-sha512 = "4154dc2844c6f8b4d4b25cf2f71611e892d22a83d052165564ff5d0cc0ac7a34b6fb84de939faa8039df9ce55fad8f03ce2b7efe592fc5235723fe5246c4d33a"
+sha256 = "7ff17217f7155573ff0783df4d421078560e4f9b5160fe85a96fa7ff597b2296"
+sha512 = "c6b002efb0d1e90faeebaa130419932e68743d08f245f7e13d5726bb21cdf55ea44d28c540be7320b1aacdf5e191b4cc3b13e0a32c2d720a43ee3ce9f89438cb"
 deps = ["midoku-http", "midoku-limiter", "midoku-types"]
 
 [midoku-http]

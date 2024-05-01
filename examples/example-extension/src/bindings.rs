@@ -1108,10 +1108,28 @@ pub mod exports {
                     }
                 }
                 pub trait Guest {
+                    /// Initialize the extension.
+                    ///
+                    /// Sources may have initialization logic that needs to be called before
+                    /// calling other functions. This may include setting up rate limiters or
+                    /// other configuration.
                     fn initialize() -> Result<(), ()>;
+                    /// Get a list of manga from the source.
+                    ///
+                    /// This function should return a list of manga that can be displayed to the
+                    /// user. The `page` parameter is used to paginate the results if necessary.
                     fn get_manga_list(page: u32) -> Result<(_rt::Vec<Manga>, bool), ()>;
+                    /// Get details for a specific manga.
+                    ///
+                    /// This function should return detailed information about a specific manga.
                     fn get_manga_details(manga_id: _rt::String) -> Result<Manga, ()>;
+                    /// Get a list of chapters for a specific manga.
+                    ///
+                    /// This function should return a list of chapters for a specific manga.
                     fn get_chapter_list(manga_id: _rt::String) -> Result<_rt::Vec<Chapter>, ()>;
+                    /// Get a list of pages for a specific chapter.
+                    ///
+                    /// This function should return a list of pages for a specific chapter.
                     fn get_page_list(
                         manga_id: _rt::String,
                         chapter_id: _rt::String,

@@ -3,10 +3,32 @@ package midoku:bindings@0.1.0;
 interface api {
     use midoku:types/types@0.1.0.{chapter, manga, page};
 
+    /// Initialize the extension.
+    /// 
+    /// Sources may have initialization logic that needs to be called before
+    /// calling other functions. This may include setting up rate limiters or
+    /// other configuration.
     initialize: func() -> result;
+
+    /// Get a list of manga from the source.
+    /// 
+    /// This function should return a list of manga that can be displayed to the
+    /// user. The `page` parameter is used to paginate the results if necessary.
     get-manga-list: func(page: u32) -> result<tuple<list<manga>, bool>>;
+
+    /// Get details for a specific manga.
+    /// 
+    /// This function should return detailed information about a specific manga.
     get-manga-details: func(manga-id: string) -> result<manga>;
+
+    /// Get a list of chapters for a specific manga.
+    /// 
+    /// This function should return a list of chapters for a specific manga.
     get-chapter-list: func(manga-id: string) -> result<list<chapter>>;
+
+    /// Get a list of pages for a specific chapter.
+    /// 
+    /// This function should return a list of pages for a specific chapter.
     get-page-list: func(manga-id: string, chapter-id: string) -> result<list<page>>;
 }
 
