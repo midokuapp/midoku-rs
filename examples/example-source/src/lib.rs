@@ -23,7 +23,7 @@ impl Guest for Component {
         block();
 
         // Send a GET request to the API
-        let url = [URL, "/manga"].join("");
+        let url = format!("{}/manga", URL);
         let response: IncomingResponse = handle(Method::Get, &url, None, None)?;
 
         // Get the response bytes
