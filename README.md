@@ -1,25 +1,28 @@
 # `midoku-rs`
 
-Midoku source bindings in Rust. These crates provide a safe and (hopefully)
-idiomatic way to building Midoku sources in Rust.
+Midoku extension bindings in Rust. These crates provide a safe and (hopefully)
+idiomatic way to building Midoku extensions in Rust.
 
 ## Motivation
 
 Tachiyomi is a popular manga reader app for Android that can access various
-manga sources. However, these sources are written in Java and compiled into
+manga sources. However, these extensions are written in Java and compiled into
 an APK, making it challenging to modify or fix them without the Android
 development environment.
 
 This project aims to simplify this process by introducing a new method for
-creating sources. By providing a user-friendly API for writing sources in Rust,
-developers can compile them into a WebAssembly component. This component can
-then be integrated into any application that supports WebAssembly.
+creating extensions. By providing a user-friendly API for writing sources in
+Rust, developers can compile them into a WebAssembly component. This component
+can then be integrated into any application that supports WebAssembly
+(e.g. [`wasmtime`][wasmtime]).
 
-The project takes inspiration from [`aidoku-rs`][aidoku-rs], a similar tool
-for developing sources for the [Aidoku][aidoku] manga reader app.
-Unlike `aidoku-rs`, this project leverages the latest version of WASI
-(WebAssembly System Interface), facilitating a smoother development experience.
+The project takes inspiration from [`aidoku-rs`][aidoku-rs], a similar project
+for developing extensions for the [Aidoku][aidoku] manga reader app.
+Unlike `aidoku-rs`, this project takes advantage of the WebAssembly Component
+Model to make use of richer types and interfaces, facilitating a smoother
+development experience.
 
+[wasmtime]: https://wasmtime.dev
 [aidoku-rs]: https://github.com/Aidoku/aidoku-rs
 [aidoku]: https://github.com/Aidoku/Aidoku
 
