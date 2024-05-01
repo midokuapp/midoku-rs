@@ -29,7 +29,6 @@ Unlike `aidoku-rs`, this project leverages the latest version of WASI
 - [ ] More examples
 - [ ] Add tests
 - [ ] Add CI/CD pipeline for documentation and tests
-- [ ] Add more helper crates (e.g. `midoku-http` for handling HTTP requests)
 
 ## Building
 
