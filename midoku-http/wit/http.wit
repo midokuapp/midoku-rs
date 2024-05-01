@@ -13,20 +13,13 @@ interface types {
     /// Represents a response from an HTTP request.
     resource incoming-response {
         /// Returns the status code of the response.
-        /// 
-        /// Returns `Err` if `bytes` has already been called.
-        status-code: func() -> result<u16>;
+        status-code: func() -> u16;
 
         /// Returns the headers of the response.
-        /// 
-        /// Returns `Err` if `bytes` has already been called.
-        headers: func() -> result<list<tuple<string, string>>>;
+        headers: func() -> list<tuple<string, string>>;
 
         /// Returns the bytes of the response.
-        /// 
-        /// Consumes the response when called.
-        /// Returns `Err` if `bytes` has already been called.
-        bytes: func() -> result<list<u8>>;
+        bytes: func() -> list<u8>;
     }
 }
 
