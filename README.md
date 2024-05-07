@@ -51,3 +51,12 @@ cargo component build --release --workspace --target wasm32-unknown-unknown
 
 Make sure to target `wasm32-unknown-unknown` since we do not want unwanted
 WASI dependencies in our modules (`wasm32-wasi` is targeted by default).
+
+## License
+
+Licensed under either of
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
