@@ -1,6 +1,6 @@
 package midoku:types@0.1.0;
 
-interface types {
+interface chapter {
     record chapter {
         id: string,
         title: string,
@@ -13,7 +13,9 @@ interface types {
         url: string,
         language: string,
     }
+}
 
+interface manga {
     enum status {
         unknown,
         ongoing,
@@ -48,7 +50,9 @@ interface types {
         content-rating: content-rating,
         reading-mode: reading-mode,
     }
+}
 
+interface page {
     record page {
         index: u32,
         url: string,
@@ -58,6 +62,8 @@ interface types {
     }
 }
 
-world prelude {
-    export types;
+world types {
+    export chapter;
+    export manga;
+    export page;
 }

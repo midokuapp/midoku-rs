@@ -560,9 +560,9 @@ pub mod exports {
                     super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
                 pub type Chapter =
-                    super::super::super::super::exports::midoku::types::types::Chapter;
-                pub type Manga = super::super::super::super::exports::midoku::types::types::Manga;
-                pub type Page = super::super::super::super::exports::midoku::types::types::Page;
+                    super::super::super::super::exports::midoku::types::chapter::Chapter;
+                pub type Manga = super::super::super::super::exports::midoku::types::manga::Manga;
+                pub type Page = super::super::super::super::exports::midoku::types::page::Page;
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_initialize_cabi<T: Guest>() -> i32 {
@@ -604,7 +604,7 @@ pub mod exports {
                             for (i, e) in vec13.into_iter().enumerate() {
                                 let base = result13.add(i * 68);
                                 {
-                                    let super::super::super::super::exports::midoku::types::types::Manga{ id:id3, title:title3, url:url3, description:description3, cover_url:cover_url3, author_name:author_name3, artist_name:artist_name3, categories:categories3, status:status3, content_rating:content_rating3, reading_mode:reading_mode3, } = e;
+                                    let super::super::super::super::exports::midoku::types::manga::Manga{ id:id3, title:title3, url:url3, description:description3, cover_url:cover_url3, author_name:author_name3, artist_name:artist_name3, categories:categories3, status:status3, content_rating:content_rating3, reading_mode:reading_mode3, } = e;
                                     let vec4 = (id3.into_bytes()).into_boxed_slice();
                                     let ptr4 = vec4.as_ptr().cast::<u8>();
                                     let len4 = vec4.len();
@@ -766,7 +766,7 @@ pub mod exports {
                     match result1 {
                         Ok(e) => {
                             *ptr2.add(0).cast::<u8>() = (0i32) as u8;
-                            let super::super::super::super::exports::midoku::types::types::Manga {
+                            let super::super::super::super::exports::midoku::types::manga::Manga {
                                 id: id3,
                                 title: title3,
                                 url: url3,
@@ -936,7 +936,7 @@ pub mod exports {
                             for (i, e) in vec9.into_iter().enumerate() {
                                 let base = result9.add(i * 52);
                                 {
-                                    let super::super::super::super::exports::midoku::types::types::Chapter{ id:id3, title:title3, volume:volume3, chapter:chapter3, data_updated:data_updated3, scanlator:scanlator3, url:url3, language:language3, } = e;
+                                    let super::super::super::super::exports::midoku::types::chapter::Chapter{ id:id3, title:title3, volume:volume3, chapter:chapter3, data_updated:data_updated3, scanlator:scanlator3, url:url3, language:language3, } = e;
                                     let vec4 = (id3.into_bytes()).into_boxed_slice();
                                     let ptr4 = vec4.as_ptr().cast::<u8>();
                                     let len4 = vec4.len();
@@ -1054,7 +1054,7 @@ pub mod exports {
                             for (i, e) in vec7.into_iter().enumerate() {
                                 let base = result7.add(i * 20);
                                 {
-                                    let super::super::super::super::exports::midoku::types::types::Page{ index:index4, url:url4, base64:base644, } = e;
+                                    let super::super::super::super::exports::midoku::types::page::Page{ index:index4, url:url4, base64:base644, } = e;
                                     *base.add(0).cast::<i32>() = _rt::as_i32(index4);
                                     let vec5 = (url4.into_bytes()).into_boxed_slice();
                                     let ptr5 = vec5.as_ptr().cast::<u8>();
@@ -1188,7 +1188,7 @@ pub mod exports {
         #[allow(dead_code)]
         pub mod types {
             #[allow(dead_code, clippy::all)]
-            pub mod types {
+            pub mod chapter {
                 #[used]
                 #[doc(hidden)]
                 #[cfg(target_arch = "wasm32")]
@@ -1221,6 +1221,25 @@ pub mod exports {
                             .finish()
                     }
                 }
+                #[doc(hidden)]
+
+                macro_rules! __export_midoku_types_chapter_0_1_0_cabi {
+                    ($ty:ident with_types_in $($path_to_types:tt)*) => {
+                        const _: () = {};
+                    };
+                }
+                #[doc(hidden)]
+                pub(crate) use __export_midoku_types_chapter_0_1_0_cabi;
+            }
+
+            #[allow(dead_code, clippy::all)]
+            pub mod manga {
+                #[used]
+                #[doc(hidden)]
+                #[cfg(target_arch = "wasm32")]
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
+                use super::super::super::super::_rt;
                 #[repr(u8)]
                 #[derive(Clone, Copy, Eq, PartialEq)]
                 pub enum Status {
@@ -1368,6 +1387,25 @@ pub mod exports {
                             .finish()
                     }
                 }
+                #[doc(hidden)]
+
+                macro_rules! __export_midoku_types_manga_0_1_0_cabi {
+                    ($ty:ident with_types_in $($path_to_types:tt)*) => {
+                        const _: () = {};
+                    };
+                }
+                #[doc(hidden)]
+                pub(crate) use __export_midoku_types_manga_0_1_0_cabi;
+            }
+
+            #[allow(dead_code, clippy::all)]
+            pub mod page {
+                #[used]
+                #[doc(hidden)]
+                #[cfg(target_arch = "wasm32")]
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
+                use super::super::super::super::_rt;
                 #[derive(Clone)]
                 pub struct Page {
                     pub index: u32,
@@ -1386,13 +1424,13 @@ pub mod exports {
                 }
                 #[doc(hidden)]
 
-                macro_rules! __export_midoku_types_types_0_1_0_cabi {
+                macro_rules! __export_midoku_types_page_0_1_0_cabi {
                     ($ty:ident with_types_in $($path_to_types:tt)*) => {
                         const _: () = {};
                     };
                 }
                 #[doc(hidden)]
-                pub(crate) use __export_midoku_types_types_0_1_0_cabi;
+                pub(crate) use __export_midoku_types_page_0_1_0_cabi;
             }
         }
     }
@@ -1648,7 +1686,9 @@ mod _rt {
 macro_rules! __export_endpoints_impl {
   ($ty:ident) => (self::export!($ty with_types_in self););
   ($ty:ident with_types_in $($path_to_types_root:tt)*) => (
-  $($path_to_types_root)*::exports::midoku::types::types::__export_midoku_types_types_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::types);
+  $($path_to_types_root)*::exports::midoku::types::chapter::__export_midoku_types_chapter_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::chapter);
+  $($path_to_types_root)*::exports::midoku::types::manga::__export_midoku_types_manga_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::manga);
+  $($path_to_types_root)*::exports::midoku::types::page::__export_midoku_types_page_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::page);
   $($path_to_types_root)*::exports::midoku::bindings::api::__export_midoku_bindings_api_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::bindings::api);
   )
 }
@@ -1658,9 +1698,9 @@ pub(crate) use __export_endpoints_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:endpoints:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1562] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x9a\x0b\x01A\x02\x01\
-A\x0f\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1627] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xdb\x0b\x01A\x02\x01\
+A\x13\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
 \0\0\x04\0\x11incoming-response\x03\x01\x01h\x02\x01@\x01\x04self\x03\0{\x04\0%[\
 method]incoming-response.status-code\x01\x04\x01o\x02ss\x01p\x05\x01@\x01\x04sel\
 f\x03\0\x06\x04\0![method]incoming-response.headers\x01\x07\x01p}\x01@\x01\x04se\
@@ -1673,27 +1713,28 @@ j\x01\x09\0\x01@\x04\x06method\x01\x03urls\x07headers\x06\x04body\x08\0\x0a\x04\
 ky\x01@\0\0\0\x04\0\x05burst\x01\x01\x04\0\x09period-ms\x01\x01\x01j\0\0\x01@\x01\
 \x05bursty\0\x02\x04\0\x09set-burst\x01\x03\x01@\x01\x09period-msy\0\x02\x04\0\x0d\
 set-period-ms\x01\x04\x01@\0\0\x7f\x04\0\x05ready\x01\x05\x01@\0\x01\0\x04\0\x05\
-block\x01\x06\x03\x01!midoku:limiter/rate-limiter@0.1.0\x05\x04\x01B\x0e\x01r\x08\
+block\x01\x06\x03\x01!midoku:limiter/rate-limiter@0.1.0\x05\x04\x01B\x02\x01r\x08\
 \x02ids\x05titles\x06volumev\x07chapterv\x0cdata-updatedy\x09scanlators\x03urls\x08\
-languages\x04\0\x07chapter\x03\0\0\x01m\x05\x07unknown\x07ongoing\x09completed\x06\
-hiatus\x09cancelled\x04\0\x06status\x03\0\x02\x01m\x03\x04safe\x0asuggestive\x04\
-nsfw\x04\0\x0econtent-rating\x03\0\x04\x01m\x04\x0dright-to-left\x0dleft-to-righ\
-t\x08vertical\x06scroll\x04\0\x0creading-mode\x03\0\x06\x01ps\x01r\x0b\x02ids\x05\
-titles\x03urls\x0bdescriptions\x09cover-urls\x0bauthor-names\x0bartist-names\x0a\
-categories\x08\x06status\x03\x0econtent-rating\x05\x0creading-mode\x07\x04\0\x05\
-manga\x03\0\x09\x01p}\x01r\x03\x05indexy\x03urls\x06base64\x0b\x04\0\x04page\x03\
-\0\x0c\x04\x01\x18midoku:types/types@0.1.0\x05\x05\x02\x03\0\x03\x07chapter\x02\x03\
-\0\x03\x05manga\x02\x03\0\x03\x04page\x01B\x19\x02\x03\x02\x01\x06\x04\0\x07chap\
-ter\x03\0\0\x02\x03\x02\x01\x07\x04\0\x05manga\x03\0\x02\x02\x03\x02\x01\x08\x04\
-\0\x04page\x03\0\x04\x01j\0\0\x01@\0\0\x06\x04\0\x0ainitialize\x01\x07\x01p\x03\x01\
-o\x02\x08\x7f\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\x0eget-manga-list\x01\
-\x0b\x01j\x01\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11get-manga-details\x01\x0d\
-\x01p\x01\x01j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\0\x10get-chapter-list\x01\
-\x10\x01p\x05\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0achapter-ids\0\x12\x04\0\x0d\
-get-page-list\x01\x13\x04\x01\x19midoku:bindings/api@0.1.0\x05\x09\x04\x01(midok\
-u:example-extension/endpoints@0.1.0\x04\0\x0b\x0f\x01\0\x09endpoints\x03\0\0\0G\x09\
-producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.202.0\x10wit-bindgen-rus\
-t\x060.24.0";
+languages\x04\0\x07chapter\x03\0\0\x04\x01\x1amidoku:types/chapter@0.1.0\x05\x05\
+\x01B\x09\x01m\x05\x07unknown\x07ongoing\x09completed\x06hiatus\x09cancelled\x04\
+\0\x06status\x03\0\0\x01m\x03\x04safe\x0asuggestive\x04nsfw\x04\0\x0econtent-rat\
+ing\x03\0\x02\x01m\x04\x0dright-to-left\x0dleft-to-right\x08vertical\x06scroll\x04\
+\0\x0creading-mode\x03\0\x04\x01ps\x01r\x0b\x02ids\x05titles\x03urls\x0bdescript\
+ions\x09cover-urls\x0bauthor-names\x0bartist-names\x0acategories\x06\x06status\x01\
+\x0econtent-rating\x03\x0creading-mode\x05\x04\0\x05manga\x03\0\x07\x04\x01\x18m\
+idoku:types/manga@0.1.0\x05\x06\x01B\x03\x01p}\x01r\x03\x05indexy\x03urls\x06bas\
+e64\0\x04\0\x04page\x03\0\x01\x04\x01\x17midoku:types/page@0.1.0\x05\x07\x02\x03\
+\0\x03\x07chapter\x02\x03\0\x04\x05manga\x02\x03\0\x05\x04page\x01B\x19\x02\x03\x02\
+\x01\x08\x04\0\x07chapter\x03\0\0\x02\x03\x02\x01\x09\x04\0\x05manga\x03\0\x02\x02\
+\x03\x02\x01\x0a\x04\0\x04page\x03\0\x04\x01j\0\0\x01@\0\0\x06\x04\0\x0ainitiali\
+ze\x01\x07\x01p\x03\x01o\x02\x08\x7f\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\
+\x0eget-manga-list\x01\x0b\x01j\x01\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11g\
+et-manga-details\x01\x0d\x01p\x01\x01j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\
+\0\x10get-chapter-list\x01\x10\x01p\x05\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0a\
+chapter-ids\0\x12\x04\0\x0dget-page-list\x01\x13\x04\x01\x19midoku:bindings/api@\
+0.1.0\x05\x0b\x04\x01(midoku:example-extension/endpoints@0.1.0\x04\0\x0b\x0f\x01\
+\0\x09endpoints\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\
+\x070.202.0\x10wit-bindgen-rust\x060.24.0";
 
 #[inline(never)]
 #[doc(hidden)]

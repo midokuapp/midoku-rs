@@ -1,7 +1,9 @@
 package midoku:bindings@0.1.0;
 
 interface api {
-    use midoku:types/types@0.1.0.{chapter, manga, page};
+    use midoku:types/chapter@0.1.0.{chapter};
+    use midoku:types/manga@0.1.0.{manga};
+    use midoku:types/page@0.1.0.{page};
 
     /// Initialize the extension.
     /// 
@@ -37,6 +39,8 @@ world bindings {
     import midoku:http/types@0.1.0;
     import midoku:limiter/rate-limiter@0.1.0;
 
-    export midoku:types/types@0.1.0;
+    export midoku:types/chapter@0.1.0;
+    export midoku:types/manga@0.1.0;
+    export midoku:types/page@0.1.0;
     export api;
 }
