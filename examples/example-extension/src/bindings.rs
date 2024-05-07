@@ -561,6 +561,8 @@ pub mod exports {
                 use super::super::super::super::_rt;
                 pub type Chapter =
                     super::super::super::super::exports::midoku::types::chapter::Chapter;
+                pub type Filter =
+                    super::super::super::super::exports::midoku::types::filter::Filter;
                 pub type Manga = super::super::super::super::exports::midoku::types::manga::Manga;
                 pub type Page = super::super::super::super::exports::midoku::types::page::Page;
                 #[doc(hidden)]
@@ -577,23 +579,101 @@ pub mod exports {
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
-                pub unsafe fn _export_get_manga_list_cabi<T: Guest>(arg0: i32) -> *mut u8 {
+                pub unsafe fn _export_get_manga_list_cabi<T: Guest>(
+                    arg0: *mut u8,
+                    arg1: usize,
+                    arg2: i32,
+                ) -> *mut u8 {
                     #[cfg(target_arch = "wasm32")]
                     _rt::run_ctors_once();
-                    let result0 = T::get_manga_list(arg0 as u32);
-                    let ptr1 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
-                    match result0 {
+                    let base17 = arg0;
+                    let len17 = arg1;
+                    let mut result17 = _rt::Vec::with_capacity(len17);
+                    for i in 0..len17 {
+                        let base = base17.add(i * 32);
+                        let e17 = {
+                            let l0 = i32::from(*base.add(0).cast::<u8>());
+                            use super::super::super::super::exports::midoku::types::filter::Filter as V16;
+                            let v16 = match l0 {
+                                0 => {
+                                    let e16 = {
+                                        let l1 = *base.add(4).cast::<*mut u8>();
+                                        let l2 = *base.add(8).cast::<usize>();
+                                        let len3 = l2;
+                                        let bytes3 =
+                                            _rt::Vec::from_raw_parts(l1.cast(), len3, len3);
+
+                                        super::super::super::super::exports::midoku::types::filter::FilterTitle{
+                  query: _rt::string_lift(bytes3),
+                }
+                                    };
+                                    V16::Title(e16)
+                                }
+                                n => {
+                                    debug_assert_eq!(n, 1, "invalid enum discriminant");
+                                    let e16 = {
+                                        let l4 = *base.add(4).cast::<*mut u8>();
+                                        let l5 = *base.add(8).cast::<usize>();
+                                        let len6 = l5;
+                                        let bytes6 =
+                                            _rt::Vec::from_raw_parts(l4.cast(), len6, len6);
+                                        let l7 = i32::from(*base.add(12).cast::<u8>());
+                                        let l8 = *base.add(16).cast::<*mut u8>();
+                                        let l9 = *base.add(20).cast::<usize>();
+                                        let base13 = l8;
+                                        let len13 = l9;
+                                        let mut result13 = _rt::Vec::with_capacity(len13);
+                                        for i in 0..len13 {
+                                            let base = base13.add(i * 8);
+                                            let e13 = {
+                                                let l10 = *base.add(0).cast::<*mut u8>();
+                                                let l11 = *base.add(4).cast::<usize>();
+                                                let len12 = l11;
+                                                let bytes12 = _rt::Vec::from_raw_parts(
+                                                    l10.cast(),
+                                                    len12,
+                                                    len12,
+                                                );
+
+                                                _rt::string_lift(bytes12)
+                                            };
+                                            result13.push(e13);
+                                        }
+                                        _rt::cabi_dealloc(base13, len13 * 8, 4);
+                                        let l14 = *base.add(24).cast::<i32>();
+                                        let l15 = i32::from(*base.add(28).cast::<u8>());
+
+                                        super::super::super::super::exports::midoku::types::filter::FilterSort{
+                  name: _rt::string_lift(bytes6),
+                  can_be_reversed: _rt::bool_lift(l7 as u8),
+                  options: result13,
+                  default_option_index: l14 as u32,
+                  default_option_reversed: _rt::bool_lift(l15 as u8),
+                }
+                                    };
+                                    V16::Sort(e16)
+                                }
+                            };
+
+                            v16
+                        };
+                        result17.push(e17);
+                    }
+                    _rt::cabi_dealloc(base17, len17 * 32, 4);
+                    let result18 = T::get_manga_list(result17, arg2 as u32);
+                    let ptr19 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
+                    match result18 {
                         Ok(e) => {
-                            *ptr1.add(0).cast::<u8>() = (0i32) as u8;
-                            let (t2_0, t2_1) = e;
-                            let vec13 = t2_0;
-                            let len13 = vec13.len();
-                            let layout13 =
-                                _rt::alloc::Layout::from_size_align_unchecked(vec13.len() * 68, 4);
-                            let result13 = if layout13.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout13).cast::<u8>();
+                            *ptr19.add(0).cast::<u8>() = (0i32) as u8;
+                            let (t20_0, t20_1) = e;
+                            let vec31 = t20_0;
+                            let len31 = vec31.len();
+                            let layout31 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec31.len() * 68, 4);
+                            let result31 = if layout31.size() != 0 {
+                                let ptr = _rt::alloc::alloc(layout31).cast::<u8>();
                                 if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout13);
+                                    _rt::alloc::handle_alloc_error(layout31);
                                 }
                                 ptr
                             } else {
@@ -601,62 +681,62 @@ pub mod exports {
                                     ::core::ptr::null_mut()
                                 }
                             };
-                            for (i, e) in vec13.into_iter().enumerate() {
-                                let base = result13.add(i * 68);
+                            for (i, e) in vec31.into_iter().enumerate() {
+                                let base = result31.add(i * 68);
                                 {
-                                    let super::super::super::super::exports::midoku::types::manga::Manga{ id:id3, title:title3, url:url3, description:description3, cover_url:cover_url3, author_name:author_name3, artist_name:artist_name3, categories:categories3, status:status3, content_rating:content_rating3, reading_mode:reading_mode3, } = e;
-                                    let vec4 = (id3.into_bytes()).into_boxed_slice();
-                                    let ptr4 = vec4.as_ptr().cast::<u8>();
-                                    let len4 = vec4.len();
-                                    ::core::mem::forget(vec4);
-                                    *base.add(4).cast::<usize>() = len4;
-                                    *base.add(0).cast::<*mut u8>() = ptr4.cast_mut();
-                                    let vec5 = (title3.into_bytes()).into_boxed_slice();
-                                    let ptr5 = vec5.as_ptr().cast::<u8>();
-                                    let len5 = vec5.len();
-                                    ::core::mem::forget(vec5);
-                                    *base.add(12).cast::<usize>() = len5;
-                                    *base.add(8).cast::<*mut u8>() = ptr5.cast_mut();
-                                    let vec6 = (url3.into_bytes()).into_boxed_slice();
-                                    let ptr6 = vec6.as_ptr().cast::<u8>();
-                                    let len6 = vec6.len();
-                                    ::core::mem::forget(vec6);
-                                    *base.add(20).cast::<usize>() = len6;
-                                    *base.add(16).cast::<*mut u8>() = ptr6.cast_mut();
-                                    let vec7 = (description3.into_bytes()).into_boxed_slice();
-                                    let ptr7 = vec7.as_ptr().cast::<u8>();
-                                    let len7 = vec7.len();
-                                    ::core::mem::forget(vec7);
-                                    *base.add(28).cast::<usize>() = len7;
-                                    *base.add(24).cast::<*mut u8>() = ptr7.cast_mut();
-                                    let vec8 = (cover_url3.into_bytes()).into_boxed_slice();
-                                    let ptr8 = vec8.as_ptr().cast::<u8>();
-                                    let len8 = vec8.len();
-                                    ::core::mem::forget(vec8);
-                                    *base.add(36).cast::<usize>() = len8;
-                                    *base.add(32).cast::<*mut u8>() = ptr8.cast_mut();
-                                    let vec9 = (author_name3.into_bytes()).into_boxed_slice();
-                                    let ptr9 = vec9.as_ptr().cast::<u8>();
-                                    let len9 = vec9.len();
-                                    ::core::mem::forget(vec9);
-                                    *base.add(44).cast::<usize>() = len9;
-                                    *base.add(40).cast::<*mut u8>() = ptr9.cast_mut();
-                                    let vec10 = (artist_name3.into_bytes()).into_boxed_slice();
-                                    let ptr10 = vec10.as_ptr().cast::<u8>();
-                                    let len10 = vec10.len();
-                                    ::core::mem::forget(vec10);
-                                    *base.add(52).cast::<usize>() = len10;
-                                    *base.add(48).cast::<*mut u8>() = ptr10.cast_mut();
-                                    let vec12 = categories3;
-                                    let len12 = vec12.len();
-                                    let layout12 = _rt::alloc::Layout::from_size_align_unchecked(
-                                        vec12.len() * 8,
+                                    let super::super::super::super::exports::midoku::types::manga::Manga{ id:id21, title:title21, url:url21, description:description21, cover_url:cover_url21, author_name:author_name21, artist_name:artist_name21, categories:categories21, status:status21, content_rating:content_rating21, reading_mode:reading_mode21, } = e;
+                                    let vec22 = (id21.into_bytes()).into_boxed_slice();
+                                    let ptr22 = vec22.as_ptr().cast::<u8>();
+                                    let len22 = vec22.len();
+                                    ::core::mem::forget(vec22);
+                                    *base.add(4).cast::<usize>() = len22;
+                                    *base.add(0).cast::<*mut u8>() = ptr22.cast_mut();
+                                    let vec23 = (title21.into_bytes()).into_boxed_slice();
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
+                                    ::core::mem::forget(vec23);
+                                    *base.add(12).cast::<usize>() = len23;
+                                    *base.add(8).cast::<*mut u8>() = ptr23.cast_mut();
+                                    let vec24 = (url21.into_bytes()).into_boxed_slice();
+                                    let ptr24 = vec24.as_ptr().cast::<u8>();
+                                    let len24 = vec24.len();
+                                    ::core::mem::forget(vec24);
+                                    *base.add(20).cast::<usize>() = len24;
+                                    *base.add(16).cast::<*mut u8>() = ptr24.cast_mut();
+                                    let vec25 = (description21.into_bytes()).into_boxed_slice();
+                                    let ptr25 = vec25.as_ptr().cast::<u8>();
+                                    let len25 = vec25.len();
+                                    ::core::mem::forget(vec25);
+                                    *base.add(28).cast::<usize>() = len25;
+                                    *base.add(24).cast::<*mut u8>() = ptr25.cast_mut();
+                                    let vec26 = (cover_url21.into_bytes()).into_boxed_slice();
+                                    let ptr26 = vec26.as_ptr().cast::<u8>();
+                                    let len26 = vec26.len();
+                                    ::core::mem::forget(vec26);
+                                    *base.add(36).cast::<usize>() = len26;
+                                    *base.add(32).cast::<*mut u8>() = ptr26.cast_mut();
+                                    let vec27 = (author_name21.into_bytes()).into_boxed_slice();
+                                    let ptr27 = vec27.as_ptr().cast::<u8>();
+                                    let len27 = vec27.len();
+                                    ::core::mem::forget(vec27);
+                                    *base.add(44).cast::<usize>() = len27;
+                                    *base.add(40).cast::<*mut u8>() = ptr27.cast_mut();
+                                    let vec28 = (artist_name21.into_bytes()).into_boxed_slice();
+                                    let ptr28 = vec28.as_ptr().cast::<u8>();
+                                    let len28 = vec28.len();
+                                    ::core::mem::forget(vec28);
+                                    *base.add(52).cast::<usize>() = len28;
+                                    *base.add(48).cast::<*mut u8>() = ptr28.cast_mut();
+                                    let vec30 = categories21;
+                                    let len30 = vec30.len();
+                                    let layout30 = _rt::alloc::Layout::from_size_align_unchecked(
+                                        vec30.len() * 8,
                                         4,
                                     );
-                                    let result12 = if layout12.size() != 0 {
-                                        let ptr = _rt::alloc::alloc(layout12).cast::<u8>();
+                                    let result30 = if layout30.size() != 0 {
+                                        let ptr = _rt::alloc::alloc(layout30).cast::<u8>();
                                         if ptr.is_null() {
-                                            _rt::alloc::handle_alloc_error(layout12);
+                                            _rt::alloc::handle_alloc_error(layout30);
                                         }
                                         ptr
                                     } else {
@@ -664,38 +744,38 @@ pub mod exports {
                                             ::core::ptr::null_mut()
                                         }
                                     };
-                                    for (i, e) in vec12.into_iter().enumerate() {
-                                        let base = result12.add(i * 8);
+                                    for (i, e) in vec30.into_iter().enumerate() {
+                                        let base = result30.add(i * 8);
                                         {
-                                            let vec11 = (e.into_bytes()).into_boxed_slice();
-                                            let ptr11 = vec11.as_ptr().cast::<u8>();
-                                            let len11 = vec11.len();
-                                            ::core::mem::forget(vec11);
-                                            *base.add(4).cast::<usize>() = len11;
-                                            *base.add(0).cast::<*mut u8>() = ptr11.cast_mut();
+                                            let vec29 = (e.into_bytes()).into_boxed_slice();
+                                            let ptr29 = vec29.as_ptr().cast::<u8>();
+                                            let len29 = vec29.len();
+                                            ::core::mem::forget(vec29);
+                                            *base.add(4).cast::<usize>() = len29;
+                                            *base.add(0).cast::<*mut u8>() = ptr29.cast_mut();
                                         }
                                     }
-                                    *base.add(60).cast::<usize>() = len12;
-                                    *base.add(56).cast::<*mut u8>() = result12;
-                                    *base.add(64).cast::<u8>() = (status3.clone() as i32) as u8;
+                                    *base.add(60).cast::<usize>() = len30;
+                                    *base.add(56).cast::<*mut u8>() = result30;
+                                    *base.add(64).cast::<u8>() = (status21.clone() as i32) as u8;
                                     *base.add(65).cast::<u8>() =
-                                        (content_rating3.clone() as i32) as u8;
+                                        (content_rating21.clone() as i32) as u8;
                                     *base.add(66).cast::<u8>() =
-                                        (reading_mode3.clone() as i32) as u8;
+                                        (reading_mode21.clone() as i32) as u8;
                                 }
                             }
-                            *ptr1.add(8).cast::<usize>() = len13;
-                            *ptr1.add(4).cast::<*mut u8>() = result13;
-                            *ptr1.add(12).cast::<u8>() = (match t2_1 {
+                            *ptr19.add(8).cast::<usize>() = len31;
+                            *ptr19.add(4).cast::<*mut u8>() = result31;
+                            *ptr19.add(12).cast::<u8>() = (match t20_1 {
                                 true => 1,
                                 false => 0,
                             }) as u8;
                         }
                         Err(_) => {
-                            *ptr1.add(0).cast::<u8>() = (1i32) as u8;
+                            *ptr19.add(0).cast::<u8>() = (1i32) as u8;
                         }
                     };
-                    ptr1
+                    ptr19
                 }
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
@@ -1117,8 +1197,13 @@ pub mod exports {
                     /// Get a list of manga from the source.
                     ///
                     /// This function should return a list of manga that can be displayed to the
-                    /// user. The `page` parameter is used to paginate the results if necessary.
-                    fn get_manga_list(page: u32) -> Result<(_rt::Vec<Manga>, bool), ()>;
+                    /// user. The `filters` parameter is used to filter the results based on
+                    /// user input. The `page` parameter is used to paginate the results if
+                    /// necessary.
+                    fn get_manga_list(
+                        filters: _rt::Vec<Filter>,
+                        page: u32,
+                    ) -> Result<(_rt::Vec<Manga>, bool), ()>;
                     /// Get details for a specific manga.
                     ///
                     /// This function should return detailed information about a specific manga.
@@ -1145,8 +1230,8 @@ pub mod exports {
       $($path_to_types)*::_export_initialize_cabi::<$ty>()
     }
     #[export_name = "midoku:bindings/api@0.1.0#get-manga-list"]
-    unsafe extern "C" fn export_get_manga_list(arg0: i32,) -> *mut u8 {
-      $($path_to_types)*::_export_get_manga_list_cabi::<$ty>(arg0)
+    unsafe extern "C" fn export_get_manga_list(arg0: *mut u8,arg1: usize,arg2: i32,) -> *mut u8 {
+      $($path_to_types)*::_export_get_manga_list_cabi::<$ty>(arg0, arg1, arg2)
     }
     #[export_name = "cabi_post_midoku:bindings/api@0.1.0#get-manga-list"]
     unsafe extern "C" fn _post_return_get_manga_list(arg0: *mut u8,) {
@@ -1230,6 +1315,68 @@ pub mod exports {
                 }
                 #[doc(hidden)]
                 pub(crate) use __export_midoku_types_chapter_0_1_0_cabi;
+            }
+
+            #[allow(dead_code, clippy::all)]
+            pub mod filter {
+                #[used]
+                #[doc(hidden)]
+                #[cfg(target_arch = "wasm32")]
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
+                use super::super::super::super::_rt;
+                #[derive(Clone)]
+                pub struct FilterTitle {
+                    pub query: _rt::String,
+                }
+                impl ::core::fmt::Debug for FilterTitle {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("FilterTitle")
+                            .field("query", &self.query)
+                            .finish()
+                    }
+                }
+                #[derive(Clone)]
+                pub struct FilterSort {
+                    pub name: _rt::String,
+                    pub can_be_reversed: bool,
+                    pub options: _rt::Vec<_rt::String>,
+                    pub default_option_index: u32,
+                    pub default_option_reversed: bool,
+                }
+                impl ::core::fmt::Debug for FilterSort {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        f.debug_struct("FilterSort")
+                            .field("name", &self.name)
+                            .field("can-be-reversed", &self.can_be_reversed)
+                            .field("options", &self.options)
+                            .field("default-option-index", &self.default_option_index)
+                            .field("default-option-reversed", &self.default_option_reversed)
+                            .finish()
+                    }
+                }
+                #[derive(Clone)]
+                pub enum Filter {
+                    Title(FilterTitle),
+                    Sort(FilterSort),
+                }
+                impl ::core::fmt::Debug for Filter {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+                        match self {
+                            Filter::Title(e) => f.debug_tuple("Filter::Title").field(e).finish(),
+                            Filter::Sort(e) => f.debug_tuple("Filter::Sort").field(e).finish(),
+                        }
+                    }
+                }
+                #[doc(hidden)]
+
+                macro_rules! __export_midoku_types_filter_0_1_0_cabi {
+                    ($ty:ident with_types_in $($path_to_types:tt)*) => {
+                        const _: () = {};
+                    };
+                }
+                #[doc(hidden)]
+                pub(crate) use __export_midoku_types_filter_0_1_0_cabi;
             }
 
             #[allow(dead_code, clippy::all)]
@@ -1687,6 +1834,7 @@ macro_rules! __export_endpoints_impl {
   ($ty:ident) => (self::export!($ty with_types_in self););
   ($ty:ident with_types_in $($path_to_types_root:tt)*) => (
   $($path_to_types_root)*::exports::midoku::types::chapter::__export_midoku_types_chapter_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::chapter);
+  $($path_to_types_root)*::exports::midoku::types::filter::__export_midoku_types_filter_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::filter);
   $($path_to_types_root)*::exports::midoku::types::manga::__export_midoku_types_manga_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::manga);
   $($path_to_types_root)*::exports::midoku::types::page::__export_midoku_types_page_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::types::page);
   $($path_to_types_root)*::exports::midoku::bindings::api::__export_midoku_bindings_api_0_1_0_cabi!($ty with_types_in $($path_to_types_root)*::exports::midoku::bindings::api);
@@ -1698,9 +1846,9 @@ pub(crate) use __export_endpoints_impl as export;
 #[cfg(target_arch = "wasm32")]
 #[link_section = "component-type:wit-bindgen:0.24.0:endpoints:encoded world"]
 #[doc(hidden)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1627] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xdb\x0b\x01A\x02\x01\
-A\x13\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1862] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xc6\x0d\x01A\x02\x01\
+A\x16\x01B\x0d\x01m\x05\x03get\x04post\x03put\x04head\x06delete\x04\0\x06method\x03\
 \0\0\x04\0\x11incoming-response\x03\x01\x01h\x02\x01@\x01\x04self\x03\0{\x04\0%[\
 method]incoming-response.status-code\x01\x04\x01o\x02ss\x01p\x05\x01@\x01\x04sel\
 f\x03\0\x06\x04\0![method]incoming-response.headers\x01\x07\x01p}\x01@\x01\x04se\
@@ -1716,25 +1864,30 @@ set-period-ms\x01\x04\x01@\0\0\x7f\x04\0\x05ready\x01\x05\x01@\0\x01\0\x04\0\x05
 block\x01\x06\x03\x01!midoku:limiter/rate-limiter@0.1.0\x05\x04\x01B\x02\x01r\x08\
 \x02ids\x05titles\x06volumev\x07chapterv\x0cdata-updatedy\x09scanlators\x03urls\x08\
 languages\x04\0\x07chapter\x03\0\0\x04\x01\x1amidoku:types/chapter@0.1.0\x05\x05\
-\x01B\x09\x01m\x05\x07unknown\x07ongoing\x09completed\x06hiatus\x09cancelled\x04\
-\0\x06status\x03\0\0\x01m\x03\x04safe\x0asuggestive\x04nsfw\x04\0\x0econtent-rat\
-ing\x03\0\x02\x01m\x04\x0dright-to-left\x0dleft-to-right\x08vertical\x06scroll\x04\
-\0\x0creading-mode\x03\0\x04\x01ps\x01r\x0b\x02ids\x05titles\x03urls\x0bdescript\
-ions\x09cover-urls\x0bauthor-names\x0bartist-names\x0acategories\x06\x06status\x01\
-\x0econtent-rating\x03\x0creading-mode\x05\x04\0\x05manga\x03\0\x07\x04\x01\x18m\
-idoku:types/manga@0.1.0\x05\x06\x01B\x03\x01p}\x01r\x03\x05indexy\x03urls\x06bas\
-e64\0\x04\0\x04page\x03\0\x01\x04\x01\x17midoku:types/page@0.1.0\x05\x07\x02\x03\
-\0\x03\x07chapter\x02\x03\0\x04\x05manga\x02\x03\0\x05\x04page\x01B\x19\x02\x03\x02\
-\x01\x08\x04\0\x07chapter\x03\0\0\x02\x03\x02\x01\x09\x04\0\x05manga\x03\0\x02\x02\
-\x03\x02\x01\x0a\x04\0\x04page\x03\0\x04\x01j\0\0\x01@\0\0\x06\x04\0\x0ainitiali\
-ze\x01\x07\x01p\x03\x01o\x02\x08\x7f\x01j\x01\x09\0\x01@\x01\x04pagey\0\x0a\x04\0\
-\x0eget-manga-list\x01\x0b\x01j\x01\x03\0\x01@\x01\x08manga-ids\0\x0c\x04\0\x11g\
-et-manga-details\x01\x0d\x01p\x01\x01j\x01\x0e\0\x01@\x01\x08manga-ids\0\x0f\x04\
-\0\x10get-chapter-list\x01\x10\x01p\x05\x01j\x01\x11\0\x01@\x02\x08manga-ids\x0a\
-chapter-ids\0\x12\x04\0\x0dget-page-list\x01\x13\x04\x01\x19midoku:bindings/api@\
-0.1.0\x05\x0b\x04\x01(midoku:example-extension/endpoints@0.1.0\x04\0\x0b\x0f\x01\
-\0\x09endpoints\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\
-\x070.202.0\x10wit-bindgen-rust\x060.24.0";
+\x01B\x07\x01r\x01\x05querys\x04\0\x0cfilter-title\x03\0\0\x01ps\x01r\x05\x04nam\
+es\x0fcan-be-reversed\x7f\x07options\x02\x14default-option-indexy\x17default-opt\
+ion-reversed\x7f\x04\0\x0bfilter-sort\x03\0\x03\x01q\x02\x05title\x01\x01\0\x04s\
+ort\x01\x04\0\x04\0\x06filter\x03\0\x05\x04\x01\x19midoku:types/filter@0.1.0\x05\
+\x06\x01B\x09\x01m\x05\x07unknown\x07ongoing\x09completed\x06hiatus\x09cancelled\
+\x04\0\x06status\x03\0\0\x01m\x03\x04safe\x0asuggestive\x04nsfw\x04\0\x0econtent\
+-rating\x03\0\x02\x01m\x04\x0dright-to-left\x0dleft-to-right\x08vertical\x06scro\
+ll\x04\0\x0creading-mode\x03\0\x04\x01ps\x01r\x0b\x02ids\x05titles\x03urls\x0bde\
+scriptions\x09cover-urls\x0bauthor-names\x0bartist-names\x0acategories\x06\x06st\
+atus\x01\x0econtent-rating\x03\x0creading-mode\x05\x04\0\x05manga\x03\0\x07\x04\x01\
+\x18midoku:types/manga@0.1.0\x05\x07\x01B\x03\x01p}\x01r\x03\x05indexy\x03urls\x06\
+base64\0\x04\0\x04page\x03\0\x01\x04\x01\x17midoku:types/page@0.1.0\x05\x08\x02\x03\
+\0\x03\x07chapter\x02\x03\0\x04\x06filter\x02\x03\0\x05\x05manga\x02\x03\0\x06\x04\
+page\x01B\x1c\x02\x03\x02\x01\x09\x04\0\x07chapter\x03\0\0\x02\x03\x02\x01\x0a\x04\
+\0\x06filter\x03\0\x02\x02\x03\x02\x01\x0b\x04\0\x05manga\x03\0\x04\x02\x03\x02\x01\
+\x0c\x04\0\x04page\x03\0\x06\x01j\0\0\x01@\0\0\x08\x04\0\x0ainitialize\x01\x09\x01\
+p\x03\x01p\x05\x01o\x02\x0b\x7f\x01j\x01\x0c\0\x01@\x02\x07filters\x0a\x04pagey\0\
+\x0d\x04\0\x0eget-manga-list\x01\x0e\x01j\x01\x05\0\x01@\x01\x08manga-ids\0\x0f\x04\
+\0\x11get-manga-details\x01\x10\x01p\x01\x01j\x01\x11\0\x01@\x01\x08manga-ids\0\x12\
+\x04\0\x10get-chapter-list\x01\x13\x01p\x07\x01j\x01\x14\0\x01@\x02\x08manga-ids\
+\x0achapter-ids\0\x15\x04\0\x0dget-page-list\x01\x16\x04\x01\x19midoku:bindings/\
+api@0.1.0\x05\x0d\x04\x01(midoku:example-extension/endpoints@0.1.0\x04\0\x0b\x0f\
+\x01\0\x09endpoints\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-compo\
+nent\x070.202.0\x10wit-bindgen-rust\x060.24.0";
 
 #[inline(never)]
 #[doc(hidden)]

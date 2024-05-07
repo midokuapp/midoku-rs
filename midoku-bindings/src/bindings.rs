@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::path::Path;
 
 use midoku_types::chapter::Chapter;
+use midoku_types::filter::Filter;
 use midoku_types::manga::Manga;
 use midoku_types::page::Page;
 use wasmtime::component::{Component, Linker, TypedFunc};
@@ -14,7 +15,7 @@ use crate::state::State;
 pub struct Bindings {
     store: RefCell<Store<State>>,
     initialize: TypedFunc<(), (Result<(), ()>,)>,
-    get_manga_list: TypedFunc<(u32,), (Result<(Vec<Manga>, bool), ()>,)>,
+    get_manga_list: TypedFunc<(Vec<Filter>, u32,), (Result<(Vec<Manga>, bool), ()>,)>,
     get_manga_details: TypedFunc<(String,), (Result<Manga, ()>,)>,
     get_chapter_list: TypedFunc<(String,), (Result<Vec<Chapter>, ()>,)>,
     get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
@@ -85,7 +86,7 @@ impl Bindings {
 
         let initialize = api.typed_func::<(), (Result<(), ()>,)>("initialize")?;
         let get_manga_list =
-            api.typed_func::<(u32,), (Result<(Vec<Manga>, bool), ()>,)>("get-manga-list")?;
+            api.typed_func::<(Vec<Filter>, u32,), (Result<(Vec<Manga>, bool), ()>,)>("get-manga-list")?;
         let get_manga_details =
             api.typed_func::<(String,), (Result<Manga, ()>,)>("get-manga-details")?;
         let get_chapter_list =
@@ -116,8 +117,8 @@ impl Bindings {
         result_initialize
     }
 
-    pub fn get_manga_list(&self, page: u32) -> Result<(Vec<Manga>, bool), ()> {
-        let result_get_manga_list = call_func!(self, get_manga_list, (page,));
+    pub fn get_manga_list(&self, filter: Vec<Filter>, page: u32) -> Result<(Vec<Manga>, bool), ()> {
+        let result_get_manga_list = call_func!(self, get_manga_list, (filter, page,));
         post_return!(self, get_manga_list);
         result_get_manga_list
     }

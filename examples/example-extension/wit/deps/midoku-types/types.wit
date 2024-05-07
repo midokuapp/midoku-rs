@@ -15,6 +15,25 @@ interface chapter {
     }
 }
 
+interface filter {
+    record filter-title {
+        query: string,
+    }
+
+    record filter-sort {
+        name: string,
+        can-be-reversed: bool,
+        options: list<string>,
+        default-option-index: u32,
+        default-option-reversed: bool,
+    }
+
+    variant filter {
+        title(filter-title),
+        sort(filter-sort),
+    }
+}
+
 interface manga {
     enum status {
         unknown,
@@ -64,6 +83,7 @@ interface page {
 
 world types {
     export chapter;
+    export filter;
     export manga;
     export page;
 }

@@ -1,7 +1,7 @@
 #[allow(warnings)]
 mod bindings;
 
-use bindings::exports::midoku::bindings::api::{Chapter, Guest, Manga, Page};
+use bindings::exports::midoku::bindings::api::{Chapter, Filter, Guest, Manga, Page};
 use bindings::midoku::http::outgoing_handler::{handle, IncomingResponse, Method};
 use bindings::midoku::limiter::rate_limiter::{block, set_burst, set_period_ms};
 
@@ -18,7 +18,7 @@ impl Guest for Component {
         Ok(())
     }
 
-    fn get_manga_list(_page: u32) -> Result<(Vec<Manga>, bool), ()> {
+    fn get_manga_list(_filter: Vec<Filter>, _page: u32) -> Result<(Vec<Manga>, bool), ()> {
         // Block until the rate limiter allows the request
         block();
 
