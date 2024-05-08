@@ -9,14 +9,15 @@ pub struct FilterTitle {
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(record)]
 pub struct FilterSort {
-    pub name: String,
-    #[component(name = "can-be-reversed")]
-    pub can_be_reversed: bool,
-    pub options: Vec<String>,
-    #[component(name = "default-option-index")]
-    pub default_option_index: u32,
-    #[component(name = "default-option-reversed")]
-    pub default_option_reversed: bool,
+    #[component(name = "option-index")]
+    pub option_index: u32,
+
+    /// If true, the sort order is reversed.
+    ///
+    /// This is analogous to an ascending if true or descending if false sort
+    /// order.
+    #[component(name = "option-reversed")]
+    pub option_reversed: bool,
 }
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
