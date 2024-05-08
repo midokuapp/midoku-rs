@@ -9,8 +9,8 @@ pub struct Chapter {
     pub chapter: f32,
 
     /// The date the chapter was last updated. This is a Unix timestamp in seconds.
-    #[component(name = "data-updated")]
-    pub data_updated: u32,
+    #[component(name = "date-updated")]
+    pub date_updated: u32,
     pub scanlator: String,
     pub url: String,
     pub language: String,
