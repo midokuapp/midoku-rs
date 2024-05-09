@@ -1,6 +1,8 @@
-use std::cell::RefCell;
+use std::cell::{Ref, RefCell, RefMut};
+use std::collections::HashMap;
 use std::path::Path;
 
+use midoku_settings::types::Value;
 use midoku_types::chapter::Chapter;
 use midoku_types::filter::Filter;
 use midoku_types::manga::Manga;
@@ -10,12 +12,13 @@ use wasmtime::{AsContextMut, Engine, Store};
 
 use crate::instance_impl::midoku_http::map_midoku_http;
 use crate::instance_impl::midoku_limiter::map_midoku_limiter;
+use crate::instance_impl::midoku_settings::map_midoku_settings;
 use crate::state::State;
 
 pub struct Bindings {
     store: RefCell<Store<State>>,
     initialize: TypedFunc<(), (Result<(), ()>,)>,
-    get_manga_list: TypedFunc<(Vec<Filter>, u32,), (Result<(Vec<Manga>, bool), ()>,)>,
+    get_manga_list: TypedFunc<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>,
     get_manga_details: TypedFunc<(String,), (Result<Manga, ()>,)>,
     get_chapter_list: TypedFunc<(String,), (Result<Vec<Chapter>, ()>,)>,
     get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
@@ -76,6 +79,7 @@ impl Bindings {
         let mut linker: Linker<State> = Linker::new(&engine);
         map_midoku_http(&mut linker)?;
         map_midoku_limiter(&mut linker)?;
+        map_midoku_settings(&mut linker)?;
 
         let instance: wasmtime::component::Instance = linker.instantiate(&mut store, &component)?;
 
@@ -85,8 +89,10 @@ impl Bindings {
             .ok_or("export not found")?;
 
         let initialize = api.typed_func::<(), (Result<(), ()>,)>("initialize")?;
-        let get_manga_list =
-            api.typed_func::<(Vec<Filter>, u32,), (Result<(Vec<Manga>, bool), ()>,)>("get-manga-list")?;
+        let get_manga_list = api
+            .typed_func::<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>(
+                "get-manga-list",
+            )?;
         let get_manga_details =
             api.typed_func::<(String,), (Result<Manga, ()>,)>("get-manga-details")?;
         let get_chapter_list =
@@ -139,5 +145,15 @@ impl Bindings {
         let result_get_page_list = call_func!(self, get_page_list, (id, chapter_id));
         post_return!(self, get_page_list);
         result_get_page_list
+    }
+
+    /// Get a reference to the settings.
+    pub fn settings(&self) -> Ref<HashMap<String, Value>> {
+        Ref::map(self.store.borrow(), |s| s.data().settings())
+    }
+
+    /// Get a mutable reference to the settings.
+    pub fn settings_mut(&mut self) -> RefMut<HashMap<String, Value>> {
+        RefMut::map(self.store.borrow_mut(), |s| s.data_mut().settings_mut())
     }
 }

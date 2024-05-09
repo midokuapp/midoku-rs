@@ -1,3 +1,4 @@
 midoku-http = "../../midoku-http/wit"
 midoku-limiter = "../../midoku-limiter/wit"
+midoku-settings = "../../midoku-settings/wit"
 midoku-types = "../../midoku-types/wit"

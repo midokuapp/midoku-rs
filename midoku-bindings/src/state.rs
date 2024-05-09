@@ -1,9 +1,13 @@
+use std::collections::HashMap;
+
 use midoku_limiter::rate_limiter::RateLimiter;
+use midoku_settings::types::Value;
 use wasmtime::component::ResourceTable;
 
 pub struct State {
     resource_table: ResourceTable,
     limiter: Option<RateLimiter>,
+    settings: HashMap<String, Value>,
 }
 
 impl State {
@@ -22,6 +26,14 @@ impl State {
     pub fn limiter_mut(&mut self) -> Option<&mut RateLimiter> {
         self.limiter.as_mut()
     }
+
+    pub fn settings(&self) -> &HashMap<String, Value> {
+        &self.settings
+    }
+
+    pub fn settings_mut(&mut self) -> &mut HashMap<String, Value> {
+        &mut self.settings
+    }
 }
 
 impl Default for State {
@@ -29,6 +41,7 @@ impl Default for State {
         Self {
             resource_table: ResourceTable::new(),
             limiter: None,
+            settings: HashMap::new(),
         }
     }
 }

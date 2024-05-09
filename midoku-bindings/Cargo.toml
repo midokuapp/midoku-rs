@@ -10,6 +10,7 @@ license.workspace = true
 [dependencies]
 midoku-http = { path = "../midoku-http" }
 midoku-limiter = { path = "../midoku-limiter" }
+midoku-settings = { path = "../midoku-settings" }
 midoku-types = { path = "../midoku-types" }
 wasmtime = "20.0.0"
 
