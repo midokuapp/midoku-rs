@@ -1,0 +1,83 @@
+name: Cargo test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run tests
+
+    env:
+      SCCACHE_CACHE_SIZE: "2G"
+      SCCACHE_VERSION: "0.8.0"
+      RUSTC_WRAPPER: "/usr/local/bin/sccache"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore sccache cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/sccache
+          key: ${{ runner.os }}-sccache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-sccache-
+
+      - name: Restore cargo cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            ~/.cargo/bin
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install sccache
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            sccache_platform="x86_64-unknown-linux-musl"
+          elif [ "${{ runner.os }}" = "macOS" ]; then
+            sccache_platform="x86_64-apple-darwin"
+          elif [ "${{ runner.os }}" = "Windows" ]; then
+            sccache_platform="x86_64-pc-windows-msvc"
+          else
+            echo "Unsupported platform: ${{ runner.os }}"
+            exit 1
+          fi
+          sccache_file="sccache-v${SCCACHE_VERSION}-${sccache_platform}"
+          sccache_url="https://github.com/mozilla/sccache/releases/download/v${SCCACHE_VERSION}/${sccache_file}.tar.gz"
+          echo "URL=${sccache_url}"
+          curl -L "$sccache_url" | tar xz
+          mv -f "$sccache_file/sccache" "$RUSTC_WRAPPER"
+          chmod +x "$RUSTC_WRAPPER"
+
+      - name: Run `cargo test`
+        run: cargo test --workspace --exclude example-extension
+
+      - name: Show sccache statistics
+        run: $RUSTC_WRAPPER --show-stats
+
+  rustfmt:
+    name: Check formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run `cargo fmt`
+        run: cargo fmt --all -- --check
