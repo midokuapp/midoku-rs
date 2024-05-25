@@ -1,6 +1,6 @@
 use midoku_bindings;
 
-const EXTENSION_PATH: &str = "tests/wasm-binaries/example_extension.wasm";
+const EXTENSION_PATH: &str = "tests/example_extension.wasm";
 
 #[test]
 fn test_bindings_from_file() {
