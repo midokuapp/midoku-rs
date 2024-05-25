@@ -15,6 +15,10 @@ use crate::instance_impl::midoku_limiter::map_midoku_limiter;
 use crate::instance_impl::midoku_settings::map_midoku_settings;
 use crate::state::State;
 
+/// Bindings to a Midoku source.
+///
+/// This struct contains the bindings to a Midoku source. It is used to call
+/// functions in the WebAssembly component.
 pub struct Bindings {
     store: RefCell<Store<State>>,
     initialize: TypedFunc<(), (Result<(), ()>,)>,
@@ -123,24 +127,46 @@ impl Bindings {
         result_initialize
     }
 
+    /// Get a list of manga from the source.
+    ///
+    /// # Arguments
+    ///
+    /// * `filter` - A list of filters to apply to the manga list.
+    /// * `page` - The page number to get.
     pub fn get_manga_list(&self, filter: Vec<Filter>, page: u32) -> Result<(Vec<Manga>, bool), ()> {
         let result_get_manga_list = call_func!(self, get_manga_list, (filter, page,));
         post_return!(self, get_manga_list);
         result_get_manga_list
     }
 
+    /// Get details for a specific manga.
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The ID of the manga to get details for.
     pub fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
         let result_get_manga_details = call_func!(self, get_manga_details, (id,));
         post_return!(self, get_manga_details);
         result_get_manga_details
     }
 
+    /// Get a list of chapters for a specific manga.
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The ID of the manga to get chapters for.
     pub fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
         let result_get_chapter_list = call_func!(self, get_chapter_list, (id,));
         post_return!(self, get_chapter_list);
         result_get_chapter_list
     }
 
+    /// Get a list of pages for a specific chapter.
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The ID of the manga.
+    /// * `chapter_id` - The ID of the chapter.
     pub fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
         let result_get_page_list = call_func!(self, get_page_list, (id, chapter_id));
         post_return!(self, get_page_list);
@@ -153,6 +179,17 @@ impl Bindings {
     }
 
     /// Get a mutable reference to the settings.
+    ///
+    /// This allow modifying settings for the component (e.g. User-Agent, etc.).
+    ///
+    /// # Example
+    ///
+    /// ```ignore
+    /// bindings.settings_mut().insert(
+    ///     "key".to_string(),
+    ///     Value::String("value".to_string())
+    /// );
+    /// ```
     pub fn settings_mut(&mut self) -> RefMut<HashMap<String, Value>> {
         RefMut::map(self.store.borrow_mut(), |s| s.data_mut().settings_mut())
     }
