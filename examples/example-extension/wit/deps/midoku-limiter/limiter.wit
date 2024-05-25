@@ -27,8 +27,12 @@ interface rate-limiter {
     /// Returns `Ok` if the period was set successfully, `Err` otherwise.
     set-period-ms: func(period-ms: u32) -> result;
 
-    /// Returns the readyness of the limiter. If the limiter is ready, it means
-    /// that the rate limit is not exceeded and the call can proceed.
+    /// Returns the readyness of the limiter. This function allow a single cell
+    /// to go through the limiter without blocking if the limiter is ready.
+    /// 
+    /// Calling this function consumes the limiter's burst size, meaning calling
+    /// it multiple times will return `false` after the burst size has been
+    /// consumed.
     /// 
     /// Returns `true` if the limiter is ready, `false` otherwise.
     ready: func() -> bool;
