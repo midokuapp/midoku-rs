@@ -29,10 +29,8 @@ development experience.
 ## TODO
 
 - [x] Better documentation
-- [ ] More examples
 - [x] Add tests
 - [x] Add CI pipeline for tests
-- [ ] Add CD pipeline for documentation
 
 ## Building
 
