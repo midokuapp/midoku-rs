@@ -15,6 +15,7 @@ pub enum Method {
     Delete,
 }
 
+#[derive(Debug)]
 pub struct IncomingResponse {
     status_code: u16,
     headers: Vec<(String, String)>,
@@ -40,5 +41,23 @@ impl IncomingResponse {
 
     pub fn bytes(&self) -> &Vec<u8> {
         &self.bytes
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_incoming_response() {
+        let status_code = 200;
+        let headers = vec![("Content-Type".to_string(), "application/json".to_string())];
+        let bytes = vec![1, 2, 3];
+
+        let response = IncomingResponse::new(status_code, headers.clone(), bytes.clone());
+
+        assert_eq!(response.status_code(), status_code);
+        assert_eq!(response.headers(), &headers);
+        assert_eq!(response.bytes(), &bytes);
     }
 }

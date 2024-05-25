@@ -74,3 +74,121 @@ impl Default for RateLimiter {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_rate_limiter_default() {
+        let rate_limiter = RateLimiter::default();
+
+        assert_eq!(rate_limiter.burst, 1);
+        assert_eq!(rate_limiter.period_ms, 1);
+    }
+
+    #[test]
+    fn test_rate_limiter_get_burst() {
+        let rate_limiter = RateLimiter::default();
+
+        assert_eq!(rate_limiter.burst(), 1);
+    }
+
+    #[test]
+    fn test_rate_limiter_get_period_ms() {
+        let rate_limiter = RateLimiter::default();
+
+        assert_eq!(rate_limiter.period_ms(), 1);
+    }
+
+    #[test]
+    fn test_rate_limiter_set_burst() {
+        let mut rate_limiter = RateLimiter::default();
+
+        rate_limiter.set_burst(3).unwrap();
+        assert_eq!(rate_limiter.burst, 3);
+        assert_eq!(rate_limiter.period_ms, 1);
+        assert_eq!(rate_limiter.limiter.check().unwrap(), ());
+    }
+
+    #[test]
+    fn test_rate_limiter_set_period_ms() {
+        let mut rate_limiter = RateLimiter::default();
+
+        rate_limiter.set_period_ms(1000).unwrap();
+        assert_eq!(rate_limiter.burst, 1);
+        assert_eq!(rate_limiter.period_ms, 1000);
+        assert_eq!(rate_limiter.limiter.check().unwrap(), ());
+    }
+
+    #[test]
+    fn test_rate_limiter_set_burst_zero() {
+        let mut rate_limiter = RateLimiter::default();
+
+        assert!(rate_limiter.set_burst(0).is_err());
+    }
+
+    #[test]
+    fn test_rate_limiter_set_period_ms_zero() {
+        let mut rate_limiter = RateLimiter::default();
+
+        assert!(rate_limiter.set_period_ms(0).is_err());
+    }
+
+    #[test]
+    fn test_rate_limiter_set_limiter() {
+        let mut rate_limiter = RateLimiter::default();
+
+        rate_limiter.set_limiter(5, 2000).unwrap();
+
+        // burst and period_ms should not change
+        assert_eq!(rate_limiter.burst, 1);
+        assert_eq!(rate_limiter.period_ms, 1);
+    }
+
+    #[test]
+    fn test_rate_limiter_set_limiter_burst_zero() {
+        let mut rate_limiter = RateLimiter::default();
+
+        assert!(rate_limiter.set_limiter(0, 2000).is_err());
+    }
+
+    #[test]
+    fn test_rate_limiter_set_limiter_period_ms_zero() {
+        let mut rate_limiter = RateLimiter::default();
+
+        assert!(rate_limiter.set_limiter(5, 0).is_err());
+    }
+
+    #[test]
+    fn test_rate_limiter_set_limiter_zero() {
+        let mut rate_limiter = RateLimiter::default();
+
+        assert!(rate_limiter.set_limiter(0, 0).is_err());
+    }
+
+    #[test]
+    fn test_rate_limiter_ready() {
+        let rate_limiter = RateLimiter::default();
+
+        assert!(rate_limiter.ready());
+        assert!(!rate_limiter.ready());
+    }
+
+    #[test]
+    fn test_rate_limiter_block() {
+        let rate_limiter = RateLimiter::default();
+
+        let start_time = std::time::Instant::now();
+        rate_limiter.block();
+        let elapsed = start_time.elapsed().as_millis();
+
+        assert!(elapsed < 1);
+
+        let start_time = std::time::Instant::now();
+        rate_limiter.block();
+        let elapsed = start_time.elapsed().as_millis();
+
+        assert!(elapsed >= 1);
+    }
+}

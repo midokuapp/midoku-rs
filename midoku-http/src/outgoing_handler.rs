@@ -59,3 +59,56 @@ pub fn handle(
 
     Ok(IncomingResponse::new(status_code, headers, bytes))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_from_method() {
+        let reqwest_method: reqwest::Method = Method::Get.into();
+        assert_eq!(reqwest_method, reqwest::Method::GET);
+
+        let reqwest_method: reqwest::Method = Method::Post.into();
+        assert_eq!(reqwest_method, reqwest::Method::POST);
+
+        let reqwest_method: reqwest::Method = Method::Put.into();
+        assert_eq!(reqwest_method, reqwest::Method::PUT);
+
+        let reqwest_method: reqwest::Method = Method::Head.into();
+        assert_eq!(reqwest_method, reqwest::Method::HEAD);
+
+        let reqwest_method: reqwest::Method = Method::Delete.into();
+        assert_eq!(reqwest_method, reqwest::Method::DELETE);
+    }
+
+    const URL: &str = "https://example.com";
+
+    #[test]
+    fn test_handle() {
+        let response = handle(Method::Get, URL.to_string(), None, None);
+        assert!(response.is_ok());
+    }
+
+    #[test]
+    fn test_handle_with_headers() {
+        let headers = vec![("Content-Type".to_string(), "application/json".to_string())];
+        let response = handle(Method::Get, URL.to_string(), Some(headers), None);
+        assert!(response.is_ok());
+    }
+
+    #[test]
+    fn test_handle_with_body() {
+        let body = vec![1, 2, 3];
+        let response = handle(Method::Get, URL.to_string(), None, Some(body));
+        assert!(response.is_ok());
+    }
+
+    #[test]
+    fn test_handle_with_headers_and_body() {
+        let headers = vec![("Content-Type".to_string(), "application/json".to_string())];
+        let body = vec![1, 2, 3];
+        let response = handle(Method::Get, URL.to_string(), Some(headers), Some(body));
+        assert!(response.is_ok());
+    }
+}

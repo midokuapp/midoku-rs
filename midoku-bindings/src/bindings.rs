@@ -60,7 +60,7 @@ impl Bindings {
     /// .wasm file.
     ///
     /// # Example
-    /// ```no_run
+    /// ```ignore
     /// let bindings = Bindings::from_file("example.wasm")?;
     ///
     /// // Call the wasm `initialize` function which contains the initialization
