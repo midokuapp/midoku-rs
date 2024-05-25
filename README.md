@@ -30,7 +30,7 @@ development experience.
 
 - [ ] Better documentation
 - [ ] More examples
-- [ ] Add tests
+- [x] Add tests
 - [ ] Add CI/CD pipeline for documentation and tests
 
 ## Building
