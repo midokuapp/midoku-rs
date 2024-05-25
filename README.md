@@ -26,12 +26,6 @@ development experience.
 [aidoku-rs]: https://github.com/Aidoku/aidoku-rs
 [aidoku]: https://github.com/Aidoku/Aidoku
 
-## TODO
-
-- [x] Better documentation
-- [x] Add tests
-- [x] Add CI pipeline for tests
-
 ## Building
 
 To build an extension, run the following command:
