@@ -16,7 +16,9 @@ pub fn map_midoku_http(linker: &mut Linker<State>) -> Result<(), Box<dyn std::er
     Ok(())
 }
 
-fn map_midoku_http_types(instance: &mut LinkerInstance<'_, State>) -> Result<(), Box<dyn std::error::Error>> {
+fn map_midoku_http_types(
+    instance: &mut LinkerInstance<'_, State>,
+) -> Result<(), Box<dyn std::error::Error>> {
     instance.resource(
         "incoming-response",
         ResourceType::host::<IncomingResponse>(),
