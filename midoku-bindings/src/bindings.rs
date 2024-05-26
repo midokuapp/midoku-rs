@@ -71,24 +71,18 @@ impl Bindings {
         map_midoku_limiter(&mut linker)?;
         map_midoku_settings(&mut linker)?;
 
-        let instance: wasmtime::component::Instance = linker.instantiate(&mut store, &component)?;
+        let instance = linker.instantiate(&mut store, &component)?;
 
         let mut export = instance.exports(&mut store);
         let mut api = export
             .instance("midoku:bindings/api@0.1.0")
             .ok_or("export not found")?;
 
-        let initialize = api.typed_func::<(), (Result<(), ()>,)>("initialize")?;
-        let get_manga_list = api
-            .typed_func::<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>(
-                "get-manga-list",
-            )?;
-        let get_manga_details =
-            api.typed_func::<(String,), (Result<Manga, ()>,)>("get-manga-details")?;
-        let get_chapter_list =
-            api.typed_func::<(String,), (Result<Vec<Chapter>, ()>,)>("get-chapter-list")?;
-        let get_page_list =
-            api.typed_func::<(String, String), (Result<Vec<Page>, ()>,)>("get-page-list")?;
+        let initialize = api.typed_func("initialize")?;
+        let get_manga_list = api.typed_func("get-manga-list")?;
+        let get_manga_details = api.typed_func("get-manga-details")?;
+        let get_chapter_list = api.typed_func("get-chapter-list")?;
+        let get_page_list = api.typed_func("get-page-list")?;
 
         drop(export);
 
