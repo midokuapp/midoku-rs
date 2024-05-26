@@ -8,7 +8,8 @@ idiomatic way to building Midoku extensions in Rust.
 Tachiyomi is a popular manga reader app for Android that can access various
 manga sources. However, these extensions are written in Java and compiled into
 an APK, making it challenging to modify or fix them without the Android
-development environment.
+development environment (which can be cumbersome to set up just for editing a
+single file).
 
 This project aims to simplify this process by introducing a new method for
 creating extensions. By providing a user-friendly API for writing sources in
@@ -16,11 +17,11 @@ Rust, developers can compile them into a WebAssembly component. This component
 can then be integrated into any application that supports WebAssembly
 (e.g. [`wasmtime`][wasmtime]).
 
-The project takes inspiration from [`aidoku-rs`][aidoku-rs], a similar project
+This project takes inspiration from [`aidoku-rs`][aidoku-rs], a similar project
 for developing extensions for the [Aidoku][aidoku] manga reader app.
-Unlike `aidoku-rs`, this project takes advantage of the WebAssembly Component
-Model to make use of richer types and interfaces, facilitating a smoother
-development experience.
+However, unlike `aidoku-rs` this project takes advantage of the WebAssembly
+Component Model to make use of richer types and interfaces, making the
+development process smoother and more efficient.
 
 [wasmtime]: https://wasmtime.dev
 [aidoku-rs]: https://github.com/Aidoku/aidoku-rs
