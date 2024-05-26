@@ -1,4 +1,5 @@
 use midoku_bindings;
+use midoku_types::manga::{ContentRating, ReadingMode, Status};
 
 const EXTENSION_PATH: &str = "tests/example_extension.wasm";
 
@@ -24,7 +25,13 @@ fn test_bindings_get_manga_list() {
 
     let get_manga_list = bindings.get_manga_list(vec![], 0);
 
-    assert!(get_manga_list.is_err()); // Not implemented
+    assert!(get_manga_list.is_ok());
+
+    let (manga_list, has_next) = get_manga_list.unwrap();
+
+    // Example result
+    assert!(manga_list.is_empty());
+    assert!(!has_next);
 }
 
 #[test]
@@ -33,7 +40,22 @@ fn test_bindings_get_manga_details() {
 
     let get_manga_details = bindings.get_manga_details("manga_id".to_string());
 
-    assert!(get_manga_details.is_err()); // Not implemented
+    assert!(get_manga_details.is_ok());
+
+    let manga = get_manga_details.unwrap();
+
+    // Example result
+    assert_eq!(manga.id, "");
+    assert_eq!(manga.title, "");
+    assert_eq!(manga.url, "");
+    assert_eq!(manga.description, "");
+    assert_eq!(manga.cover_url, "");
+    assert_eq!(manga.author_name, "");
+    assert_eq!(manga.artist_name, "");
+    assert!(manga.categories.is_empty());
+    assert_eq!(manga.status, Status::Unknown);
+    assert_eq!(manga.content_rating, ContentRating::Safe);
+    assert_eq!(manga.reading_mode, ReadingMode::RightToLeft);
 }
 
 #[test]
@@ -42,7 +64,12 @@ fn test_bindings_get_chapter_list() {
 
     let get_chapter_list = bindings.get_chapter_list("manga_id".to_string());
 
-    assert!(get_chapter_list.is_err()); // Not implemented
+    assert!(get_chapter_list.is_ok());
+
+    let chapter_list = get_chapter_list.unwrap();
+
+    // Example result
+    assert!(chapter_list.is_empty());
 }
 
 #[test]
@@ -51,7 +78,12 @@ fn test_bindings_get_page_list() {
 
     let get_page_list = bindings.get_page_list("manga_id".to_string(), "chapter_id".to_string());
 
-    assert!(get_page_list.is_err()); // Not implemented
+    assert!(get_page_list.is_ok());
+
+    let page_list = get_page_list.unwrap();
+
+    // Example result
+    assert!(page_list.is_empty());
 }
 
 #[test]
