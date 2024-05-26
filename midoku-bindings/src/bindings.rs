@@ -28,19 +28,43 @@ pub struct Bindings {
     get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
 }
 
+/// Macro to get the mutable context from the store.
+#[doc(hidden)]
+macro_rules! store_context_mut {
+    ($self:expr) => {
+        $self.store.borrow_mut().as_context_mut()
+    };
+}
+
+/// Macro to call a function and get the result.
+#[doc(hidden)]
+macro_rules! call_func {
+    ($self:expr, $func:ident, $args:expr) => {
+        $self
+            .$func
+            .call(&mut store_context_mut!($self), $args)
+            .map_err(|_| ())
+            .map(|r| r.0)
+    };
+}
+
+/// Macro to clean up after calling a function.
+#[doc(hidden)]
+macro_rules! post_return {
+    ($self:expr, $func:ident, $args:expr) => {
+        $self
+            .$func
+            .post_return(&mut store_context_mut!($self))
+            .map_err(|_| ())
+    };
+}
+
 /// Macro to call a function, get the result, and clean up.
 #[doc(hidden)]
 macro_rules! call_wasm_component_func {
     ($self:expr, $func:ident, $args:expr) => {{
-        let result = $self
-            .$func
-            .call(&mut $self.store.borrow_mut().as_context_mut(), $args)
-            .map_err(|_| ())?
-            .0;
-        $self
-            .$func
-            .post_return(&mut $self.store.borrow_mut().as_context_mut())
-            .map_err(|_| ())?;
+        let result = call_func!($self, $func, $args)?;
+        post_return!($self, $func, $args)?;
         result
     }};
 }
