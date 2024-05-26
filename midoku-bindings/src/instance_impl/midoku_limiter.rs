@@ -1,4 +1,5 @@
 use wasmtime::component::{Linker, LinkerInstance};
+use wasmtime::StoreContextMut;
 
 use crate::state::State;
 
@@ -15,8 +16,9 @@ pub fn map_midoku_limiter(linker: &mut Linker<State>) -> Result<(), Box<dyn std:
     Ok(())
 }
 
+/// Host function implementation for the `burst` function.
 fn host_burst(
-    store: wasmtime::StoreContextMut<State>,
+    store: StoreContextMut<State>,
     _: (),
 ) -> Result<(Option<u32>,), wasmtime::Error> {
     let limiter = store.data().limiter();
@@ -24,8 +26,9 @@ fn host_burst(
     Ok((burst,))
 }
 
+/// Host function implementation for the `period-ms` function.
 fn host_period_ms(
-    store: wasmtime::StoreContextMut<State>,
+    store: StoreContextMut<State>,
     _: (),
 ) -> Result<(Option<u32>,), wasmtime::Error> {
     let limiter = store.data().limiter();
@@ -33,8 +36,9 @@ fn host_period_ms(
     Ok((period_ms,))
 }
 
+/// Host function implementation for the `set-burst` function.
 fn host_set_burst(
-    mut store: wasmtime::StoreContextMut<State>,
+    mut store: StoreContextMut<State>,
     (burst,): (u32,),
 ) -> Result<(Result<(), ()>,), wasmtime::Error> {
     let limiter = store.data_mut().limiter_mut();
@@ -44,8 +48,9 @@ fn host_set_burst(
     Ok((result,))
 }
 
+/// Host function implementation for the `set-period-ms` function.
 fn host_set_period_ms(
-    mut store: wasmtime::StoreContextMut<State>,
+    mut store: StoreContextMut<State>,
     (period_ms,): (u32,),
 ) -> Result<(Result<(), ()>,), wasmtime::Error> {
     let limiter = store.data_mut().limiter_mut();
@@ -55,13 +60,15 @@ fn host_set_period_ms(
     Ok((result,))
 }
 
-fn host_ready(store: wasmtime::StoreContextMut<State>, _: ()) -> Result<(bool,), wasmtime::Error> {
+/// Host function implementation for the `ready` function.
+fn host_ready(store: StoreContextMut<State>, _: ()) -> Result<(bool,), wasmtime::Error> {
     let limiter = store.data().limiter();
     let ready = limiter.map(|limiter| limiter.ready()).unwrap_or(true);
     Ok((ready,))
 }
 
-fn host_block(store: wasmtime::StoreContextMut<State>, _: ()) -> Result<(), wasmtime::Error> {
+/// Host function implementation for the `block` function.
+fn host_block(store: StoreContextMut<State>, _: ()) -> Result<(), wasmtime::Error> {
     let limiter = store.data().limiter();
     limiter.map(|limiter| limiter.block());
     Ok(())

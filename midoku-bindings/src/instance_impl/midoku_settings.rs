@@ -1,5 +1,6 @@
 use midoku_settings::types::Value;
 use wasmtime::component::{Linker, LinkerInstance};
+use wasmtime::StoreContextMut;
 
 use crate::state::State;
 
@@ -11,8 +12,9 @@ pub fn map_midoku_settings(linker: &mut Linker<State>) -> Result<(), Box<dyn std
     Ok(())
 }
 
+/// Host function implementation for the `get` function.
 fn host_get(
-    store: wasmtime::StoreContextMut<State>,
+    store: StoreContextMut<State>,
     (key,): (String,),
 ) -> Result<(Result<Value, ()>,), wasmtime::Error> {
     let settings = store.data().settings();

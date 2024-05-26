@@ -1,6 +1,7 @@
 use midoku_http::outgoing_handler::handle;
 use midoku_http::types::{IncomingResponse, Method};
 use wasmtime::component::{Linker, LinkerInstance, Resource, ResourceType};
+use wasmtime::StoreContextMut;
 
 use crate::state::State;
 
@@ -32,51 +33,79 @@ pub fn map_midoku_http(linker: &mut Linker<State>) -> Result<(), Box<dyn std::er
     Ok(())
 }
 
+/// Helper macro to get a resource from the resource table in the store.
+#[doc(hidden)]
+macro_rules! resource_table_get {
+    ($store:expr, $resource:expr) => {
+        $store.data().resource_table().get(&$resource)
+    };
+}
+
+/// Helper macro to push a resource to the resource table in the store.
+#[doc(hidden)]
+macro_rules! resource_table_push {
+    ($store:expr, $resource:expr) => {
+        $store.data_mut().resource_table_mut().push($resource)
+    };
+}
+
+/// Helper macro to delete a resource from the resource table in the store.
+#[doc(hidden)]
+macro_rules! resource_table_delete {
+    ($store:expr, $rep:expr) => {
+        $store.data_mut().resource_table_mut().delete($rep)
+    };
+}
+
+/// Host functions implementation for the `incoming response` resource.
 struct HostIncomingResponse;
 
 impl HostIncomingResponse {
+    /// Host function implementation for the `destructor` behavior of the
+    /// `IncomingResponse` resource.
     fn destructor(
-        mut store: wasmtime::StoreContextMut<State>,
+        mut store: StoreContextMut<State>,
         resource_rep: u32,
     ) -> Result<(), wasmtime::Error> {
         let incoming_response: Resource<IncomingResponse> = Resource::new_own(resource_rep);
-        store
-            .data_mut()
-            .resource_table_mut()
-            .delete(incoming_response)?;
+        resource_table_delete!(store, incoming_response)?;
         Ok(())
     }
 
+    /// Host function implementation for the `status_code` method of the
+    /// `IncomingResponse` resource.
     fn status_code(
-        store: wasmtime::StoreContextMut<State>,
+        store: StoreContextMut<State>,
         (resource,): (Resource<IncomingResponse>,),
     ) -> Result<(u16,), wasmtime::Error> {
-        let incoming_response: &IncomingResponse = store.data().resource_table().get(&resource)?;
-        let status_code: u16 = incoming_response.status_code();
-        Ok((status_code,))
+        let incoming_response = resource_table_get!(store, resource)?;
+        Ok((incoming_response.status_code(),))
     }
 
+    /// Host function implementation for the `headers` method of the
+    /// `IncomingResponse` resource.
     fn headers(
-        store: wasmtime::StoreContextMut<State>,
+        store: StoreContextMut<State>,
         (resource,): (Resource<IncomingResponse>,),
     ) -> Result<(Vec<(String, String)>,), wasmtime::Error> {
-        let incoming_response: &IncomingResponse = store.data().resource_table().get(&resource)?;
-        let headers: Vec<(String, String)> = incoming_response.headers().clone();
-        Ok((headers,))
+        let incoming_response = resource_table_get!(store, resource)?;
+        Ok((incoming_response.headers().clone(),))
     }
 
+    /// Host function implementation for the `bytes` method of the
+    /// `IncomingResponse` resource.
     fn bytes(
-        store: wasmtime::StoreContextMut<State>,
+        store: StoreContextMut<State>,
         (resource,): (Resource<IncomingResponse>,),
     ) -> Result<(Vec<u8>,), wasmtime::Error> {
-        let incoming_response: &IncomingResponse = store.data().resource_table().get(&resource)?;
-        let bytes: Vec<u8> = incoming_response.bytes().clone();
-        Ok((bytes,))
+        let incoming_response = resource_table_get!(store, resource)?;
+        Ok((incoming_response.bytes().clone(),))
     }
 }
 
+/// Host function implementation for the `handle` function.
 fn host_handle(
-    mut store: wasmtime::StoreContextMut<State>,
+    mut store: StoreContextMut<State>,
     (method, url, headers, body): (
         Method,
         Box<str>,
@@ -92,10 +121,6 @@ fn host_handle(
         return Ok((Err(()),));
     }
 
-    let incoming_response_resource: Resource<IncomingResponse> = store
-        .data_mut()
-        .resource_table_mut()
-        .push(incoming_response.unwrap())?;
-    let result: Result<Resource<IncomingResponse>, ()> = Ok(incoming_response_resource);
-    Ok((result,))
+    let incoming_response_resource = resource_table_push!(store, incoming_response.unwrap())?;
+    Ok((Ok(incoming_response_resource),))
 }
