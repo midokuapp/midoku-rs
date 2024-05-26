@@ -17,6 +17,7 @@ jobs:
     name: Run tests
 
     env:
+      CARGO_COMPONENT_VERSION: "0.13.1"
       SCCACHE_CACHE_SIZE: "2G"
       SCCACHE_VERSION: "0.8.0"
       RUSTC_WRAPPER: "/usr/local/bin/sccache"
@@ -65,6 +66,18 @@ jobs:
           curl -L "$sccache_url" | tar xz
           mv -f "$sccache_file/sccache" "$RUSTC_WRAPPER"
           chmod +x "$RUSTC_WRAPPER"
+
+      - name: Install wasm32-unknown-unknown target
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+
+      - name: Install cargo-component
+        run: |
+          if ! command -v cargo-component || ! cargo-component --version | grep -q $CARGO_COMPONENT_VERSION; then
+            cargo install cargo-component --locked --version $CARGO_COMPONENT_VERSION --force
+          fi
 
       - name: Run `cargo test`
         run: cargo test --workspace --exclude example-extension

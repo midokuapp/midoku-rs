@@ -1,18 +1,51 @@
+use std::path::PathBuf;
+
 use midoku_bindings;
 use midoku_types::manga::{ContentRating, ReadingMode, Status};
+use once_cell::sync::Lazy;
 
-const EXTENSION_PATH: &str = "tests/example_extension.wasm";
+static EXTENSION_PATH: Lazy<PathBuf> = Lazy::new(|| {
+    // Build the extension in release mode
+    let output = std::process::Command::new("cargo-component")
+        .args(&[
+            "build",
+            "--release",
+            "--package",
+            "example-extension",
+            "--target",
+            "wasm32-unknown-unknown",
+        ])
+        .output()
+        .expect("Failed to build the extension");
+
+    if !output.status.success() {
+        panic!(
+            "Failed to build the extension: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+
+    // Parse the built extension path from the stderr
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let extension_path = stderr
+        .lines()
+        .find(|line| line.ends_with("example_extension.wasm"))
+        .map(|line| line.trim_end().split_whitespace().last().unwrap())
+        .expect("Failed to parse the extension path");
+
+    extension_path.into()
+});
 
 #[test]
 fn test_bindings_from_file() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH);
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path());
 
     assert!(bindings.is_ok());
 }
 
 #[test]
 fn test_bindings_initialize() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     let initialize = bindings.initialize();
 
@@ -21,7 +54,7 @@ fn test_bindings_initialize() {
 
 #[test]
 fn test_bindings_get_manga_list() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     let get_manga_list = bindings.get_manga_list(vec![], 0);
 
@@ -36,7 +69,7 @@ fn test_bindings_get_manga_list() {
 
 #[test]
 fn test_bindings_get_manga_details() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     let get_manga_details = bindings.get_manga_details("manga_id".to_string());
 
@@ -60,7 +93,7 @@ fn test_bindings_get_manga_details() {
 
 #[test]
 fn test_bindings_get_chapter_list() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     let get_chapter_list = bindings.get_chapter_list("manga_id".to_string());
 
@@ -74,7 +107,7 @@ fn test_bindings_get_chapter_list() {
 
 #[test]
 fn test_bindings_get_page_list() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     let get_page_list = bindings.get_page_list("manga_id".to_string(), "chapter_id".to_string());
 
@@ -88,7 +121,7 @@ fn test_bindings_get_page_list() {
 
 #[test]
 fn test_bindings_settings() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     let settings = bindings.settings();
 
@@ -97,7 +130,7 @@ fn test_bindings_settings() {
 
 #[test]
 fn test_bindings_setting_mut() {
-    let mut bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH).unwrap();
+    let mut bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
 
     bindings.settings_mut().insert(
         "key1".to_string(),
