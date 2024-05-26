@@ -30,7 +30,7 @@ pub struct Bindings {
 
 /// Macro to call a function, get the result, and clean up.
 #[doc(hidden)]
-macro_rules! call_func {
+macro_rules! call_wasm_component_func {
     ($self:expr, $func:ident, $args:expr) => {{
         let result = $self
             .$func
@@ -102,7 +102,7 @@ impl Bindings {
     /// calling other functions. This may include setting up rate limiters or
     /// other configuration.
     pub fn initialize(&self) -> Result<(), ()> {
-        call_func!(self, initialize, ())
+        call_wasm_component_func!(self, initialize, ())
     }
 
     /// Get a list of manga from the source.
@@ -112,7 +112,7 @@ impl Bindings {
     /// * `filter` - A list of filters to apply to the manga list.
     /// * `page` - The page number to get.
     pub fn get_manga_list(&self, filter: Vec<Filter>, page: u32) -> Result<(Vec<Manga>, bool), ()> {
-        call_func!(self, get_manga_list, (filter, page,))
+        call_wasm_component_func!(self, get_manga_list, (filter, page,))
     }
 
     /// Get details for a specific manga.
@@ -121,7 +121,7 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get details for.
     pub fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
-        call_func!(self, get_manga_details, (id,))
+        call_wasm_component_func!(self, get_manga_details, (id,))
     }
 
     /// Get a list of chapters for a specific manga.
@@ -130,7 +130,7 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get chapters for.
     pub fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
-        call_func!(self, get_chapter_list, (id,))
+        call_wasm_component_func!(self, get_chapter_list, (id,))
     }
 
     /// Get a list of pages for a specific chapter.
@@ -140,7 +140,7 @@ impl Bindings {
     /// * `id` - The ID of the manga.
     /// * `chapter_id` - The ID of the chapter.
     pub fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
-        call_func!(self, get_page_list, (id, chapter_id))
+        call_wasm_component_func!(self, get_page_list, (id, chapter_id))
     }
 
     /// Get a reference to the settings.
