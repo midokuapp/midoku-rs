@@ -28,35 +28,21 @@ pub struct Bindings {
     get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
 }
 
-/// Macro to get the mutable context from the store.
-#[doc(hidden)]
-macro_rules! store_context_mut {
-    ($self:expr) => {
-        $self.store.borrow_mut().as_context_mut()
-    };
-}
-
-/// Macro to call a function and get the result.
+/// Macro to call a function, get the result, and clean up.
 #[doc(hidden)]
 macro_rules! call_func {
-    ($self:expr, $func:ident, $args:expr) => {
-        $self
+    ($self:expr, $func:ident, $args:expr) => {{
+        let result = $self
             .$func
-            .call(&mut store_context_mut!($self), $args)
+            .call(&mut $self.store.borrow_mut().as_context_mut(), $args)
             .map_err(|_| ())?
-            .0
-    };
-}
-
-/// Macro to clean up after calling a function.
-#[doc(hidden)]
-macro_rules! post_return {
-    ($self:expr, $func:ident) => {
+            .0;
         $self
             .$func
-            .post_return(&mut store_context_mut!($self))
+            .post_return(&mut $self.store.borrow_mut().as_context_mut())
             .map_err(|_| ())?;
-    };
+        result
+    }};
 }
 
 impl Bindings {
@@ -122,9 +108,7 @@ impl Bindings {
     /// calling other functions. This may include setting up rate limiters or
     /// other configuration.
     pub fn initialize(&self) -> Result<(), ()> {
-        let result_initialize = call_func!(self, initialize, ());
-        post_return!(self, initialize);
-        result_initialize
+        call_func!(self, initialize, ())
     }
 
     /// Get a list of manga from the source.
@@ -134,9 +118,7 @@ impl Bindings {
     /// * `filter` - A list of filters to apply to the manga list.
     /// * `page` - The page number to get.
     pub fn get_manga_list(&self, filter: Vec<Filter>, page: u32) -> Result<(Vec<Manga>, bool), ()> {
-        let result_get_manga_list = call_func!(self, get_manga_list, (filter, page,));
-        post_return!(self, get_manga_list);
-        result_get_manga_list
+        call_func!(self, get_manga_list, (filter, page,))
     }
 
     /// Get details for a specific manga.
@@ -145,9 +127,7 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get details for.
     pub fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
-        let result_get_manga_details = call_func!(self, get_manga_details, (id,));
-        post_return!(self, get_manga_details);
-        result_get_manga_details
+        call_func!(self, get_manga_details, (id,))
     }
 
     /// Get a list of chapters for a specific manga.
@@ -156,9 +136,7 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get chapters for.
     pub fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
-        let result_get_chapter_list = call_func!(self, get_chapter_list, (id,));
-        post_return!(self, get_chapter_list);
-        result_get_chapter_list
+        call_func!(self, get_chapter_list, (id,))
     }
 
     /// Get a list of pages for a specific chapter.
@@ -168,9 +146,7 @@ impl Bindings {
     /// * `id` - The ID of the manga.
     /// * `chapter_id` - The ID of the chapter.
     pub fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
-        let result_get_page_list = call_func!(self, get_page_list, (id, chapter_id));
-        post_return!(self, get_page_list);
-        result_get_page_list
+        call_func!(self, get_page_list, (id, chapter_id))
     }
 
     /// Get a reference to the settings.
