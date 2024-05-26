@@ -17,20 +17,14 @@ pub fn map_midoku_limiter(linker: &mut Linker<State>) -> Result<(), Box<dyn std:
 }
 
 /// Host function implementation for the `burst` function.
-fn host_burst(
-    store: StoreContextMut<State>,
-    _: (),
-) -> Result<(Option<u32>,), wasmtime::Error> {
+fn host_burst(store: StoreContextMut<State>, _: ()) -> Result<(Option<u32>,), wasmtime::Error> {
     let limiter = store.data().limiter();
     let burst = limiter.map(|limiter| limiter.burst());
     Ok((burst,))
 }
 
 /// Host function implementation for the `period-ms` function.
-fn host_period_ms(
-    store: StoreContextMut<State>,
-    _: (),
-) -> Result<(Option<u32>,), wasmtime::Error> {
+fn host_period_ms(store: StoreContextMut<State>, _: ()) -> Result<(Option<u32>,), wasmtime::Error> {
     let limiter = store.data().limiter();
     let period_ms = limiter.map(|limiter| limiter.period_ms());
     Ok((period_ms,))
