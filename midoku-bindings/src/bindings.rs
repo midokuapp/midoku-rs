@@ -133,10 +133,14 @@ impl Bindings {
     ///
     /// # Arguments
     ///
-    /// * `filter` - A list of filters to apply to the manga list.
+    /// * `filters` - A list of filters to apply to the manga list.
     /// * `page` - The page number to get.
-    pub fn get_manga_list(&self, filter: Vec<Filter>, page: u32) -> Result<(Vec<Manga>, bool), ()> {
-        call_wasm_component_func!(self, get_manga_list, (filter, page,))
+    pub fn get_manga_list(
+        &self,
+        filters: Vec<Filter>,
+        page: u32,
+    ) -> Result<(Vec<Manga>, bool), ()> {
+        call_wasm_component_func!(self, get_manga_list, (filters, page,))
     }
 
     /// Get details for a specific manga.
