@@ -1,12 +1,15 @@
+use serde::{Deserialize, Serialize};
 use wasmtime::component::{ComponentType, Lift, Lower};
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 #[component(record)]
 pub struct FilterTitle {
     pub query: String,
 }
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 #[component(record)]
 pub struct FilterSort {
     #[component(name = "option-index")]
@@ -20,7 +23,8 @@ pub struct FilterSort {
     pub option_reversed: bool,
 }
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[serde(untagged)]
 #[component(variant)]
 pub enum Filter {
     #[component(name = "title")]
