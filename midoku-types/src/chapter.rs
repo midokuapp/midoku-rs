@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
 use wasmtime::component::{ComponentType, Lift, Lower};
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 #[component(record)]
 pub struct Chapter {
     pub id: String,

@@ -1,6 +1,7 @@
+use serde::{Deserialize, Serialize};
 use wasmtime::component::{ComponentType, Lift, Lower};
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(enum)]
 pub enum Status {
     #[component(name = "unknown")]
@@ -15,7 +16,7 @@ pub enum Status {
     Cancelled,
 }
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(enum)]
 pub enum ContentRating {
     #[component(name = "safe")]
@@ -26,7 +27,7 @@ pub enum ContentRating {
     Nsfw,
 }
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
 #[component(enum)]
 pub enum ReadingMode {
     #[component(name = "right-to-left")]
@@ -39,7 +40,8 @@ pub enum ReadingMode {
     Scroll,
 }
 
-#[derive(ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 #[component(record)]
 pub struct Manga {
     pub id: String,
