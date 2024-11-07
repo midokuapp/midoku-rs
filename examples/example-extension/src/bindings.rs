@@ -6,7 +6,8 @@ pub mod midoku {
         pub mod types {
             #[used]
             #[doc(hidden)]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             /// Represents an HTTP method.
             #[repr(u8)]
@@ -19,10 +20,7 @@ pub mod midoku {
                 Delete,
             }
             impl ::core::fmt::Debug for Method {
-                fn fmt(
-                    &self,
-                    f: &mut ::core::fmt::Formatter<'_>,
-                ) -> ::core::fmt::Result {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                     match self {
                         Method::Get => f.debug_tuple("Method::Get").finish(),
                         Method::Post => f.debug_tuple("Method::Post").finish(),
@@ -113,9 +111,7 @@ pub mod midoku {
                     unsafe {
                         #[repr(align(4))]
                         struct RetArea([::core::mem::MaybeUninit<u8>; 8]);
-                        let mut ret_area = RetArea(
-                            [::core::mem::MaybeUninit::uninit(); 8],
-                        );
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 8]);
                         let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                         #[cfg(target_arch = "wasm32")]
                         #[link(wasm_import_module = "midoku:http/types@0.1.0")]
@@ -139,19 +135,11 @@ pub mod midoku {
                                 let l3 = *base.add(0).cast::<*mut u8>();
                                 let l4 = *base.add(4).cast::<usize>();
                                 let len5 = l4;
-                                let bytes5 = _rt::Vec::from_raw_parts(
-                                    l3.cast(),
-                                    len5,
-                                    len5,
-                                );
+                                let bytes5 = _rt::Vec::from_raw_parts(l3.cast(), len5, len5);
                                 let l6 = *base.add(8).cast::<*mut u8>();
                                 let l7 = *base.add(12).cast::<usize>();
                                 let len8 = l7;
-                                let bytes8 = _rt::Vec::from_raw_parts(
-                                    l6.cast(),
-                                    len8,
-                                    len8,
-                                );
+                                let bytes8 = _rt::Vec::from_raw_parts(l6.cast(), len8, len8);
                                 (_rt::string_lift(bytes5), _rt::string_lift(bytes8))
                             };
                             result9.push(e9);
@@ -168,9 +156,7 @@ pub mod midoku {
                     unsafe {
                         #[repr(align(4))]
                         struct RetArea([::core::mem::MaybeUninit<u8>; 8]);
-                        let mut ret_area = RetArea(
-                            [::core::mem::MaybeUninit::uninit(); 8],
-                        );
+                        let mut ret_area = RetArea([::core::mem::MaybeUninit::uninit(); 8]);
                         let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                         #[cfg(target_arch = "wasm32")]
                         #[link(wasm_import_module = "midoku:http/types@0.1.0")]
@@ -195,7 +181,8 @@ pub mod midoku {
         pub mod outgoing_handler {
             #[used]
             #[doc(hidden)]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             pub type Method = super::super::super::midoku::http::types::Method;
             pub type IncomingResponse = super::super::super::midoku::http::types::IncomingResponse;
@@ -228,10 +215,8 @@ pub mod midoku {
                         Some(e) => {
                             let vec4 = e;
                             let len4 = vec4.len();
-                            let layout4 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec4.len() * 16,
-                                4,
-                            );
+                            let layout4 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec4.len() * 16, 4);
                             let result4 = if layout4.size() != 0 {
                                 let ptr = _rt::alloc::alloc(layout4).cast::<u8>();
                                 if ptr.is_null() {
@@ -348,7 +333,8 @@ pub mod midoku {
         pub mod rate_limiter {
             #[used]
             #[doc(hidden)]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             #[allow(unused_unsafe, clippy::all)]
             /// Returns the burst size of the limiter. The burst size is the maximum
@@ -535,7 +521,8 @@ pub mod midoku {
         pub mod settings {
             #[used]
             #[doc(hidden)]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             /// Represents an arbitrary number.
             #[derive(Clone, Copy)]
@@ -545,10 +532,7 @@ pub mod midoku {
                 F64(f64),
             }
             impl ::core::fmt::Debug for Number {
-                fn fmt(
-                    &self,
-                    f: &mut ::core::fmt::Formatter<'_>,
-                ) -> ::core::fmt::Result {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                     match self {
                         Number::S64(e) => f.debug_tuple("Number::S64").field(e).finish(),
                         Number::U64(e) => f.debug_tuple("Number::U64").field(e).finish(),
@@ -568,21 +552,12 @@ pub mod midoku {
                 Map(_rt::Vec<(_rt::String, _rt::String)>),
             }
             impl ::core::fmt::Debug for Value {
-                fn fmt(
-                    &self,
-                    f: &mut ::core::fmt::Formatter<'_>,
-                ) -> ::core::fmt::Result {
+                fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                     match self {
                         Value::Bool(e) => f.debug_tuple("Value::Bool").field(e).finish(),
-                        Value::Number(e) => {
-                            f.debug_tuple("Value::Number").field(e).finish()
-                        }
-                        Value::String(e) => {
-                            f.debug_tuple("Value::String").field(e).finish()
-                        }
-                        Value::Array(e) => {
-                            f.debug_tuple("Value::Array").field(e).finish()
-                        }
+                        Value::Number(e) => f.debug_tuple("Value::Number").field(e).finish(),
+                        Value::String(e) => f.debug_tuple("Value::String").field(e).finish(),
+                        Value::Array(e) => f.debug_tuple("Value::Array").field(e).finish(),
                         Value::Map(e) => f.debug_tuple("Value::Map").field(e).finish(),
                     }
                 }
@@ -641,7 +616,10 @@ pub mod midoku {
                                                     Number::U64(e9)
                                                 }
                                                 n => {
-                                                    debug_assert_eq!(n, 2, "invalid enum discriminant");
+                                                    debug_assert_eq!(
+                                                        n, 2,
+                                                        "invalid enum discriminant"
+                                                    );
                                                     let e9 = {
                                                         let l8 = *ptr1.add(24).cast::<f64>();
                                                         l8
@@ -658,11 +636,8 @@ pub mod midoku {
                                             let l10 = *ptr1.add(16).cast::<*mut u8>();
                                             let l11 = *ptr1.add(20).cast::<usize>();
                                             let len12 = l11;
-                                            let bytes12 = _rt::Vec::from_raw_parts(
-                                                l10.cast(),
-                                                len12,
-                                                len12,
-                                            );
+                                            let bytes12 =
+                                                _rt::Vec::from_raw_parts(l10.cast(), len12, len12);
                                             _rt::string_lift(bytes12)
                                         };
                                         Value::String(e28)
@@ -721,7 +696,10 @@ pub mod midoku {
                                                         len26,
                                                         len26,
                                                     );
-                                                    (_rt::string_lift(bytes23), _rt::string_lift(bytes26))
+                                                    (
+                                                        _rt::string_lift(bytes23),
+                                                        _rt::string_lift(bytes26),
+                                                    )
                                                 };
                                                 result27.push(e27);
                                             }
@@ -756,16 +734,20 @@ pub mod exports {
             pub mod api {
                 #[used]
                 #[doc(hidden)]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
-                pub type Chapter = super::super::super::super::exports::midoku::types::chapter::Chapter;
-                pub type Filter = super::super::super::super::exports::midoku::types::filter::Filter;
+                pub type Chapter =
+                    super::super::super::super::exports::midoku::types::chapter::Chapter;
+                pub type Filter =
+                    super::super::super::super::exports::midoku::types::filter::Filter;
                 pub type Manga = super::super::super::super::exports::midoku::types::manga::Manga;
                 pub type Page = super::super::super::super::exports::midoku::types::page::Page;
                 #[doc(hidden)]
                 #[allow(non_snake_case)]
                 pub unsafe fn _export_initialize_cabi<T: Guest>() -> i32 {
-                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    #[cfg(target_arch = "wasm32")]
+                    _rt::run_ctors_once();
                     let result0 = T::initialize();
                     let result1 = match result0 {
                         Ok(_) => 0i32,
@@ -780,7 +762,8 @@ pub mod exports {
                     arg1: usize,
                     arg2: i32,
                 ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    #[cfg(target_arch = "wasm32")]
+                    _rt::run_ctors_once();
                     let base7 = arg0;
                     let len7 = arg1;
                     let mut result7 = _rt::Vec::with_capacity(len7);
@@ -795,11 +778,8 @@ pub mod exports {
                                         let l1 = *base.add(4).cast::<*mut u8>();
                                         let l2 = *base.add(8).cast::<usize>();
                                         let len3 = l2;
-                                        let bytes3 = _rt::Vec::from_raw_parts(
-                                            l1.cast(),
-                                            len3,
-                                            len3,
-                                        );
+                                        let bytes3 =
+                                            _rt::Vec::from_raw_parts(l1.cast(), len3, len3);
                                         super::super::super::super::exports::midoku::types::filter::FilterTitle {
                                             query: _rt::string_lift(bytes3),
                                         }
@@ -832,10 +812,8 @@ pub mod exports {
                             let (t10_0, t10_1) = e;
                             let vec21 = t10_0;
                             let len21 = vec21.len();
-                            let layout21 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec21.len() * 68,
-                                4,
-                            );
+                            let layout21 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec21.len() * 68, 4);
                             let result21 = if layout21.size() != 0 {
                                 let ptr = _rt::alloc::alloc(layout21).cast::<u8>();
                                 if ptr.is_null() {
@@ -931,12 +909,11 @@ pub mod exports {
                                     }
                                     *base.add(60).cast::<usize>() = len20;
                                     *base.add(56).cast::<*mut u8>() = result20;
-                                    *base.add(64).cast::<u8>() = (status11.clone() as i32)
-                                        as u8;
-                                    *base.add(65).cast::<u8>() = (content_rating11.clone()
-                                        as i32) as u8;
-                                    *base.add(66).cast::<u8>() = (reading_mode11.clone() as i32)
-                                        as u8;
+                                    *base.add(64).cast::<u8>() = (status11.clone() as i32) as u8;
+                                    *base.add(65).cast::<u8>() =
+                                        (content_rating11.clone() as i32) as u8;
+                                    *base.add(66).cast::<u8>() =
+                                        (reading_mode11.clone() as i32) as u8;
                                 }
                             }
                             *ptr9.add(8).cast::<usize>() = len21;
@@ -1012,7 +989,8 @@ pub mod exports {
                     arg0: *mut u8,
                     arg1: usize,
                 ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    #[cfg(target_arch = "wasm32")]
+                    _rt::run_ctors_once();
                     let len0 = arg1;
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
                     let result1 = T::get_manga_details(_rt::string_lift(bytes0));
@@ -1077,10 +1055,8 @@ pub mod exports {
                             *ptr2.add(52).cast::<*mut u8>() = ptr10.cast_mut();
                             let vec12 = categories3;
                             let len12 = vec12.len();
-                            let layout12 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec12.len() * 8,
-                                4,
-                            );
+                            let layout12 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec12.len() * 8, 4);
                             let result12 = if layout12.size() != 0 {
                                 let ptr = _rt::alloc::alloc(layout12).cast::<u8>();
                                 if ptr.is_null() {
@@ -1104,10 +1080,8 @@ pub mod exports {
                             *ptr2.add(64).cast::<usize>() = len12;
                             *ptr2.add(60).cast::<*mut u8>() = result12;
                             *ptr2.add(68).cast::<u8>() = (status3.clone() as i32) as u8;
-                            *ptr2.add(69).cast::<u8>() = (content_rating3.clone() as i32)
-                                as u8;
-                            *ptr2.add(70).cast::<u8>() = (reading_mode3.clone() as i32)
-                                as u8;
+                            *ptr2.add(69).cast::<u8>() = (content_rating3.clone() as i32) as u8;
+                            *ptr2.add(70).cast::<u8>() = (reading_mode3.clone() as i32) as u8;
                         }
                         Err(_) => {
                             *ptr2.add(0).cast::<u8>() = (1i32) as u8;
@@ -1165,7 +1139,8 @@ pub mod exports {
                     arg0: *mut u8,
                     arg1: usize,
                 ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    #[cfg(target_arch = "wasm32")]
+                    _rt::run_ctors_once();
                     let len0 = arg1;
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
                     let result1 = T::get_chapter_list(_rt::string_lift(bytes0));
@@ -1175,10 +1150,8 @@ pub mod exports {
                             *ptr2.add(0).cast::<u8>() = (0i32) as u8;
                             let vec9 = e;
                             let len9 = vec9.len();
-                            let layout9 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec9.len() * 52,
-                                4,
-                            );
+                            let layout9 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec9.len() * 52, 4);
                             let result9 = if layout9.size() != 0 {
                                 let ptr = _rt::alloc::alloc(layout9).cast::<u8>();
                                 if ptr.is_null() {
@@ -1288,25 +1261,22 @@ pub mod exports {
                     arg2: *mut u8,
                     arg3: usize,
                 ) -> *mut u8 {
-                    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+                    #[cfg(target_arch = "wasm32")]
+                    _rt::run_ctors_once();
                     let len0 = arg1;
                     let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
                     let len1 = arg3;
                     let bytes1 = _rt::Vec::from_raw_parts(arg2.cast(), len1, len1);
-                    let result2 = T::get_page_list(
-                        _rt::string_lift(bytes0),
-                        _rt::string_lift(bytes1),
-                    );
+                    let result2 =
+                        T::get_page_list(_rt::string_lift(bytes0), _rt::string_lift(bytes1));
                     let ptr3 = _RET_AREA.0.as_mut_ptr().cast::<u8>();
                     match result2 {
                         Ok(e) => {
                             *ptr3.add(0).cast::<u8>() = (0i32) as u8;
                             let vec7 = e;
                             let len7 = vec7.len();
-                            let layout7 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec7.len() * 20,
-                                4,
-                            );
+                            let layout7 =
+                                _rt::alloc::Layout::from_size_align_unchecked(vec7.len() * 20, 4);
                             let result7 = if layout7.size() != 0 {
                                 let ptr = _rt::alloc::alloc(layout7).cast::<u8>();
                                 if ptr.is_null() {
@@ -1400,9 +1370,7 @@ pub mod exports {
                     /// Get a list of chapters for a specific manga.
                     ///
                     /// This function should return a list of chapters for a specific manga.
-                    fn get_chapter_list(
-                        manga_id: _rt::String,
-                    ) -> Result<_rt::Vec<Chapter>, ()>;
+                    fn get_chapter_list(manga_id: _rt::String) -> Result<_rt::Vec<Chapter>, ()>;
                     /// Get a list of pages for a specific chapter.
                     ///
                     /// This function should return a list of pages for a specific chapter.
@@ -1458,9 +1426,7 @@ pub mod exports {
                 pub(crate) use __export_midoku_bindings_api_0_1_0_cabi;
                 #[repr(align(4))]
                 struct _RetArea([::core::mem::MaybeUninit<u8>; 72]);
-                static mut _RET_AREA: _RetArea = _RetArea(
-                    [::core::mem::MaybeUninit::uninit(); 72],
-                );
+                static mut _RET_AREA: _RetArea = _RetArea([::core::mem::MaybeUninit::uninit(); 72]);
             }
         }
         #[allow(dead_code)]
@@ -1469,7 +1435,8 @@ pub mod exports {
             pub mod chapter {
                 #[used]
                 #[doc(hidden)]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
                 #[derive(Clone)]
                 pub struct Chapter {
@@ -1484,10 +1451,7 @@ pub mod exports {
                     pub language: _rt::String,
                 }
                 impl ::core::fmt::Debug for Chapter {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("Chapter")
                             .field("id", &self.id)
                             .field("title", &self.title)
@@ -1503,7 +1467,7 @@ pub mod exports {
                 #[doc(hidden)]
                 macro_rules! __export_midoku_types_chapter_0_1_0_cabi {
                     ($ty:ident with_types_in $($path_to_types:tt)*) => {
-                        const _ : () = {};
+                        const _: () = {};
                     };
                 }
                 #[doc(hidden)]
@@ -1513,17 +1477,15 @@ pub mod exports {
             pub mod filter {
                 #[used]
                 #[doc(hidden)]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
                 #[derive(Clone)]
                 pub struct FilterTitle {
                     pub query: _rt::String,
                 }
                 impl ::core::fmt::Debug for FilterTitle {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("FilterTitle")
                             .field("query", &self.query)
                             .finish()
@@ -1540,10 +1502,7 @@ pub mod exports {
                     pub option_reversed: bool,
                 }
                 impl ::core::fmt::Debug for FilterSort {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("FilterSort")
                             .field("option-index", &self.option_index)
                             .field("option-reversed", &self.option_reversed)
@@ -1556,24 +1515,17 @@ pub mod exports {
                     Sort(FilterSort),
                 }
                 impl ::core::fmt::Debug for Filter {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            Filter::Title(e) => {
-                                f.debug_tuple("Filter::Title").field(e).finish()
-                            }
-                            Filter::Sort(e) => {
-                                f.debug_tuple("Filter::Sort").field(e).finish()
-                            }
+                            Filter::Title(e) => f.debug_tuple("Filter::Title").field(e).finish(),
+                            Filter::Sort(e) => f.debug_tuple("Filter::Sort").field(e).finish(),
                         }
                     }
                 }
                 #[doc(hidden)]
                 macro_rules! __export_midoku_types_filter_0_1_0_cabi {
                     ($ty:ident with_types_in $($path_to_types:tt)*) => {
-                        const _ : () = {};
+                        const _: () = {};
                     };
                 }
                 #[doc(hidden)]
@@ -1583,7 +1535,8 @@ pub mod exports {
             pub mod manga {
                 #[used]
                 #[doc(hidden)]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
                 #[repr(u8)]
                 #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
@@ -1595,20 +1548,13 @@ pub mod exports {
                     Cancelled,
                 }
                 impl ::core::fmt::Debug for Status {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
                             Status::Unknown => f.debug_tuple("Status::Unknown").finish(),
                             Status::Ongoing => f.debug_tuple("Status::Ongoing").finish(),
-                            Status::Completed => {
-                                f.debug_tuple("Status::Completed").finish()
-                            }
+                            Status::Completed => f.debug_tuple("Status::Completed").finish(),
                             Status::Hiatus => f.debug_tuple("Status::Hiatus").finish(),
-                            Status::Cancelled => {
-                                f.debug_tuple("Status::Cancelled").finish()
-                            }
+                            Status::Cancelled => f.debug_tuple("Status::Cancelled").finish(),
                         }
                     }
                 }
@@ -1636,20 +1582,13 @@ pub mod exports {
                     Nsfw,
                 }
                 impl ::core::fmt::Debug for ContentRating {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
-                            ContentRating::Safe => {
-                                f.debug_tuple("ContentRating::Safe").finish()
-                            }
+                            ContentRating::Safe => f.debug_tuple("ContentRating::Safe").finish(),
                             ContentRating::Suggestive => {
                                 f.debug_tuple("ContentRating::Suggestive").finish()
                             }
-                            ContentRating::Nsfw => {
-                                f.debug_tuple("ContentRating::Nsfw").finish()
-                            }
+                            ContentRating::Nsfw => f.debug_tuple("ContentRating::Nsfw").finish(),
                         }
                     }
                 }
@@ -1676,10 +1615,7 @@ pub mod exports {
                     Scroll,
                 }
                 impl ::core::fmt::Debug for ReadingMode {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         match self {
                             ReadingMode::RightToLeft => {
                                 f.debug_tuple("ReadingMode::RightToLeft").finish()
@@ -1690,9 +1626,7 @@ pub mod exports {
                             ReadingMode::Vertical => {
                                 f.debug_tuple("ReadingMode::Vertical").finish()
                             }
-                            ReadingMode::Scroll => {
-                                f.debug_tuple("ReadingMode::Scroll").finish()
-                            }
+                            ReadingMode::Scroll => f.debug_tuple("ReadingMode::Scroll").finish(),
                         }
                     }
                 }
@@ -1726,10 +1660,7 @@ pub mod exports {
                     pub reading_mode: ReadingMode,
                 }
                 impl ::core::fmt::Debug for Manga {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("Manga")
                             .field("id", &self.id)
                             .field("title", &self.title)
@@ -1748,7 +1679,7 @@ pub mod exports {
                 #[doc(hidden)]
                 macro_rules! __export_midoku_types_manga_0_1_0_cabi {
                     ($ty:ident with_types_in $($path_to_types:tt)*) => {
-                        const _ : () = {};
+                        const _: () = {};
                     };
                 }
                 #[doc(hidden)]
@@ -1758,7 +1689,8 @@ pub mod exports {
             pub mod page {
                 #[used]
                 #[doc(hidden)]
-                static __FORCE_SECTION_REF: fn() = super::super::super::super::__link_custom_section_describing_imports;
+                static __FORCE_SECTION_REF: fn() =
+                    super::super::super::super::__link_custom_section_describing_imports;
                 use super::super::super::super::_rt;
                 #[derive(Clone)]
                 pub struct Page {
@@ -1768,10 +1700,7 @@ pub mod exports {
                     pub base64: _rt::Vec<u8>,
                 }
                 impl ::core::fmt::Debug for Page {
-                    fn fmt(
-                        &self,
-                        f: &mut ::core::fmt::Formatter<'_>,
-                    ) -> ::core::fmt::Result {
+                    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
                         f.debug_struct("Page")
                             .field("index", &self.index)
                             .field("url", &self.url)
@@ -1782,7 +1711,7 @@ pub mod exports {
                 #[doc(hidden)]
                 macro_rules! __export_midoku_types_page_0_1_0_cabi {
                     ($ty:ident with_types_in $($path_to_types:tt)*) => {
-                        const _ : () = {};
+                        const _: () = {};
                     };
                 }
                 #[doc(hidden)]
@@ -1853,7 +1782,9 @@ mod _rt {
     }
     impl<T: WasmResource> fmt::Debug for Resource<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("Resource").field("handle", &self.handle).finish()
+            f.debug_struct("Resource")
+                .field("handle", &self.handle)
+                .finish()
         }
     }
     impl<T: WasmResource> Drop for Resource<T> {
@@ -1866,8 +1797,8 @@ mod _rt {
             }
         }
     }
-    pub use alloc_crate::vec::Vec;
     pub use alloc_crate::string::String;
+    pub use alloc_crate::vec::Vec;
     pub unsafe fn string_lift(bytes: Vec<u8>) -> String {
         if cfg!(debug_assertions) {
             String::from_utf8(bytes).unwrap()
