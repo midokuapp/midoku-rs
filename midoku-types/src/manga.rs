@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 use wasmtime::component::{ComponentType, Lift, Lower};
 
-#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, Copy, PartialEq)]
 #[component(enum)]
+#[repr(u8)]
 pub enum Status {
     #[component(name = "unknown")]
     Unknown,
@@ -16,8 +17,9 @@ pub enum Status {
     Cancelled,
 }
 
-#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, Copy, PartialEq)]
 #[component(enum)]
+#[repr(u8)]
 pub enum ContentRating {
     #[component(name = "safe")]
     Safe,
@@ -27,8 +29,9 @@ pub enum ContentRating {
     Nsfw,
 }
 
-#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, ComponentType, Lift, Lower, Debug, Clone, Copy, PartialEq)]
 #[component(enum)]
+#[repr(u8)]
 pub enum ReadingMode {
     #[component(name = "right-to-left")]
     RightToLeft,

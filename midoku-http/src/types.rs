@@ -2,6 +2,7 @@ use wasmtime::component::{ComponentType, Lift, Lower};
 
 #[derive(ComponentType, Lift, Lower, Debug, Clone, Copy, PartialEq)]
 #[component(enum)]
+#[repr(u8)]
 pub enum Method {
     #[component(name = "get")]
     Get,

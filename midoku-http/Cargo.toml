@@ -6,11 +6,11 @@ publish.workspace = true
 license.workspace = true
 
 [dependencies]
-reqwest = { version = "0.12.4", default-features = false, features = [
+reqwest = { version = "0.12.9", default-features = false, features = [
     "blocking",
     "rustls-tls",
     "charset",
     "http2",
     "macos-system-configuration",
 ] }
-wasmtime = "20.0.0"
+wasmtime = "26.0.1"

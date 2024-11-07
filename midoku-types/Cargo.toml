@@ -7,4 +7,4 @@ license.workspace = true
 
 [dependencies]
 serde = "1.0"
-wasmtime = "20.0.0"
+wasmtime = "26.0.1"

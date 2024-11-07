@@ -28,6 +28,16 @@ pub struct Bindings {
     get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
 }
 
+#[doc(hidden)]
+macro_rules! get_typed_func {
+    ($instance:expr, $store:expr, $api:expr, $name:expr) => {{
+        let index = $instance
+            .get_export(&mut $store, Some(&$api), $name)
+            .unwrap();
+        $instance.get_typed_func(&mut $store, index)
+    }};
+}
+
 /// Macro to get the mutable context from the store.
 #[doc(hidden)]
 macro_rules! store_context_mut {
@@ -97,18 +107,15 @@ impl Bindings {
 
         let instance = linker.instantiate(&mut store, &component)?;
 
-        let mut export = instance.exports(&mut store);
-        let mut api = export
-            .instance("midoku:bindings/api@0.1.0")
+        let api = instance
+            .get_export(&mut store, None, "midoku:bindings/api@0.1.0")
             .ok_or("export not found")?;
 
-        let initialize = api.typed_func("initialize")?;
-        let get_manga_list = api.typed_func("get-manga-list")?;
-        let get_manga_details = api.typed_func("get-manga-details")?;
-        let get_chapter_list = api.typed_func("get-chapter-list")?;
-        let get_page_list = api.typed_func("get-page-list")?;
-
-        drop(export);
+        let initialize = get_typed_func!(instance, store, api, "initialize")?;
+        let get_manga_list = get_typed_func!(instance, store, api, "get-manga-list")?;
+        let get_manga_details = get_typed_func!(instance, store, api, "get-manga-details")?;
+        let get_chapter_list = get_typed_func!(instance, store, api, "get-chapter-list")?;
+        let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?;
 
         Ok(Self {
             store: RefCell::new(store),
