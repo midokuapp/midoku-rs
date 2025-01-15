@@ -1,3 +1,4 @@
+#[cfg(not(feature = "async"))]
 use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
 use std::path::Path;
@@ -7,6 +8,10 @@ use midoku_types::chapter::Chapter;
 use midoku_types::filter::Filter;
 use midoku_types::manga::Manga;
 use midoku_types::page::Page;
+#[cfg(feature = "async")]
+use parking_lot::{
+    MappedRwLockReadGuard, MappedRwLockWriteGuard, RwLock, RwLockReadGuard, RwLockWriteGuard,
+};
 use wasmtime::component::{Component, Linker, TypedFunc};
 use wasmtime::{AsContextMut, Engine, Store};
 
@@ -20,7 +25,10 @@ use crate::state::State;
 /// This struct contains the bindings to a Midoku source. It is used to call
 /// functions in the WebAssembly component.
 pub struct Bindings {
+    #[cfg(not(feature = "async"))]
     store: RefCell<Store<State>>,
+    #[cfg(feature = "async")]
+    store: RwLock<Store<State>>,
     initialize: TypedFunc<(), (Result<(), ()>,)>,
     get_manga_list: TypedFunc<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>,
     get_manga_details: TypedFunc<(String,), (Result<Manga, ()>,)>,
@@ -42,7 +50,7 @@ macro_rules! get_typed_func {
 #[doc(hidden)]
 macro_rules! store_context_mut {
     ($self:expr) => {
-        $self.store.borrow_mut().as_context_mut()
+        $self.store.write().as_context_mut()
     };
 }
 
@@ -118,7 +126,10 @@ impl Bindings {
         let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?;
 
         Ok(Self {
+            #[cfg(not(feature = "async"))]
             store: RefCell::new(store),
+            #[cfg(feature = "async")]
+            store: RwLock::new(store),
             initialize,
             get_manga_list,
             get_manga_details,
@@ -179,8 +190,15 @@ impl Bindings {
     }
 
     /// Get a reference to the settings.
+    #[cfg(not(feature = "async"))]
     pub fn settings(&self) -> Ref<HashMap<String, Value>> {
         Ref::map(self.store.borrow(), |s| s.data().settings())
+    }
+
+    /// Get a reference to the settings
+    #[cfg(feature = "async")]
+    pub fn settings(&self) -> MappedRwLockReadGuard<'_, HashMap<String, Value>> {
+        RwLockReadGuard::map(self.store.read(), |store| store.data().settings())
     }
 
     /// Get a mutable reference to the settings.
@@ -195,7 +213,25 @@ impl Bindings {
     ///     Value::String("value".to_string())
     /// );
     /// ```
+    #[cfg(not(feature = "async"))]
     pub fn settings_mut(&mut self) -> RefMut<HashMap<String, Value>> {
         RefMut::map(self.store.borrow_mut(), |s| s.data_mut().settings_mut())
+    }
+
+    /// Get a mutable reference to the settings.
+    ///
+    /// This allow modifying settings for the component (e.g. User-Agent, etc.).
+    ///
+    /// # Example
+    ///
+    /// ```ignore
+    /// bindings.settings_mut().insert(
+    ///     "key".to_string(),
+    ///     Value::String("value".to_string())
+    /// );
+    /// ```
+    #[cfg(feature = "async")]
+    pub fn settings_mut(&mut self) -> MappedRwLockWriteGuard<'_, HashMap<String, Value>> {
+        RwLockWriteGuard::map(self.store.write(), |store| store.data_mut().settings_mut())
     }
 }

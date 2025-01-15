@@ -13,9 +13,14 @@ midoku-limiter = { path = "../midoku-limiter" }
 midoku-settings = { path = "../midoku-settings" }
 midoku-types = { path = "../midoku-types" }
 wasmtime = "26.0.1"
+parking_lot = { version = "0.12.3", optional = true }
 
 [dev-dependencies]
 once_cell = "1.20.2"
 
 [build-dependencies]
 wit-deps = "0.4.0"
+
+[features]
+default = []
+async = ["dep:parking_lot"]
