@@ -30,9 +30,11 @@ jobs:
           toolchain: stable
           targets: wasm32-unknown-unknown
 
-      - name: Install cargo-component
+      - name: Install cargo-binstall
         uses: cargo-bins/cargo-binstall@main
-        run: cargo-binstall cargo-component --locked --version 0.13.1 --force --no-confirm
+
+      - name: Install cargo-component
+        run: cargo-binstall cargo-component --locked --version $CARGO_COMPONENT_VERSION --force --no-confirm
 
       - name: Run `cargo test`
         run: cargo test --workspace --exclude example-extension
