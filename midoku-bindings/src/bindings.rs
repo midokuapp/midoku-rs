@@ -1,5 +1,3 @@
-#[cfg(not(feature = "async"))]
-use std::cell::{Ref, RefCell, RefMut};
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -8,7 +6,6 @@ use midoku_types::chapter::Chapter;
 use midoku_types::filter::Filter;
 use midoku_types::manga::Manga;
 use midoku_types::page::Page;
-#[cfg(feature = "async")]
 use parking_lot::{
     MappedRwLockReadGuard, MappedRwLockWriteGuard, RwLock, RwLockReadGuard, RwLockWriteGuard,
 };
@@ -25,9 +22,6 @@ use crate::state::State;
 /// This struct contains the bindings to a Midoku source. It is used to call
 /// functions in the WebAssembly component.
 pub struct Bindings {
-    #[cfg(not(feature = "async"))]
-    store: RefCell<Store<State>>,
-    #[cfg(feature = "async")]
     store: RwLock<Store<State>>,
     initialize: TypedFunc<(), (Result<(), ()>,)>,
     get_manga_list: TypedFunc<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>,
@@ -60,7 +54,8 @@ macro_rules! call_func {
     ($self:expr, $func:ident, $args:expr) => {
         $self
             .$func
-            .call(&mut store_context_mut!($self), $args)
+            .call_async(&mut store_context_mut!($self), $args)
+            .await
             .map_err(|_| ())
             .map(|r| r.0)
     };
@@ -72,7 +67,8 @@ macro_rules! post_return {
     ($self:expr, $func:ident, $args:expr) => {
         $self
             .$func
-            .post_return(&mut store_context_mut!($self))
+            .post_return_async(&mut store_context_mut!($self))
+            .await
             .map_err(|_| ())
     };
 }
@@ -93,17 +89,20 @@ impl Bindings {
     ///
     /// # Example
     /// ```ignore
-    /// let bindings = Bindings::from_file("example.wasm")?;
+    /// let bindings = Bindings::from_file("example.wasm").await?;
     ///
     /// // Call the wasm `initialize` function which contains the initialization
     /// // logic, such as the rate limiter configuration.
-    /// bindings.initialize()?;
+    /// bindings.initialize().await?;
     ///
     /// // Call the wasm `get_manga_list` function to get the list of manga.
-    /// let (manga_list, has_next) = bindings.get_manga_list(0)?;
+    /// let (manga_list, has_next) = bindings.get_manga_list(0).await?;
     /// ```
-    pub fn from_file<T: AsRef<Path>>(path: T) -> Result<Self, Box<dyn std::error::Error>> {
-        let engine = Engine::default();
+    pub async fn from_file<T: AsRef<Path>>(path: T) -> Result<Self, Box<dyn std::error::Error>> {
+        use wasmtime::Config;
+
+        let engine = Engine::new(Config::default().async_support(true)).unwrap();
+
         let mut store = Store::new(&engine, State::default());
 
         let component = Component::from_file(&engine, path.as_ref())?;
@@ -113,7 +112,7 @@ impl Bindings {
         map_midoku_limiter(&mut linker)?;
         map_midoku_settings(&mut linker)?;
 
-        let instance = linker.instantiate(&mut store, &component)?;
+        let instance = linker.instantiate_async(&mut store, &component).await?;
 
         let api = instance
             .get_export(&mut store, None, "midoku:bindings/api@0.1.0")
@@ -126,9 +125,6 @@ impl Bindings {
         let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?;
 
         Ok(Self {
-            #[cfg(not(feature = "async"))]
-            store: RefCell::new(store),
-            #[cfg(feature = "async")]
             store: RwLock::new(store),
             initialize,
             get_manga_list,
@@ -143,7 +139,7 @@ impl Bindings {
     /// Sources may have initialization logic that needs to be called before
     /// calling other functions. This may include setting up rate limiters or
     /// other configuration.
-    pub fn initialize(&self) -> Result<(), ()> {
+    pub async fn initialize(&self) -> Result<(), ()> {
         call_wasm_component_func!(self, initialize, ())
     }
 
@@ -153,7 +149,7 @@ impl Bindings {
     ///
     /// * `filters` - A list of filters to apply to the manga list.
     /// * `page` - The page number to get.
-    pub fn get_manga_list(
+    pub async fn get_manga_list(
         &self,
         filters: Vec<Filter>,
         page: u32,
@@ -166,7 +162,7 @@ impl Bindings {
     /// # Arguments
     ///
     /// * `id` - The ID of the manga to get details for.
-    pub fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
+    pub async fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
         call_wasm_component_func!(self, get_manga_details, (id,))
     }
 
@@ -175,7 +171,7 @@ impl Bindings {
     /// # Arguments
     ///
     /// * `id` - The ID of the manga to get chapters for.
-    pub fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
+    pub async fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
         call_wasm_component_func!(self, get_chapter_list, (id,))
     }
 
@@ -185,18 +181,11 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga.
     /// * `chapter_id` - The ID of the chapter.
-    pub fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
+    pub async fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
         call_wasm_component_func!(self, get_page_list, (id, chapter_id))
     }
 
-    /// Get a reference to the settings.
-    #[cfg(not(feature = "async"))]
-    pub fn settings(&self) -> Ref<HashMap<String, Value>> {
-        Ref::map(self.store.borrow(), |s| s.data().settings())
-    }
-
     /// Get a reference to the settings
-    #[cfg(feature = "async")]
     pub fn settings(&self) -> MappedRwLockReadGuard<'_, HashMap<String, Value>> {
         RwLockReadGuard::map(self.store.read(), |store| store.data().settings())
     }
@@ -213,24 +202,6 @@ impl Bindings {
     ///     Value::String("value".to_string())
     /// );
     /// ```
-    #[cfg(not(feature = "async"))]
-    pub fn settings_mut(&mut self) -> RefMut<HashMap<String, Value>> {
-        RefMut::map(self.store.borrow_mut(), |s| s.data_mut().settings_mut())
-    }
-
-    /// Get a mutable reference to the settings.
-    ///
-    /// This allow modifying settings for the component (e.g. User-Agent, etc.).
-    ///
-    /// # Example
-    ///
-    /// ```ignore
-    /// bindings.settings_mut().insert(
-    ///     "key".to_string(),
-    ///     Value::String("value".to_string())
-    /// );
-    /// ```
-    #[cfg(feature = "async")]
     pub fn settings_mut(&mut self) -> MappedRwLockWriteGuard<'_, HashMap<String, Value>> {
         RwLockWriteGuard::map(self.store.write(), |store| store.data_mut().settings_mut())
     }

@@ -1,10 +1,10 @@
 use std::path::PathBuf;
+use std::sync::LazyLock;
 
 use midoku_bindings;
 use midoku_types::manga::{ContentRating, ReadingMode, Status};
-use once_cell::sync::Lazy;
 
-static EXTENSION_PATH: Lazy<PathBuf> = Lazy::new(|| {
+static EXTENSION_PATH: LazyLock<PathBuf> = LazyLock::new(|| {
     // Build the extension in release mode
     let output = std::process::Command::new("cargo-component")
         .args(&[
@@ -36,27 +36,31 @@ static EXTENSION_PATH: Lazy<PathBuf> = Lazy::new(|| {
     extension_path.into()
 });
 
-#[test]
-fn test_bindings_from_file() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path());
+#[tokio::test]
+async fn test_bindings_from_file() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).await;
 
     assert!(bindings.is_ok());
 }
 
-#[test]
-fn test_bindings_initialize() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_initialize() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
-    let initialize = bindings.initialize();
+    let initialize = bindings.initialize().await;
 
     assert!(initialize.is_ok());
 }
 
-#[test]
-fn test_bindings_get_manga_list() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_get_manga_list() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
-    let get_manga_list = bindings.get_manga_list(vec![], 0);
+    let get_manga_list = bindings.get_manga_list(vec![], 0).await;
 
     assert!(get_manga_list.is_ok());
 
@@ -67,11 +71,13 @@ fn test_bindings_get_manga_list() {
     assert!(!has_next);
 }
 
-#[test]
-fn test_bindings_get_manga_details() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_get_manga_details() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
-    let get_manga_details = bindings.get_manga_details("manga_id".to_string());
+    let get_manga_details = bindings.get_manga_details("manga_id".to_string()).await;
 
     assert!(get_manga_details.is_ok());
 
@@ -91,11 +97,13 @@ fn test_bindings_get_manga_details() {
     assert_eq!(manga.reading_mode, ReadingMode::RightToLeft);
 }
 
-#[test]
-fn test_bindings_get_chapter_list() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_get_chapter_list() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
-    let get_chapter_list = bindings.get_chapter_list("manga_id".to_string());
+    let get_chapter_list = bindings.get_chapter_list("manga_id".to_string()).await;
 
     assert!(get_chapter_list.is_ok());
 
@@ -105,11 +113,15 @@ fn test_bindings_get_chapter_list() {
     assert!(chapter_list.is_empty());
 }
 
-#[test]
-fn test_bindings_get_page_list() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_get_page_list() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
-    let get_page_list = bindings.get_page_list("manga_id".to_string(), "chapter_id".to_string());
+    let get_page_list = bindings
+        .get_page_list("manga_id".to_string(), "chapter_id".to_string())
+        .await;
 
     assert!(get_page_list.is_ok());
 
@@ -119,18 +131,22 @@ fn test_bindings_get_page_list() {
     assert!(page_list.is_empty());
 }
 
-#[test]
-fn test_bindings_settings() {
-    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_settings() {
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
     let settings = bindings.settings();
 
     assert!(settings.is_empty());
 }
 
-#[test]
-fn test_bindings_setting_mut() {
-    let mut bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path()).unwrap();
+#[tokio::test]
+async fn test_bindings_setting_mut() {
+    let mut bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
 
     bindings.settings_mut().insert(
         "key1".to_string(),
