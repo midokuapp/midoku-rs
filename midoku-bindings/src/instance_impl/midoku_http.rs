@@ -28,7 +28,9 @@ pub fn map_midoku_http(linker: &mut Linker<State>) -> Result<(), Box<dyn std::er
 
     let mut outgoing_handler_instance: LinkerInstance<'_, State> =
         linker.instance("midoku:http/outgoing-handler@0.1.0")?;
-    outgoing_handler_instance.func_wrap("handle", host_handle)?;
+    outgoing_handler_instance.func_wrap_async("handle", |store, params| {
+        Box::new(async move { host_handle(store, params).await })
+    })?;
 
     Ok(())
 }
@@ -104,8 +106,8 @@ impl HostIncomingResponse {
 }
 
 /// Host function implementation for the `handle` function.
-fn host_handle(
-    mut store: StoreContextMut<State>,
+async fn host_handle(
+    mut store: StoreContextMut<'_, State>,
     (method, url, headers, body): (
         Method,
         Box<str>,
@@ -116,7 +118,7 @@ fn host_handle(
     let headers = headers.map(|headers| headers.to_vec());
     let body = body.map(|body| body.to_vec());
 
-    let incoming_response = handle(method, url.to_string(), headers, body);
+    let incoming_response = handle(method, url.to_string(), headers, body).await;
     if incoming_response.is_err() {
         return Ok((Err(()),));
     }
