@@ -17,7 +17,7 @@ jobs:
     name: Run tests
 
     env:
-      CARGO_COMPONENT_VERSION: "0.13.1"
+      CARGO_COMPONENT_VERSION: "0.20.0"
 
     runs-on: ubuntu-latest
 
