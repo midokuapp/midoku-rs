@@ -1,13 +1,14 @@
 use midoku_http;
 
-#[test]
-fn test_handle_response_body() {
+#[tokio::test]
+async fn test_handle_response_body() {
     let response = midoku_http::outgoing_handler::handle(
         midoku_http::types::Method::Get,
         "https://jsonplaceholder.typicode.com/todos/1".to_string(),
         None,
         None,
-    );
+    )
+    .await;
     assert!(response.is_ok());
     let response = response.unwrap();
     let bytes = response.bytes();

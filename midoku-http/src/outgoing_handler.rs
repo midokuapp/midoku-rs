@@ -1,5 +1,5 @@
-use reqwest::blocking::Client;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
+use reqwest::Client;
 
 use crate::types::{IncomingResponse, Method};
 
@@ -15,7 +15,7 @@ impl From<Method> for reqwest::Method {
     }
 }
 
-pub fn handle(
+pub async fn handle(
     method: Method,
     url: String,
     headers: Option<Vec<(String, String)>>,
@@ -42,7 +42,7 @@ pub fn handle(
         request_builder = request_builder.body(body);
     }
 
-    let response = request_builder.send().map_err(|_| ())?;
+    let response = request_builder.send().await.map_err(|_| ())?;
 
     let status_code = response.status().as_u16();
     let headers = response
@@ -55,7 +55,7 @@ pub fn handle(
             )
         })
         .collect();
-    let bytes = response.bytes().map_err(|_| ())?.to_vec();
+    let bytes = response.bytes().await.map_err(|_| ())?.to_vec();
 
     Ok(IncomingResponse::new(status_code, headers, bytes))
 }
@@ -84,31 +84,31 @@ mod tests {
 
     const URL: &str = "https://example.com";
 
-    #[test]
-    fn test_handle() {
-        let response = handle(Method::Get, URL.to_string(), None, None);
+    #[tokio::test]
+    async fn test_handle() {
+        let response = handle(Method::Get, URL.to_string(), None, None).await;
         assert!(response.is_ok());
     }
 
-    #[test]
-    fn test_handle_with_headers() {
+    #[tokio::test]
+    async fn test_handle_with_headers() {
         let headers = vec![("Content-Type".to_string(), "application/json".to_string())];
-        let response = handle(Method::Get, URL.to_string(), Some(headers), None);
+        let response = handle(Method::Get, URL.to_string(), Some(headers), None).await;
         assert!(response.is_ok());
     }
 
-    #[test]
-    fn test_handle_with_body() {
+    #[tokio::test]
+    async fn test_handle_with_body() {
         let body = vec![1, 2, 3];
-        let response = handle(Method::Get, URL.to_string(), None, Some(body));
+        let response = handle(Method::Get, URL.to_string(), None, Some(body)).await;
         assert!(response.is_ok());
     }
 
-    #[test]
-    fn test_handle_with_headers_and_body() {
+    #[tokio::test]
+    async fn test_handle_with_headers_and_body() {
         let headers = vec![("Content-Type".to_string(), "application/json".to_string())];
         let body = vec![1, 2, 3];
-        let response = handle(Method::Get, URL.to_string(), Some(headers), Some(body));
+        let response = handle(Method::Get, URL.to_string(), Some(headers), Some(body)).await;
         assert!(response.is_ok());
     }
 }
