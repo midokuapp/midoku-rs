@@ -1,0 +1,2 @@
+# Mark bindings by `wit-bindgen` as generated
+src/bindings.rs linguist-generated
