@@ -1,7 +1,6 @@
 use std::num::NonZeroU32;
 use std::time::Duration;
 
-use futures::executor;
 use governor::{DefaultDirectRateLimiter, Quota, RateLimiter as GovernorRateLimiter};
 
 pub struct RateLimiter {
@@ -55,8 +54,8 @@ impl RateLimiter {
         self.limiter.check().is_ok()
     }
 
-    pub fn block(&self) {
-        executor::block_on(self.limiter.until_ready());
+    pub async fn block(&self) {
+        self.limiter.until_ready().await;
     }
 }
 
@@ -175,18 +174,18 @@ mod tests {
         assert!(!rate_limiter.ready());
     }
 
-    #[test]
-    fn test_rate_limiter_block() {
+    #[tokio::test]
+    async fn test_rate_limiter_block() {
         let rate_limiter = RateLimiter::default();
 
         let start_time = std::time::Instant::now();
-        rate_limiter.block();
+        rate_limiter.block().await;
         let elapsed = start_time.elapsed().as_millis();
 
         assert!(elapsed < 1);
 
         let start_time = std::time::Instant::now();
-        rate_limiter.block();
+        rate_limiter.block().await;
         let elapsed = start_time.elapsed().as_millis();
 
         assert!(elapsed >= 1);

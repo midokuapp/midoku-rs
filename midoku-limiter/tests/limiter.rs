@@ -1,7 +1,7 @@
 use midoku_limiter;
 
-#[test]
-fn test_rate_limiter() {
+#[tokio::test]
+async fn test_rate_limiter() {
     let mut rate_limiter = midoku_limiter::rate_limiter::RateLimiter::default();
 
     assert_eq!(rate_limiter.burst(), 1);
@@ -21,7 +21,7 @@ fn test_rate_limiter() {
 
     for _ in 0..rate_limiter.burst() - 1 {
         let start_time = std::time::Instant::now();
-        rate_limiter.block();
+        rate_limiter.block().await;
         let elapsed = start_time.elapsed().as_millis();
 
         assert!(elapsed < 1);

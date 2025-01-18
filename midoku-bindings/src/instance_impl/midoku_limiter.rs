@@ -11,7 +11,9 @@ pub fn map_midoku_limiter(linker: &mut Linker<State>) -> Result<(), Box<dyn std:
     rate_limiter_instance.func_wrap("set-burst", host_set_burst)?;
     rate_limiter_instance.func_wrap("set-period-ms", host_set_period_ms)?;
     rate_limiter_instance.func_wrap("ready", host_ready)?;
-    rate_limiter_instance.func_wrap("block", host_block)?;
+    rate_limiter_instance.func_wrap_async("block", |store, params| {
+        Box::new(async move { host_block(store, params).await })
+    })?;
 
     Ok(())
 }
@@ -62,8 +64,10 @@ fn host_ready(store: StoreContextMut<State>, _: ()) -> Result<(bool,), wasmtime:
 }
 
 /// Host function implementation for the `block` function.
-fn host_block(store: StoreContextMut<State>, _: ()) -> Result<(), wasmtime::Error> {
-    let limiter = store.data().limiter();
-    limiter.map(|limiter| limiter.block());
+async fn host_block(store: StoreContextMut<'_, State>, _: ()) -> Result<(), wasmtime::Error> {
+    let Some(limiter) = store.data().limiter() else {
+        return Ok(());
+    };
+    limiter.block().await;
     Ok(())
 }
