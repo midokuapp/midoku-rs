@@ -1,4 +1,5 @@
 pub mod bindings;
+mod func;
 pub mod instance_impl;
 pub mod state;
 

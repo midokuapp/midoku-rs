@@ -9,9 +9,10 @@ use midoku_types::page::Page;
 use parking_lot::{
     MappedRwLockReadGuard, MappedRwLockWriteGuard, RwLock, RwLockReadGuard, RwLockWriteGuard,
 };
-use wasmtime::component::{Component, Linker, TypedFunc};
-use wasmtime::{AsContextMut, Engine, Store};
+use wasmtime::component::{Component, Linker};
+use wasmtime::{Engine, Store};
 
+use crate::func::Func;
 use crate::instance_impl::midoku_http::map_midoku_http;
 use crate::instance_impl::midoku_limiter::map_midoku_limiter;
 use crate::instance_impl::midoku_settings::map_midoku_settings;
@@ -23,11 +24,11 @@ use crate::state::State;
 /// functions in the WebAssembly component.
 pub struct Bindings {
     store: RwLock<Store<State>>,
-    initialize: TypedFunc<(), (Result<(), ()>,)>,
-    get_manga_list: TypedFunc<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>,
-    get_manga_details: TypedFunc<(String,), (Result<Manga, ()>,)>,
-    get_chapter_list: TypedFunc<(String,), (Result<Vec<Chapter>, ()>,)>,
-    get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
+    initialize: Func<(), Result<(), ()>>,
+    get_manga_list: Func<(Vec<Filter>, u32), Result<(Vec<Manga>, bool), ()>>,
+    get_manga_details: Func<(String,), Result<Manga, ()>>,
+    get_chapter_list: Func<(String,), Result<Vec<Chapter>, ()>>,
+    get_page_list: Func<(String, String), Result<Vec<Page>, ()>>,
 }
 
 #[doc(hidden)]
@@ -37,49 +38,6 @@ macro_rules! get_typed_func {
             .get_export(&mut $store, Some(&$api), $name)
             .unwrap();
         $instance.get_typed_func(&mut $store, index)
-    }};
-}
-
-/// Macro to get the mutable context from the store.
-#[doc(hidden)]
-macro_rules! store_context_mut {
-    ($self:expr) => {
-        $self.store.write().as_context_mut()
-    };
-}
-
-/// Macro to call a function and get the result.
-#[doc(hidden)]
-macro_rules! call_func {
-    ($self:expr, $func:ident, $args:expr) => {
-        $self
-            .$func
-            .call_async(&mut store_context_mut!($self), $args)
-            .await
-            .map_err(|_| ())
-            .map(|r| r.0)
-    };
-}
-
-/// Macro to clean up after calling a function.
-#[doc(hidden)]
-macro_rules! post_return {
-    ($self:expr, $func:ident, $args:expr) => {
-        $self
-            .$func
-            .post_return_async(&mut store_context_mut!($self))
-            .await
-            .map_err(|_| ())
-    };
-}
-
-/// Macro to call a function, get the result, and clean up.
-#[doc(hidden)]
-macro_rules! call_wasm_component_func {
-    ($self:expr, $func:ident, $args:expr) => {{
-        let result = call_func!($self, $func, $args)?;
-        post_return!($self, $func, $args)?;
-        result
     }};
 }
 
@@ -118,11 +76,11 @@ impl Bindings {
             .get_export(&mut store, None, "midoku:bindings/api@0.1.0")
             .ok_or("export not found")?;
 
-        let initialize = get_typed_func!(instance, store, api, "initialize")?;
-        let get_manga_list = get_typed_func!(instance, store, api, "get-manga-list")?;
-        let get_manga_details = get_typed_func!(instance, store, api, "get-manga-details")?;
-        let get_chapter_list = get_typed_func!(instance, store, api, "get-chapter-list")?;
-        let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?;
+        let initialize = get_typed_func!(instance, store, api, "initialize")?.into();
+        let get_manga_list = get_typed_func!(instance, store, api, "get-manga-list")?.into();
+        let get_manga_details = get_typed_func!(instance, store, api, "get-manga-details")?.into();
+        let get_chapter_list = get_typed_func!(instance, store, api, "get-chapter-list")?.into();
+        let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?.into();
 
         Ok(Self {
             store: RwLock::new(store),
@@ -140,7 +98,9 @@ impl Bindings {
     /// calling other functions. This may include setting up rate limiters or
     /// other configuration.
     pub async fn initialize(&self) -> Result<(), ()> {
-        call_wasm_component_func!(self, initialize, ())
+        let mut store = self.store.write();
+
+        self.initialize.call(&mut store, ()).await?
     }
 
     /// Get a list of manga from the source.
@@ -154,7 +114,11 @@ impl Bindings {
         filters: Vec<Filter>,
         page: u32,
     ) -> Result<(Vec<Manga>, bool), ()> {
-        call_wasm_component_func!(self, get_manga_list, (filters, page,))
+        let mut store = self.store.write();
+
+        self.get_manga_list
+            .call(&mut store, (filters, page))
+            .await?
     }
 
     /// Get details for a specific manga.
@@ -163,7 +127,9 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get details for.
     pub async fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
-        call_wasm_component_func!(self, get_manga_details, (id,))
+        let mut store = self.store.write();
+
+        self.get_manga_details.call(&mut store, (id,)).await?
     }
 
     /// Get a list of chapters for a specific manga.
@@ -172,7 +138,9 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get chapters for.
     pub async fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
-        call_wasm_component_func!(self, get_chapter_list, (id,))
+        let mut store = self.store.write();
+
+        self.get_chapter_list.call(&mut store, (id,)).await?
     }
 
     /// Get a list of pages for a specific chapter.
@@ -182,7 +150,11 @@ impl Bindings {
     /// * `id` - The ID of the manga.
     /// * `chapter_id` - The ID of the chapter.
     pub async fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
-        call_wasm_component_func!(self, get_page_list, (id, chapter_id))
+        let mut store = self.store.write();
+
+        self.get_page_list
+            .call(&mut store, (id, chapter_id))
+            .await?
     }
 
     /// Get a reference to the settings
