@@ -8,18 +8,17 @@ license.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-midoku-http = { path = "../midoku-http" }
-midoku-limiter = { path = "../midoku-limiter" }
-midoku-settings = { path = "../midoku-settings" }
-midoku-types = { path = "../midoku-types" }
-wasmtime = "26.0.1"
+midoku-http.workspace = true
+midoku-limiter.workspace = true
+midoku-settings.workspace = true
+midoku-types.workspace = true
+
+wasmtime.workspace = true
+
 parking_lot = "0.12.3"
 
 [dev-dependencies]
-tokio = { version = "1.43.0", default-features = false, features = [
-    "rt",
-    "macros",
-] }
+tokio.workspace = true
 
 [build-dependencies]
 wit-deps = "0.4.0"

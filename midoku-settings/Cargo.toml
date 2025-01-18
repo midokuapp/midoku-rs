@@ -6,4 +6,4 @@ publish.workspace = true
 license.workspace = true
 
 [dependencies]
-wasmtime = "26.0.1"
+wasmtime.workspace = true

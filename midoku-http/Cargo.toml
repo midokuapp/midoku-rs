@@ -6,16 +6,14 @@ publish.workspace = true
 license.workspace = true
 
 [dependencies]
+wasmtime.workspace = true
+
 reqwest = { version = "0.12.9", default-features = false, features = [
     "rustls-tls",
     "charset",
     "http2",
     "macos-system-configuration",
 ] }
-wasmtime = "26.0.1"
 
 [dev-dependencies]
-tokio = { version = "1.43.0", default-features = false, features = [
-    "rt",
-    "macros",
-] }
+tokio.workspace = true
