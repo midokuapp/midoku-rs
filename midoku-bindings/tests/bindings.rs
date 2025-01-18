@@ -25,15 +25,16 @@ static EXTENSION_PATH: LazyLock<PathBuf> = LazyLock::new(|| {
         );
     }
 
-    // Parse the built extension path from the stderr
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    let extension_path = stderr
-        .lines()
-        .find(|line| line.ends_with("example_extension.wasm"))
-        .map(|line| line.trim_end().split_whitespace().last().unwrap())
-        .expect("Failed to parse the extension path");
+    // Get the built extension path
+    let output = std::process::Command::new(env!("CARGO"))
+        .args(&["locate-project", "--workspace", "--message-format=plain"])
+        .output()
+        .expect("Failed to find workspace root")
+        .stdout;
+    let raw_path = std::str::from_utf8(&output).unwrap().trim();
+    let workspace_path = PathBuf::from(raw_path).parent().unwrap().to_path_buf();
 
-    extension_path.into()
+    workspace_path.join("target/wasm32-unknown-unknown/release/example_extension.wasm")
 });
 
 #[tokio::test]
