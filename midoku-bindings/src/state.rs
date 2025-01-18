@@ -27,6 +27,10 @@ impl State {
         self.limiter.as_mut()
     }
 
+    pub fn set_limiter(&mut self, limiter: RateLimiter) {
+        self.limiter = Some(limiter);
+    }
+
     pub fn settings(&self) -> &HashMap<String, Value> {
         &self.settings
     }

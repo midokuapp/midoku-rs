@@ -32,15 +32,27 @@ fn host_period_ms(store: StoreContextMut<State>, _: ()) -> Result<(Option<u32>,)
     Ok((period_ms,))
 }
 
+/// Helper macro to get the limiter or insert a default limiter into the store.
+#[doc(hidden)]
+macro_rules! get_or_insert_default_limiter {
+    ($store:expr) => {{
+        match $store.data_mut().limiter_mut() {
+            Some(limiter) => limiter,
+            None => {
+                $store.data_mut().set_limiter(Default::default());
+                $store.data_mut().limiter_mut().unwrap()
+            }
+        }
+    }};
+}
+
 /// Host function implementation for the `set-burst` function.
 fn host_set_burst(
     mut store: StoreContextMut<State>,
     (burst,): (u32,),
 ) -> Result<(Result<(), ()>,), wasmtime::Error> {
-    let limiter = store.data_mut().limiter_mut();
-    let result = limiter
-        .map(|limiter| limiter.set_burst(burst))
-        .unwrap_or(Ok(()));
+    let limiter = get_or_insert_default_limiter!(store);
+    let result = limiter.set_burst(burst);
     Ok((result,))
 }
 
@@ -49,10 +61,8 @@ fn host_set_period_ms(
     mut store: StoreContextMut<State>,
     (period_ms,): (u32,),
 ) -> Result<(Result<(), ()>,), wasmtime::Error> {
-    let limiter = store.data_mut().limiter_mut();
-    let result = limiter
-        .map(|limiter| limiter.set_period_ms(period_ms))
-        .unwrap_or(Ok(()));
+    let limiter = get_or_insert_default_limiter!(store);
+    let result = limiter.set_period_ms(period_ms);
     Ok((result,))
 }
 
