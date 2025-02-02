@@ -24,7 +24,7 @@ midoku-limiter = { path = "midoku-limiter" }
 midoku-settings = { path = "midoku-settings" }
 midoku-types = { path = "midoku-types" }
 
-wasmtime = "26.0.1"
+wasmtime = "29.0.1"
 
 tokio = { version = "1.43.0", default-features = false, features = [
     "rt",
