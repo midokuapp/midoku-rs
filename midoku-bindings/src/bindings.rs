@@ -10,7 +10,7 @@ use parking_lot::{
     MappedRwLockReadGuard, MappedRwLockWriteGuard, RwLock, RwLockReadGuard, RwLockWriteGuard,
 };
 use wasmtime::component::{Component, Linker};
-use wasmtime::{Engine, Store};
+use wasmtime::{Config, Engine, Store};
 
 use crate::func::Func;
 use crate::instance_impl::midoku_http::map_midoku_http;
@@ -57,9 +57,10 @@ impl Bindings {
     /// let (manga_list, has_next) = bindings.get_manga_list(0).await?;
     /// ```
     pub async fn from_file<T: AsRef<Path>>(path: T) -> Result<Self, Box<dyn std::error::Error>> {
-        use wasmtime::Config;
+        let mut config = Config::default();
+        config.async_support(true);
 
-        let engine = Engine::new(Config::default().async_support(true)).unwrap();
+        let engine = Engine::new(&config).unwrap();
 
         let mut store = Store::new(&engine, State::default());
 
