@@ -1,6 +1,7 @@
 pub mod bindings;
 mod func;
 pub mod instance_impl;
+mod resource_table;
 pub mod state;
 
 pub use bindings::Bindings;

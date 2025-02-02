@@ -39,7 +39,11 @@ pub fn map_midoku_http(linker: &mut Linker<State>) -> Result<(), Box<dyn std::er
 #[doc(hidden)]
 macro_rules! resource_table_get {
     ($store:expr, $resource:expr) => {
-        $store.data().resource_table().get(&$resource)
+        $store
+            .data()
+            .resource_tables
+            .incoming_response
+            .get(&$resource)
     };
 }
 
@@ -47,7 +51,11 @@ macro_rules! resource_table_get {
 #[doc(hidden)]
 macro_rules! resource_table_push {
     ($store:expr, $resource:expr) => {
-        $store.data_mut().resource_table_mut().push($resource)
+        $store
+            .data_mut()
+            .resource_tables
+            .incoming_response
+            .push($resource)
     };
 }
 
@@ -55,7 +63,11 @@ macro_rules! resource_table_push {
 #[doc(hidden)]
 macro_rules! resource_table_delete {
     ($store:expr, $rep:expr) => {
-        $store.data_mut().resource_table_mut().delete($rep)
+        $store
+            .data_mut()
+            .resource_tables
+            .incoming_response
+            .delete($rep)
     };
 }
 
