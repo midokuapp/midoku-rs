@@ -16,8 +16,6 @@ midoku-types.workspace = true
 wasmtime.workspace = true
 
 parking_lot = "0.12.3"
-
-[dev-dependencies]
 tokio.workspace = true
 
 [build-dependencies]

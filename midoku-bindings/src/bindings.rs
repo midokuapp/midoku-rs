@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::path::Path;
+use std::sync::Arc;
 
 use midoku_settings::types::Value;
 use midoku_types::chapter::Chapter;
@@ -23,7 +24,7 @@ use crate::state::State;
 /// This struct contains the bindings to a Midoku source. It is used to call
 /// functions in the WebAssembly component.
 pub struct Bindings {
-    store: RwLock<Store<State>>,
+    store: Arc<RwLock<Store<State>>>,
     initialize: Func<(), Result<(), ()>>,
     get_manga_list: Func<(Vec<Filter>, u32), Result<(Vec<Manga>, bool), ()>>,
     get_manga_details: Func<(String,), Result<Manga, ()>>,
@@ -84,7 +85,7 @@ impl Bindings {
         let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?.into();
 
         Ok(Self {
-            store: RwLock::new(store),
+            store: Arc::new(RwLock::new(store)),
             initialize,
             get_manga_list,
             get_manga_details,
@@ -99,9 +100,7 @@ impl Bindings {
     /// calling other functions. This may include setting up rate limiters or
     /// other configuration.
     pub async fn initialize(&self) -> Result<(), ()> {
-        let mut store = self.store.write();
-
-        self.initialize.call(&mut store, ()).await?
+        self.initialize.call(self.store.clone(), ()).await?
     }
 
     /// Get a list of manga from the source.
@@ -115,10 +114,8 @@ impl Bindings {
         filters: Vec<Filter>,
         page: u32,
     ) -> Result<(Vec<Manga>, bool), ()> {
-        let mut store = self.store.write();
-
         self.get_manga_list
-            .call(&mut store, (filters, page))
+            .call(self.store.clone(), (filters, page))
             .await?
     }
 
@@ -128,9 +125,9 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get details for.
     pub async fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
-        let mut store = self.store.write();
-
-        self.get_manga_details.call(&mut store, (id,)).await?
+        self.get_manga_details
+            .call(self.store.clone(), (id,))
+            .await?
     }
 
     /// Get a list of chapters for a specific manga.
@@ -139,9 +136,9 @@ impl Bindings {
     ///
     /// * `id` - The ID of the manga to get chapters for.
     pub async fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
-        let mut store = self.store.write();
-
-        self.get_chapter_list.call(&mut store, (id,)).await?
+        self.get_chapter_list
+            .call(self.store.clone(), (id,))
+            .await?
     }
 
     /// Get a list of pages for a specific chapter.
@@ -151,10 +148,8 @@ impl Bindings {
     /// * `id` - The ID of the manga.
     /// * `chapter_id` - The ID of the chapter.
     pub async fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
-        let mut store = self.store.write();
-
         self.get_page_list
-            .call(&mut store, (id, chapter_id))
+            .call(self.store.clone(), (id, chapter_id))
             .await?
     }
 
