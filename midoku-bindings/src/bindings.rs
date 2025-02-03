@@ -10,10 +10,10 @@ use midoku_types::page::Page;
 use parking_lot::{
     MappedRwLockReadGuard, MappedRwLockWriteGuard, RwLock, RwLockReadGuard, RwLockWriteGuard,
 };
-use wasmtime::component::{Component, Linker};
+use wasmtime::component::{Component, Linker, TypedFunc};
 use wasmtime::{Config, Engine, Store};
 
-use crate::func::Func;
+use crate::func::FuncExecute;
 use crate::instance_impl::midoku_http::map_midoku_http;
 use crate::instance_impl::midoku_limiter::map_midoku_limiter;
 use crate::instance_impl::midoku_settings::map_midoku_settings;
@@ -25,11 +25,11 @@ use crate::state::State;
 /// functions in the WebAssembly component.
 pub struct Bindings {
     store: Arc<RwLock<Store<State>>>,
-    initialize: Func<(), Result<(), ()>>,
-    get_manga_list: Func<(Vec<Filter>, u32), Result<(Vec<Manga>, bool), ()>>,
-    get_manga_details: Func<(String,), Result<Manga, ()>>,
-    get_chapter_list: Func<(String,), Result<Vec<Chapter>, ()>>,
-    get_page_list: Func<(String, String), Result<Vec<Page>, ()>>,
+    initialize: TypedFunc<(), (Result<(), ()>,)>,
+    get_manga_list: TypedFunc<(Vec<Filter>, u32), (Result<(Vec<Manga>, bool), ()>,)>,
+    get_manga_details: TypedFunc<(String,), (Result<Manga, ()>,)>,
+    get_chapter_list: TypedFunc<(String,), (Result<Vec<Chapter>, ()>,)>,
+    get_page_list: TypedFunc<(String, String), (Result<Vec<Page>, ()>,)>,
 }
 
 #[doc(hidden)]
@@ -78,11 +78,11 @@ impl Bindings {
             .get_export(&mut store, None, "midoku:bindings/api@0.1.0")
             .ok_or("export not found")?;
 
-        let initialize = get_typed_func!(instance, store, api, "initialize")?.into();
-        let get_manga_list = get_typed_func!(instance, store, api, "get-manga-list")?.into();
-        let get_manga_details = get_typed_func!(instance, store, api, "get-manga-details")?.into();
-        let get_chapter_list = get_typed_func!(instance, store, api, "get-chapter-list")?.into();
-        let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?.into();
+        let initialize = get_typed_func!(instance, store, api, "initialize")?;
+        let get_manga_list = get_typed_func!(instance, store, api, "get-manga-list")?;
+        let get_manga_details = get_typed_func!(instance, store, api, "get-manga-details")?;
+        let get_chapter_list = get_typed_func!(instance, store, api, "get-chapter-list")?;
+        let get_page_list = get_typed_func!(instance, store, api, "get-page-list")?;
 
         Ok(Self {
             store: Arc::new(RwLock::new(store)),
@@ -100,7 +100,7 @@ impl Bindings {
     /// calling other functions. This may include setting up rate limiters or
     /// other configuration.
     pub async fn initialize(&self) -> Result<(), ()> {
-        self.initialize.call(self.store.clone(), ()).await?
+        self.initialize.execute(self.store.clone(), ()).await?
     }
 
     /// Get a list of manga from the source.
@@ -115,7 +115,7 @@ impl Bindings {
         page: u32,
     ) -> Result<(Vec<Manga>, bool), ()> {
         self.get_manga_list
-            .call(self.store.clone(), (filters, page))
+            .execute(self.store.clone(), (filters, page))
             .await?
     }
 
@@ -126,7 +126,7 @@ impl Bindings {
     /// * `id` - The ID of the manga to get details for.
     pub async fn get_manga_details(&self, id: String) -> Result<Manga, ()> {
         self.get_manga_details
-            .call(self.store.clone(), (id,))
+            .execute(self.store.clone(), (id,))
             .await?
     }
 
@@ -137,7 +137,7 @@ impl Bindings {
     /// * `id` - The ID of the manga to get chapters for.
     pub async fn get_chapter_list(&self, id: String) -> Result<Vec<Chapter>, ()> {
         self.get_chapter_list
-            .call(self.store.clone(), (id,))
+            .execute(self.store.clone(), (id,))
             .await?
     }
 
@@ -149,7 +149,7 @@ impl Bindings {
     /// * `chapter_id` - The ID of the chapter.
     pub async fn get_page_list(&self, id: String, chapter_id: String) -> Result<Vec<Page>, ()> {
         self.get_page_list
-            .call(self.store.clone(), (id, chapter_id))
+            .execute(self.store.clone(), (id, chapter_id))
             .await?
     }
 

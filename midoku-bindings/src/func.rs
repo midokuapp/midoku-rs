@@ -3,69 +3,90 @@ use std::sync::Arc;
 use parking_lot::RwLock;
 use tokio::task::{spawn_local, LocalSet};
 use wasmtime::component::{ComponentNamedList, Lift, Lower, TypedFunc};
-use wasmtime::{AsContextMut, Store};
+use wasmtime::Store;
 
-pub(crate) struct Func<Params, Return>(Arc<TypedFunc<Params, (Return,)>>)
+trait FuncUncancellableExecute<Params, Return>
 where
     Params: Send + Sync,
     Return: Send + Sync,
-    // Bounds from [`TypedFunc`]:
-    Params: ComponentNamedList + Lower,
-    (Return,): ComponentNamedList + Lift;
-
-impl<Params, Return> From<TypedFunc<Params, (Return,)>> for Func<Params, Return>
-where
-    Params: Send + Sync,
-    Return: Send + Sync,
-    // Bounds from [`TypedFunc`]:
+    // Bounds from impl:
     Params: ComponentNamedList + Lower,
     (Return,): ComponentNamedList + Lift,
 {
-    fn from(value: TypedFunc<Params, (Return,)>) -> Self {
-        Func(Arc::new(value))
-    }
+    /// Runs [`wasmtime::Func::call_async`] followed by [`wasmtime::Func::post_return_async`]
+    /// but should not be cancelled by the runtime. If cancelled when `call_async` is running,
+    /// `post_return_async` is never called and makes the `call_async` never callable again.
+    async fn uncancellable_execute<T>(
+        &self,
+        store: &mut Store<T>,
+        params: Params,
+    ) -> Result<Return, ()>
+    where
+        T: Send + 'static;
 }
 
-impl<Params, Return> Func<Params, Return>
+pub(crate) trait FuncExecute<Params, Return>
 where
     Params: Send + Sync + 'static,
     Return: Send + Sync + 'static,
-    // Bounds from [`TypedFunc`]:
+    // Bounds from impl:
     Params: ComponentNamedList + Lower,
     (Return,): ComponentNamedList + Lift,
 {
-    async fn call_<T: Send + 'static>(
-        store: Arc<RwLock<Store<T>>>,
-        func: Arc<TypedFunc<Params, (Return,)>>,
-        params: Params,
-    ) -> Result<Return, ()> {
-        let mut store = store.write();
+    /// Runs [`wasmtime::Func::call_async`] followed by [`wasmtime::Func::post_return_async`].
+    async fn execute<T>(&self, store: Arc<RwLock<Store<T>>>, params: Params) -> Result<Return, ()>
+    where
+        T: Send + 'static;
+}
 
+impl<Params, Return> FuncUncancellableExecute<Params, Return> for TypedFunc<Params, (Return,)>
+where
+    Params: Send + Sync,
+    Return: Send + Sync,
+    // Bounds from impl:
+    Params: ComponentNamedList + Lower,
+    (Return,): ComponentNamedList + Lift,
+{
+    async fn uncancellable_execute<T>(
+        &self,
+        mut store: &mut Store<T>,
+        params: Params,
+    ) -> Result<Return, ()>
+    where
+        T: Send + 'static,
+    {
         // function call
-        let result = func
-            .call_async(store.as_context_mut(), params)
-            .await
-            .map_err(|_| ())?
-            .0;
+        let result = self.call_async(&mut store, params).await.map_err(|_| ())?.0;
 
         // mandatory cleanup after successful call
-        func.post_return_async(store.as_context_mut())
-            .await
-            .map_err(|_| ())?;
+        self.post_return_async(&mut store).await.map_err(|_| ())?;
 
         Ok(result)
     }
+}
 
-    pub async fn call<T: Send + 'static>(
-        &self,
-        store: Arc<RwLock<Store<T>>>,
-        params: Params,
-    ) -> Result<Return, ()> {
-        let func = self.0.clone();
+impl<Params, Return> FuncExecute<Params, Return> for TypedFunc<Params, (Return,)>
+where
+    Params: Send + Sync + 'static,
+    Return: Send + Sync + 'static,
+    // Bounds from impl:
+    Params: ComponentNamedList + Lower,
+    (Return,): ComponentNamedList + Lift,
+{
+    async fn execute<T>(&self, store: Arc<RwLock<Store<T>>>, params: Params) -> Result<Return, ()>
+    where
+        T: Send + 'static,
+    {
+        let func = self.clone();
 
-        let local = LocalSet::new();
-        local
-            .run_until(async move { spawn_local(Self::call_(store, func, params)).await })
+        LocalSet::new()
+            .run_until(async move {
+                spawn_local(async move {
+                    let mut store = store.write();
+                    func.uncancellable_execute(&mut store, params).await
+                })
+                .await
+            })
             .await
             .expect("could not join handle")
     }
