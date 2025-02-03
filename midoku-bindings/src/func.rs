@@ -3,7 +3,7 @@ use std::sync::Arc;
 use parking_lot::RwLock;
 use tokio::task::{spawn_local, LocalSet};
 use wasmtime::component::{ComponentNamedList, Lift, Lower, TypedFunc};
-use wasmtime::Store;
+use wasmtime::{AsContextMut, Store};
 
 pub(crate) struct Func<Params, Return>(Arc<TypedFunc<Params, (Return,)>>)
 where
@@ -34,28 +34,26 @@ where
     Params: ComponentNamedList + Lower,
     (Return,): ComponentNamedList + Lift,
 {
-    async fn call_async<T>(
-        store: &mut Store<T>,
-        func: &TypedFunc<Params, (Return,)>,
+    async fn call_<T: Send + 'static>(
+        store: Arc<RwLock<Store<T>>>,
+        func: Arc<TypedFunc<Params, (Return,)>>,
         params: Params,
-    ) -> Result<Return, ()>
-    where
-        T: Send + 'static,
-    {
-        func.call_async(store, params)
-            .await
-            .map_err(|_| ())
-            .map(|res| res.0)
-    }
+    ) -> Result<Return, ()> {
+        let mut store = store.write();
 
-    async fn post_return_async<T>(
-        store: &mut Store<T>,
-        func: &TypedFunc<Params, (Return,)>,
-    ) -> Result<(), ()>
-    where
-        T: Send + 'static,
-    {
-        func.post_return_async(store).await.map_err(|_| ())
+        // function call
+        let result = func
+            .call_async(store.as_context_mut(), params)
+            .await
+            .map_err(|_| ())?
+            .0;
+
+        // mandatory cleanup after successful call
+        func.post_return_async(store.as_context_mut())
+            .await
+            .map_err(|_| ())?;
+
+        Ok(result)
     }
 
     pub async fn call<T: Send + 'static>(
@@ -67,15 +65,7 @@ where
 
         let local = LocalSet::new();
         local
-            .run_until(async move {
-                spawn_local(async move {
-                    let mut store = store.write();
-                    let result = Self::call_async(&mut store, &func, params).await?;
-                    Self::post_return_async(&mut store, &func).await?;
-                    Ok(result)
-                })
-                .await
-            })
+            .run_until(async move { spawn_local(Self::call_(store, func, params)).await })
             .await
             .expect("could not join handle")
     }
