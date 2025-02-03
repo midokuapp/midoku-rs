@@ -3,13 +3,19 @@ use wasmtime::{AsContextMut, Store};
 
 pub(crate) struct Func<Params, Return>(TypedFunc<Params, (Return,)>)
 where
-    Params: ComponentNamedList + Lower + Send + Sync,
-    (Return,): ComponentNamedList + Lift + Send + Sync;
+    Params: Send + Sync,
+    Return: Send + Sync,
+    // Bounds from [`TypedFunc`]:
+    Params: ComponentNamedList + Lower,
+    (Return,): ComponentNamedList + Lift;
 
 impl<Params, Return> From<TypedFunc<Params, (Return,)>> for Func<Params, Return>
 where
-    Params: ComponentNamedList + Lower + Send + Sync,
-    (Return,): ComponentNamedList + Lift + Send + Sync,
+    Params: Send + Sync,
+    Return: Send + Sync,
+    // Bounds from [`TypedFunc`]:
+    Params: ComponentNamedList + Lower,
+    (Return,): ComponentNamedList + Lift,
 {
     fn from(value: TypedFunc<Params, (Return,)>) -> Self {
         Func(value)
@@ -18,8 +24,11 @@ where
 
 impl<Params, Return> Func<Params, Return>
 where
-    Params: ComponentNamedList + Lower + Send + Sync,
-    (Return,): ComponentNamedList + Lift + Send + Sync,
+    Params: Send + Sync,
+    Return: Send + Sync,
+    // Bounds from [`TypedFunc`]:
+    Params: ComponentNamedList + Lower,
+    (Return,): ComponentNamedList + Lift,
 {
     pub async fn call<T: Send>(&self, store: &mut Store<T>, params: Params) -> Result<Return, ()> {
         // function call
