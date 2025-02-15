@@ -174,3 +174,22 @@ async fn test_bindings_setting_mut() {
     );
     assert_eq!(value3, None);
 }
+
+#[tokio::test]
+async fn test_cancellation_safety() {
+    use tokio::time::{timeout, Duration};
+
+    let bindings = midoku_bindings::Bindings::from_file(EXTENSION_PATH.as_path())
+        .await
+        .unwrap();
+
+    let future = || bindings.get_manga_list(vec![], 0);
+
+    let res = timeout(Duration::from_millis(50), future()).await;
+
+    // The operation should be cancelled
+    assert!(res.is_err());
+
+    // The operation should not panic
+    future().await.unwrap();
+}
