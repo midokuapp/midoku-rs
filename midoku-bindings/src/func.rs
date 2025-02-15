@@ -35,6 +35,9 @@ where
         let (tx, rx) = oneshot::channel();
 
         spawn(async move {
+            // Acquire the store write lock.
+            // It also serves as a semaphore to prevent multiple calls to the same function,
+            // thus preventing non-cleanups of resources.
             let mut store = store.write().await;
 
             let result = func
