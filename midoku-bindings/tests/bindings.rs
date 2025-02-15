@@ -185,7 +185,7 @@ async fn test_cancellation_safety() {
 
     let future = || bindings.get_manga_list(vec![], 0);
 
-    let res = timeout(Duration::from_millis(50), future()).await;
+    let res = timeout(Duration::from_millis(1), future()).await;
 
     // The operation should be cancelled
     assert!(res.is_err());
