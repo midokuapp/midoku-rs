@@ -138,7 +138,7 @@ async fn test_bindings_settings() {
         .await
         .unwrap();
 
-    let settings = bindings.settings();
+    let settings = bindings.settings().await;
 
     assert!(settings.is_empty());
 }
@@ -149,16 +149,16 @@ async fn test_bindings_setting_mut() {
         .await
         .unwrap();
 
-    bindings.settings_mut().insert(
+    bindings.settings_mut().await.insert(
         "key1".to_string(),
         midoku_settings::types::Value::String("value1".to_string()),
     );
-    bindings.settings_mut().insert(
+    bindings.settings_mut().await.insert(
         "key2".to_string(),
         midoku_settings::types::Value::String("value2".to_string()),
     );
 
-    let settings = bindings.settings();
+    let settings = bindings.settings().await;
 
     let value1 = settings.get("key1");
     let value2 = settings.get("key2");

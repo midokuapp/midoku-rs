@@ -7,9 +7,7 @@ use midoku_types::chapter::Chapter;
 use midoku_types::filter::Filter;
 use midoku_types::manga::Manga;
 use midoku_types::page::Page;
-use parking_lot::{
-    MappedRwLockReadGuard, MappedRwLockWriteGuard, RwLock, RwLockReadGuard, RwLockWriteGuard,
-};
+use tokio::sync::{RwLock, RwLockMappedWriteGuard, RwLockReadGuard, RwLockWriteGuard};
 use wasmtime::component::{Component, Linker, TypedFunc};
 use wasmtime::{Config, Engine, Store};
 
@@ -154,8 +152,8 @@ impl Bindings {
     }
 
     /// Get a reference to the settings
-    pub fn settings(&self) -> MappedRwLockReadGuard<'_, HashMap<String, Value>> {
-        RwLockReadGuard::map(self.store.read(), |store| store.data().settings())
+    pub async fn settings(&self) -> RwLockReadGuard<'_, HashMap<String, Value>> {
+        RwLockReadGuard::map(self.store.read().await, |store| store.data().settings())
     }
 
     /// Get a mutable reference to the settings.
@@ -165,12 +163,14 @@ impl Bindings {
     /// # Example
     ///
     /// ```ignore
-    /// bindings.settings_mut().insert(
+    /// bindings.settings_mut().await.insert(
     ///     "key".to_string(),
     ///     Value::String("value".to_string())
     /// );
     /// ```
-    pub fn settings_mut(&mut self) -> MappedRwLockWriteGuard<'_, HashMap<String, Value>> {
-        RwLockWriteGuard::map(self.store.write(), |store| store.data_mut().settings_mut())
+    pub async fn settings_mut(&mut self) -> RwLockMappedWriteGuard<'_, HashMap<String, Value>> {
+        RwLockWriteGuard::map(self.store.write().await, |store| {
+            store.data_mut().settings_mut()
+        })
     }
 }
